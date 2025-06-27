@@ -1,24 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+import LoginPage from "./pages/LoginPage";
+import Dashboard from "./pages/Dashboard";
+import ClientesPage from "./pages/ClientesPage";
+import PublicPage from "./pages/PublicPage";
+import Layouts from "./components/Layouts";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Layouts>
+                  <Dashboard />
+                </Layouts>
+              </PrivateRoute>
+            }
+          >
+            <Route path="dashboard" element={<Dashboard />} />
+          </Route>
+
+          <Route
+            path="/clientes"
+            element={
+              <PrivateRoute roles={["superadmin", "admin"]}>
+                <Layouts>
+                  <ClientesPage />
+                </Layouts>
+              </PrivateRoute>
+            }
+          />
+
+          <Route path="/:uuid" element={<PublicPage />} />
+
+          <Route path="*" element={<h2>404 no encontrado</h2>} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 
