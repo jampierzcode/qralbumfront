@@ -2,6 +2,7 @@ import { Table, Button, message, Modal } from "antd";
 import { useState, useEffect } from "react";
 import api from "../api";
 import { QRCodeSVG } from "qrcode.react";
+import { CopyOutlined } from "@ant-design/icons";
 
 import UploadModal from "../components/UploadModal";
 
@@ -55,16 +56,28 @@ export default function ClientesPage() {
         <>
           {r.uuid}
           <br />
-          <QRCodeSVG value={`http://localhost:3000/${r.uuid}`} size={64} />
+          <QRCodeSVG value={`${window.location.origin}/${r.uuid}`} size={64} />
         </>
       ),
     },
     {
       title: "Archivos",
       render: (_, r) => (
-        <Button onClick={() => setModal({ visible: true, uuid: r.uuid })}>
-          Subir / Ver
-        </Button>
+        <>
+          <Button onClick={() => setModal({ visible: true, uuid: r.uuid })}>
+            Subir
+          </Button>
+          <Button
+            icon={<CopyOutlined />}
+            onClick={() => {
+              const url = `${window.location.origin}/${r.uuid}`;
+              navigator.clipboard.writeText(url);
+              message.success("Enlace copiado al portapapeles");
+            }}
+          >
+            Copiar link
+          </Button>
+        </>
       ),
     },
   ];
