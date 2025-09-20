@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import ClientesPage from "./pages/ClientesPage";
 import PublicPage from "./pages/PublicPage";
 import Layouts from "./components/Layouts";
+import PublicAlbumPage from "./pages/PageClientesV2";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           />
 
           <Route path="/:uuid" element={<PublicPage />} />
+          <Route path="/c/:uuid" element={<PublicAlbumPage />} />
 
           <Route path="*" element={<h2>404 no encontrado</h2>} />
         </Routes>

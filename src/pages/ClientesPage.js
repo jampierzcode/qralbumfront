@@ -56,7 +56,10 @@ export default function ClientesPage() {
         <>
           {r.uuid}
           <br />
-          <QRCodeSVG value={`${window.location.origin}/${r.uuid}`} size={64} />
+          <QRCodeSVG
+            value={`${window.location.origin}/c/${r.uuid}`}
+            size={64}
+          />
         </>
       ),
     },
@@ -70,7 +73,7 @@ export default function ClientesPage() {
           <Button
             icon={<CopyOutlined />}
             onClick={() => {
-              const url = `${window.location.origin}/${r.uuid}`;
+              const url = `${window.location.origin}/c/${r.uuid}`;
               navigator.clipboard.writeText(url);
               message.success("Enlace copiado al portapapeles");
             }}
