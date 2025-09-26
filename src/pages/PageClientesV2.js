@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Input, Segmented } from "antd";
+import { Input, Segmented, Image as AntImage, Modal, Carousel } from "antd";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+
 import {
   Play,
   Pause,
@@ -62,6 +64,16 @@ export default function PublicAlbumPage() {
         setVideos(rv.data.map((x) => ({ ...x, type: "video" })));
         setAudios(ra.data.map((x) => ({ ...x, type: "audio" })));
         setCurrentIndex(0);
+
+        // 🎯 Fija la primera pista en el <audio> y reproduce de inmediato
+        if (audioRef.current && ra.data.length > 0) {
+          const first = ra.data[0];
+          try {
+            audioRef.current.src = first.url; // asigna directamente la URL
+            audioRef.current.load(); // asegura metadata
+          } catch {}
+          attemptPlay(); // play() con manejo de bloqueo de autoplay
+        }
       } catch (e) {
         console.error("Error loading files", e);
       }
@@ -201,6 +213,31 @@ export default function PublicAlbumPage() {
 
   const hasMedia = photos.length + videos.length > 0;
 
+  const gestureResumeRef = useRef(false);
+  const attemptPlay = () => {
+    if (!audioRef.current) return;
+    audioRef.current
+      .play()
+      .then(() => setIsPlaying(true))
+      .catch(() => {
+        // Si el navegador bloquea el autoplay, lo reintentamos en el primer gesto de usuario
+        setIsPlaying(false);
+      });
+  };
+  useEffect(() => {
+    const onFirstGesture = () => {
+      if (gestureResumeRef.current) return;
+      gestureResumeRef.current = true;
+      if (audioRef.current && !isPlaying && currentTrack) {
+        audioRef.current.muted = false; // por si el navegador lo dejó muteado
+        attemptPlay();
+      }
+      window.removeEventListener("pointerdown", onFirstGesture);
+    };
+    window.addEventListener("pointerdown", onFirstGesture);
+    return () => window.removeEventListener("pointerdown", onFirstGesture);
+  }, [isPlaying, currentTrack]);
+
   return (
     <div className="relative min-h-screen flex flex-col items-center bg-black overflow-hidden">
       {/* Background blur image */}
@@ -249,6 +286,16 @@ export default function PublicAlbumPage() {
           </div>
         </div>
       )}
+      {/* 🔊 Audio global (siempre presente) */}
+      <audio
+        ref={audioRef}
+        autoPlay
+        src={currentTrack?.url || undefined}
+        onTimeUpdate={() => setProgress(audioRef.current?.currentTime ?? 0)}
+        onLoadedMetadata={() => setDuration(audioRef.current?.duration ?? 0)}
+        onEnded={playNext}
+        className="hidden"
+      />
 
       {/* Album + Playlist */}
       {showAlbum && (
@@ -288,11 +335,19 @@ export default function PublicAlbumPage() {
                     className="w-full h-64 object-cover"
                   />
                 ) : (
-                  <video controls className="w-full h-64 object-cover">
+                  <video
+                    controls
+                    className="w-full h-64 object-cover"
+                    onPlay={() => {
+                      if (audioRef.current) {
+                        audioRef.current.pause();
+                        setIsPlaying(false);
+                      }
+                    }}
+                  >
                     <source src={f.url} />
                   </video>
                 )}
-                <div className="p-2 text-sm truncate">{f.name}</div>
               </div>
             ))}
             {!hasMedia && (
@@ -341,26 +396,11 @@ export default function PublicAlbumPage() {
                     Reproduciendo {currentIndex + 1} de {audios.length}
                   </p>
 
-                  {/* hidden audio element */}
-                  <audio
-                    ref={audioRef}
-                    onTimeUpdate={() =>
-                      setProgress(audioRef.current?.currentTime ?? 0)
-                    }
-                    onLoadedMetadata={() =>
-                      setDuration(audioRef.current?.duration ?? 0)
-                    }
-                    onEnded={playNext}
-                    className="hidden"
-                  >
-                    <source src={currentTrack.url} />
-                  </audio>
-
                   {/* Controls */}
                   <div className="flex items-center justify-center gap-6 mb-4">
                     <button
                       onClick={playPrev}
-                      className="p-2 rounded-full hover:bg-gray-800"
+                      className="p-2 rounded-full bg-gray-800 border-0"
                       aria-label="Anterior"
                     >
                       <SkipBack size={22} />
@@ -372,7 +412,7 @@ export default function PublicAlbumPage() {
                           audioRef.current?.pause();
                           setIsPlaying(false);
                         }}
-                        className="p-4 bg-blue-600 hover:bg-blue-700 rounded-full"
+                        className="p-4 bg-blue-600 hover:bg-blue-700 rounded-full border-0"
                         aria-label="Pausar"
                       >
                         <Pause size={26} />
@@ -392,7 +432,7 @@ export default function PublicAlbumPage() {
 
                     <button
                       onClick={playNext}
-                      className="p-2 rounded-full hover:bg-gray-800"
+                      className="p-2 rounded-full bg-gray-800 border-0"
                       aria-label="Siguiente"
                     >
                       <SkipForward size={22} />
@@ -404,7 +444,7 @@ export default function PublicAlbumPage() {
                           if (audioRef.current) audioRef.current.muted = false;
                           setIsMuted(false);
                         }}
-                        className="p-2 rounded-full hover:bg-gray-800"
+                        className="p-2 rounded-full bg-gray-800 border-0"
                         aria-label="Quitar silencio"
                       >
                         <VolumeX size={22} />
@@ -415,7 +455,7 @@ export default function PublicAlbumPage() {
                           if (audioRef.current) audioRef.current.muted = true;
                           setIsMuted(true);
                         }}
-                        className="p-2 rounded-full hover:bg-gray-800"
+                        className="p-2 rounded-full bg-gray-800 border-0"
                         aria-label="Silenciar"
                       >
                         <Volume2 size={22} />
