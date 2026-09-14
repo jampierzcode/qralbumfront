@@ -83,3 +83,31 @@ Se aplican **solos** a cada carpeta nueva: registro, manifest completo, tipos y 
 ### Verificación
 - `npm test`: 22/22 · build OK.
 - Chrome 390×844 y 1280×900 en el playground: contador y error de máximo, subida múltiple con progreso, error simulado con "Reintentar", eliminar, reordenar con mouse (orden verificado en el valor), vista comprador limitada a campos editables. Sin errores de consola.
+
+## Fase 5 — Nuevo admin
+
+### Qué cambió
+Se reemplazó por completo el admin anterior (tabla de clientes con password, dashboard con ingresos simulados).
+
+- **Navegación**: Inicio · Regalos · Clientes · Plantillas · Colecciones. Escritorio con sidebar; móvil con barra inferior y botón central "+" (pensado para crear regalos desde el celular durante un Live).
+- **Inicio**: regalos totales, borradores, esperando contenido, publicados, aperturas; regalos recientes; plantillas más utilizadas.
+- **Regalos** (`/admin/gifts`): galería visual con miniatura de la plantilla, destinatario, cliente, plantilla, estado y última edición. Búsqueda, estado (chips), colección, plantilla, cliente y rango de fechas (en móvil detrás de "Filtros"). Acciones: Editar, Preview, Copiar link, QR y compartir, Duplicar, Archivar/Restaurar.
+- **Crear regalo (wizard)** (`/admin/gifts/new` → `/admin/gifts/:id/setup`):
+  1. Colección (tarjetas grandes con portada o mosaico de plantillas)
+  2. Plantilla (tarjetas con **preview animado real al pasar el mouse**, ocasiones, "Ver demo" en modal con iPhone/Escritorio)
+  3. Información básica (quién recibe, quién envía, cliente con creación rápida, ocasión)
+  4+. **Pasos generados automáticamente desde el schema** de la plantilla, con autoguardado y preview en vivo
+  Final. Vista previa móvil/escritorio + Publicar
+- **Editor** (`/admin/gifts/:id`): panel de personalización (detalles + `SchemaForm`) y **preview en vivo real** (iframe `/frame`) con 📱/🖥, opción de ver la pantalla de apertura y reiniciar. Indicador "Guardado ✓", autoguardado a los 700 ms, guardado al salir. En móvil: pestañas Editar/Preview y botón flotante "Ver preview".
+- **Publicar**: valida con el schema antes de enviar; si falta algo muestra la lista y al tocar un ítem lleva al campo. Al publicar abre **link + QR descargable (PNG) + WhatsApp** (al número del cliente si existe).
+- **Preview completo** (`/admin/gifts/:id/preview`): iPhone mini 375×812, iPhone 390×844, horizontal 844×390, iPad 768×1024, Escritorio 1440×900.
+- **Clientes**: lista con nombre, WhatsApp, email, número de regalos, último regalo y fecha; alta **sin contraseña**. Detalle con perfil, regalos, actividad y "+ Crear regalo" (preselecciona el cliente).
+- **Plantillas**: galería con preview animado, activar/ocultar, nombre/descripción comerciales, colecciones, uso, demo; vista "Ordenar" con arrastre.
+- **Colecciones**: lista ordenable por arrastre, activar/desactivar, crear/editar (nombre, descripción, portada), asignar y ordenar plantillas.
+- **Diseño**: Inter autoalojada, neutros cálidos, un acento, skeletons de carga, estados vacíos con acción, errores con reintento, `prefers-reduced-motion`. Ant Design sólo en el admin con tema propio.
+- Medios eliminados: `chart.js`, `react-chartjs-2`, `react-icons`, `lucide-react`, Tailwind/PostCSS (el admin usa CSS propio).
+- `VITE_PUBLIC_URL` (opcional): dominio usado en los links y QR que se comparten (en local conviene la IP de la red para probar desde el celular).
+
+### Verificación
+- `npm run build` OK · `npm test` 22/22.
+- Recorrido completo en Chrome (1440×900 y 390×844) **sin errores de consola**: login → crear cliente → wizard (colección, plantilla con preview animado, datos) → pasos del schema (mensaje, 3 fotos, canción) → vista previa → publicar → QR → editor con autoguardado → listado con filtros → plantillas → colecciones → móvil (inicio, regalos, editor, preview) → `/g/:slug`.
