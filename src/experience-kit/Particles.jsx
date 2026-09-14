@@ -8,6 +8,7 @@ const KINDS = {
   petals: { rise: false, speed: [24, 55], size: [6, 12], drift: 38, spin: true, alpha: [0.6, 0.95], perArea: 1 / 42000 },
   hearts: { rise: true, speed: [14, 30], size: [6, 12], drift: 18, spin: false, alpha: [0.25, 0.7], perArea: 1 / 38000 },
   sparkles: { rise: false, speed: [0, 4], size: [1, 2.6], drift: 2, spin: false, alpha: [0.1, 0.9], twinkle: true, perArea: 1 / 9000 },
+  confetti: { rise: false, speed: [30, 70], size: [5, 9], drift: 30, spin: true, alpha: [0.75, 1], perArea: 1 / 26000 },
 };
 
 const rand = (min, max) => min + Math.random() * (max - min);
@@ -33,6 +34,9 @@ function makeSprite(kind, color) {
     ctx.beginPath();
     ctx.ellipse(c, c, size * 0.2, size * 0.44, 0, 0, Math.PI * 2);
     ctx.fill();
+  } else if (kind === "confetti") {
+    ctx.fillStyle = color;
+    ctx.fillRect(c - size * 0.18, c - size * 0.36, size * 0.36, size * 0.72);
   } else if (kind === "hearts") {
     ctx.fillStyle = color;
     ctx.translate(c, c + 4);
@@ -47,9 +51,9 @@ function makeSprite(kind, color) {
 }
 
 /**
- * @param {{ kind?: "pollen"|"petals"|"hearts"|"sparkles", color?: string, density?: number, max?: number, className?: string, active?: boolean }} props
+ * @param {{ kind?: "pollen"|"petals"|"hearts"|"sparkles"|"confetti", color?: string, colors?: string[], density?: number, max?: number, className?: string, active?: boolean }} props
  */
-export default function Particles({ kind = "pollen", color = "#ffd76a", density = 1, max = 90, className = "", active = true }) {
+export default function Particles({ kind = "pollen", color = "#ffd76a", colors, density = 1, max = 90, className = "", active = true }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -59,7 +63,7 @@ export default function Particles({ kind = "pollen", color = "#ffd76a", density 
 
     const cfg = KINDS[kind] || KINDS.pollen;
     const ctx = canvas.getContext("2d");
-    const sprite = makeSprite(kind, color);
+    const sprites = (colors?.length ? colors : [color]).map((c) => makeSprite(kind, c));
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     let width = 0;
     let height = 0;
@@ -77,6 +81,7 @@ export default function Particles({ kind = "pollen", color = "#ffd76a", density 
       rot: Math.random() * Math.PI * 2,
       spin: cfg.spin ? rand(-1.2, 1.2) : 0,
       alpha: rand(...cfg.alpha),
+      sprite: sprites[Math.floor(Math.random() * sprites.length)],
     });
 
     const resize = () => {
@@ -108,10 +113,10 @@ export default function Particles({ kind = "pollen", color = "#ffd76a", density 
           ctx.save();
           ctx.translate(p.x, p.y);
           ctx.rotate(p.rot);
-          ctx.drawImage(sprite, -s / 2, -s / 2, s, s);
+          ctx.drawImage(p.sprite, -s / 2, -s / 2, s, s);
           ctx.restore();
         } else {
-          ctx.drawImage(sprite, p.x - s / 2, p.y - s / 2, s, s);
+          ctx.drawImage(p.sprite, p.x - s / 2, p.y - s / 2, s, s);
         }
       }
       ctx.globalAlpha = 1;
@@ -146,7 +151,7 @@ export default function Particles({ kind = "pollen", color = "#ffd76a", density 
       intersection.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
     };
-  }, [kind, color, density, max, active]);
+  }, [kind, color, colors?.join(","), density, max, active]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <canvas ref={canvasRef} className={className} aria-hidden="true" style={{ display: "block", pointerEvents: "none" }} />;
 }

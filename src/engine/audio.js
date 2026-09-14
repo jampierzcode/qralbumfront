@@ -74,6 +74,20 @@ export function createAudioController() {
     },
 
     play: tryPlay,
+
+    /** Posición actual para reproductores propios de una plantilla (leer con requestAnimationFrame). */
+    getPosition() {
+      return {
+        current: element?.currentTime || 0,
+        duration: element && Number.isFinite(element.duration) ? element.duration : 0,
+      };
+    },
+    seek(seconds) {
+      const el = ensureElement();
+      if (!el || !Number.isFinite(seconds)) return;
+      const duration = Number.isFinite(el.duration) ? el.duration : Infinity;
+      el.currentTime = Math.max(0, Math.min(seconds, duration));
+    },
     pause() {
       element?.pause();
     },

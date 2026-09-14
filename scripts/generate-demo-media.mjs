@@ -139,6 +139,105 @@ const scenes = {
     <path d="M760 1180 C 720 1120, 640 1140, 660 1210 C 675 1260, 760 1300, 760 1300 C 760 1300, 845 1260, 860 1210 C 880 1140, 800 1120, 760 1180Z" fill="none" stroke="#b07f4a" stroke-width="10" opacity=".7"/>`,
 };
 
+// Escenas de cumpleaños (se agregan al final para no alterar las anteriores).
+Object.assign(scenes, {
+  // Pastel con velas encendidas
+  cake: `
+    <defs>
+      <radialGradient id="bg" cx=".5" cy=".35" r=".8"><stop offset="0" stop-color="#5a3322"/><stop offset=".6" stop-color="#22120c"/><stop offset="1" stop-color="#0e0806"/></radialGradient>
+      <radialGradient id="flame" cx=".5" cy=".6" r=".6"><stop offset="0" stop-color="#fff6c8"/><stop offset=".45" stop-color="#ffc24a"/><stop offset="1" stop-color="#ff7a1a" stop-opacity="0"/></radialGradient>
+      <linearGradient id="frost" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff4ec"/><stop offset="1" stop-color="#f3d6c7"/></linearGradient>
+      <linearGradient id="sponge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0b9a8"/><stop offset="1" stop-color="#c77f6e"/></linearGradient>
+      <filter id="b"><feGaussianBlur stdDeviation="22"/></filter>
+    </defs>
+    <rect width="${W}" height="${H}" fill="url(#bg)"/>
+    <g filter="url(#b)" opacity=".6">${bokeh(18, W, 700, ["#ffb347", "#ffd27a", "#ff8f5a"], 20, 70, 0.7)}</g>
+    <ellipse cx="600" cy="1290" rx="470" ry="70" fill="#000" opacity=".45"/>
+    <rect x="200" y="880" width="800" height="380" rx="40" fill="url(#sponge)"/>
+    <path d="M200 920 Q 260 1010 320 930 T 440 930 T 560 930 T 680 930 T 800 930 T 920 930 T 1000 920 V880 H200Z" fill="url(#frost)"/>
+    <rect x="200" y="840" width="800" height="90" rx="40" fill="url(#frost)"/>
+    ${[330, 450, 600, 750, 870].map((x, i) => `
+      <rect x="${x - 14}" y="${620 + (i % 2) * 30}" width="28" height="${230 - (i % 2) * 30}" rx="8" fill="${["#f7c948", "#ef8fb1", "#8fd0f7", "#ef8fb1", "#f7c948"][i]}"/>
+      <rect x="${x - 14}" y="${660 + (i % 2) * 30}" width="28" height="14" fill="#fff" opacity=".6"/>
+      <ellipse cx="${x}" cy="${585 + (i % 2) * 30}" rx="70" ry="90" fill="url(#flame)" opacity=".55"/>
+      <path d="M${x} ${545 + (i % 2) * 30} C ${x + 22} ${580 + (i % 2) * 30}, ${x + 16} ${612 + (i % 2) * 30}, ${x} ${615 + (i % 2) * 30} C ${x - 16} ${612 + (i % 2) * 30}, ${x - 22} ${580 + (i % 2) * 30}, ${x} ${545 + (i % 2) * 30}Z" fill="#ffe28a"/>`).join("")}
+    ${Array.from({ length: 26 }, () => `<circle cx="${230 + rand() * 740}" cy="${960 + rand() * 260}" r="${4 + rand() * 5}" fill="${["#f7c948", "#ef5a8a", "#6ec6ff", "#9b7bff"][Math.floor(rand() * 4)]}"/>`).join("")}`,
+
+  // Globos dorados y malva
+  balloons: `
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1d2b"/><stop offset="1" stop-color="#140d15"/></linearGradient>
+      <radialGradient id="gold" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#fff1c2"/><stop offset=".35" stop-color="#e2b25a"/><stop offset="1" stop-color="#7a5320"/></radialGradient>
+      <radialGradient id="mauve" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#f3dde6"/><stop offset=".4" stop-color="#b98ba0"/><stop offset="1" stop-color="#5b3b4a"/></radialGradient>
+      <radialGradient id="dark" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#8a8290"/><stop offset=".4" stop-color="#3b3640"/><stop offset="1" stop-color="#141116"/></radialGradient>
+      <filter id="b"><feGaussianBlur stdDeviation="3"/></filter>
+    </defs>
+    <rect width="${W}" height="${H}" fill="url(#bg)"/>
+    <g filter="url(#b)">${bokeh(90, W, H, ["#f7d98a", "#ffffff"], 1.5, 4, 0.9)}</g>
+    ${[[320, 560, 230, "gold"], [760, 470, 250, "mauve"], [560, 860, 210, "dark"], [920, 900, 190, "gold"], [230, 1040, 180, "mauve"]].map(([x, y, r, g]) => `
+      <path d="M${x} ${y + r * 1.15} C ${x - 40} ${y + r * 1.8}, ${x + 50} ${y + r * 2.3}, ${x - 10} ${H}" stroke="#d9c2a0" stroke-width="3" fill="none" opacity=".6"/>
+      <ellipse cx="${x}" cy="${y}" rx="${r}" ry="${r * 1.15}" fill="url(#${g})"/>
+      <path d="M${x - 18} ${y + r * 1.13} L${x + 18} ${y + r * 1.13} L${x} ${y + r * 1.22}Z" fill="#7a5320"/>
+      <ellipse cx="${x - r * 0.38}" cy="${y - r * 0.45}" rx="${r * 0.16}" ry="${r * 0.28}" fill="#fff" opacity=".35" transform="rotate(-25 ${x - r * 0.38} ${y - r * 0.45})"/>`).join("")}`,
+
+  // Fiesta con luces y bengalas
+  party: `
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb877"/><stop offset=".45" stop-color="#e46a6a"/><stop offset="1" stop-color="#40254a"/></linearGradient>
+      <filter id="b"><feGaussianBlur stdDeviation="12"/></filter>
+    </defs>
+    <rect width="${W}" height="${H}" fill="url(#bg)"/>
+    <g filter="url(#b)">${bokeh(40, W, 900, ["#fff2c4", "#ffd27a", "#ff9fb2"], 16, 60, 0.8)}</g>
+    <path d="M0 260 Q 300 360 600 260 T 1200 260" stroke="#3b2430" stroke-width="3" fill="none"/>
+    ${Array.from({ length: 13 }, (_, i) => `<circle cx="${i * 100}" cy="${285 + Math.sin(i * 0.9) * 22}" r="16" fill="${["#fff3b0", "#ffd27a", "#ffb3c7"][i % 3]}"/>`).join("")}
+    <g fill="#241425">
+      ${[180, 360, 560, 760, 960].map((x, i) => `<circle cx="${x}" cy="${1010 - (i % 2) * 40}" r="62"/><path d="M${x - 110} 1500 C ${x - 110} 1180, ${x - 70} ${1090 - (i % 2) * 40}, ${x} ${1090 - (i % 2) * 40} S ${x + 110} 1180, ${x + 110} 1500Z"/>`).join("")}
+      <path d="M338 1000 L300 820" stroke="#241425" stroke-width="20" stroke-linecap="round"/>
+      <path d="M780 960 L830 780" stroke="#241425" stroke-width="20" stroke-linecap="round"/>
+    </g>
+    ${[[300, 800], [834, 760]].map(([x, y]) => Array.from({ length: 16 }, (_, k) => { const a = (k / 16) * Math.PI * 2; return `<line x1="${x}" y1="${y}" x2="${x + Math.cos(a) * 60}" y2="${y + Math.sin(a) * 60}" stroke="#fff4c2" stroke-width="3" stroke-linecap="round"/>`; }).join("") + `<circle cx="${x}" cy="${y}" r="16" fill="#fffbe6"/>`).join("")}`,
+
+  // Caja de regalo
+  gift: `
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bfe3ff"/><stop offset="1" stop-color="#7aa7f0"/></linearGradient>
+      <linearGradient id="box" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6b8b"/><stop offset="1" stop-color="#d23e63"/></linearGradient>
+    </defs>
+    <rect width="${W}" height="${H}" fill="url(#bg)"/>
+    ${Array.from({ length: 60 }, () => `<rect x="${rand() * W}" y="${rand() * H}" width="12" height="22" rx="3" fill="${["#ffd84d", "#ffffff", "#ff6b8b", "#6be3a4"][Math.floor(rand() * 4)]}" transform="rotate(${rand() * 180} ${rand() * W} ${rand() * H})" opacity=".85"/>`).join("")}
+    <ellipse cx="600" cy="1240" rx="380" ry="50" fill="#1d3a73" opacity=".25"/>
+    <rect x="280" y="760" width="640" height="470" rx="26" fill="url(#box)"/>
+    <rect x="240" y="640" width="720" height="150" rx="24" fill="#ff8aa5"/>
+    <rect x="555" y="640" width="90" height="590" fill="#ffd84d"/>
+    <path d="M600 640 C 470 470, 330 560, 430 640Z" fill="#ffd84d"/><path d="M600 640 C 730 470, 870 560, 770 640Z" fill="#ffd84d"/>
+    <circle cx="600" cy="630" r="36" fill="#f2b705"/>`,
+
+  // Retrato ilustrado de un niño "héroe" (para demos de invitación infantil)
+  kid: `
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4fb3ff"/><stop offset="1" stop-color="#c9ecff"/></linearGradient>
+      <radialGradient id="skin" cx=".45" cy=".4" r=".7"><stop offset="0" stop-color="#ffd8b8"/><stop offset="1" stop-color="#e9a985"/></radialGradient>
+    </defs>
+    <rect width="${W}" height="${H}" fill="url(#sky)"/>
+    ${Array.from({ length: 7 }, (_, i) => `<ellipse cx="${100 + i * 190}" cy="${220 + (i % 3) * 90}" rx="120" ry="44" fill="#fff" opacity=".8"/>`).join("")}
+    <path d="M250 1500 C 170 1180, 330 1010, 600 1010 S 1030 1180, 950 1500Z" fill="#e63946"/>
+    <path d="M330 1500 C 300 1230, 420 1080, 600 1080 S 900 1230, 870 1500Z" fill="#1d4ed8"/>
+    <path d="M600 1150 L650 1250 L760 1260 L675 1330 L700 1440 L600 1380 L500 1440 L525 1330 L440 1260 L550 1250Z" fill="#ffd166"/>
+    <rect x="545" y="940" width="110" height="110" rx="40" fill="url(#skin)"/>
+    <circle cx="600" cy="700" r="300" fill="url(#skin)"/>
+    <circle cx="300" cy="730" r="56" fill="#e9a985"/><circle cx="900" cy="730" r="56" fill="#e9a985"/>
+    <path d="M300 640 C 280 380, 480 300, 620 330 C 760 300, 930 420, 900 640 C 860 520, 760 470, 700 520 C 650 440, 520 450, 470 520 C 420 470, 330 520, 300 640Z" fill="#4a2c1d"/>
+    <path d="M300 600 C 380 560, 500 520, 900 600 L900 640 C 500 580, 380 620, 300 660Z" fill="#e63946"/>
+    <ellipse cx="480" cy="700" rx="42" ry="52" fill="#fff"/><ellipse cx="720" cy="700" rx="42" ry="52" fill="#fff"/>
+    <circle cx="488" cy="712" r="26" fill="#3b2418"/><circle cx="712" cy="712" r="26" fill="#3b2418"/>
+    <circle cx="496" cy="702" r="9" fill="#fff"/><circle cx="720" cy="702" r="9" fill="#fff"/>
+    <path d="M430 630 Q 480 600 530 628" stroke="#4a2c1d" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <path d="M670 628 Q 720 600 770 630" stroke="#4a2c1d" stroke-width="14" fill="none" stroke-linecap="round"/>
+    <circle cx="420" cy="820" r="40" fill="#ff8fa3" opacity=".45"/><circle cx="780" cy="820" r="40" fill="#ff8fa3" opacity=".45"/>
+    <path d="M480 840 Q 600 960 720 840 Q 600 900 480 840Z" fill="#7a2230"/>
+    <path d="M510 852 Q 600 880 690 852 Q 690 870 600 885 Q 510 870 510 852Z" fill="#fff"/>`,
+});
+
 const manifest = {};
 for (const [name, body] of Object.entries(scenes)) {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${body}</svg>`;

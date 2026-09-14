@@ -17,6 +17,7 @@ const ID = /^[a-z0-9][a-z0-9-]{1,62}$/;
  * @param {{ title?: string, subtitle?: string, button?: string }} [manifest.gateCopy]
  * @param {{ background?: string, foreground?: string, accent?: string }} [manifest.theme]
  * @param {boolean} [manifest.preferFullscreen]
+ * @param {string[]} [manifest.collectsResponses]  tipos de respuesta que acepta de los visitantes (ej. ["rsvp"])
  */
 export function defineManifest(manifest) {
   if (!manifest || !ID.test(manifest.id || "")) throw new Error("defineManifest: id inválido.");
@@ -32,6 +33,7 @@ export function defineManifest(manifest) {
     gateCopy: {},
     theme: {},
     preferFullscreen: false,
+    collectsResponses: [],
     ...manifest,
   });
 }

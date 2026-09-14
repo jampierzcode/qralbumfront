@@ -64,7 +64,7 @@ function Gate({ manifest, content, onOpen }) {
  * pausa al ocultar la pestaña, reduced motion, safe-area, 100dvh, tier de
  * rendimiento, eventos básicos y pantalla completa opcional.
  */
-export default function ExperienceShell({ manifest, schema, content, media, mode = "live", onEvent, Experience, autoOpen = false }) {
+export default function ExperienceShell({ manifest, schema, content, media, mode = "live", onEvent, onRespond, Experience, autoOpen = false }) {
   const env = useMemo(detectEnvironment, []);
   const isThumbnail = mode === "thumbnail";
   const track = content[soundtrackKey(manifest, schema)] || null;
@@ -78,6 +78,22 @@ export default function ExperienceShell({ manifest, schema, content, media, mode
   const emit = useCallback((type, meta) => {
     onEventRef.current?.(type, meta);
   }, []);
+
+  // Respuestas del visitante (ej. confirmación de asistencia). Sólo tipos declarados en el manifest.
+  // En preview/demo se simulan: nunca se guardan.
+  const onRespondRef = useRef(onRespond);
+  onRespondRef.current = onRespond;
+  const respond = useCallback(
+    async (type, payload) => {
+      if (!manifest.collectsResponses?.includes(type)) throw new Error(`La plantilla no declara respuestas de tipo "${type}".`);
+      if (mode !== "live" || !onRespondRef.current) {
+        await new Promise((r) => setTimeout(r, 450));
+        return { simulated: true };
+      }
+      return onRespondRef.current(type, payload);
+    },
+    [manifest, mode]
+  );
 
   // Debe ejecutarse de forma síncrona dentro del gesto del usuario.
   const open = useCallback(() => {
@@ -151,6 +167,7 @@ export default function ExperienceShell({ manifest, schema, content, media, mode
               mode={mode}
               audio={audio}
               onEvent={emit}
+              respond={respond}
               env={env}
               opened={opened}
               open={open}

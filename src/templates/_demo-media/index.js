@@ -11,6 +11,11 @@ const urls = {
   stars: new URL("./stars.webp", import.meta.url).href,
   blossoms: new URL("./blossoms.webp", import.meta.url).href,
   beach: new URL("./beach.webp", import.meta.url).href,
+  cake: new URL("./cake.webp", import.meta.url).href,
+  balloons: new URL("./balloons.webp", import.meta.url).href,
+  party: new URL("./party.webp", import.meta.url).href,
+  gift: new URL("./gift.webp", import.meta.url).href,
+  kid: new URL("./kid.webp", import.meta.url).href,
 };
 
 const songUrl = new URL("./music-box.mp3", import.meta.url).href;

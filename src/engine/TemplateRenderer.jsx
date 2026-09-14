@@ -10,9 +10,10 @@ import { ShellMessage } from "./ShellStatus.jsx";
  *
  * @param {{ gift: { templateId: string, recipientName?: string, senderName?: string, content?: object },
  *           media?: Record<string, object>, mode?: "live"|"preview"|"demo"|"thumbnail",
- *           onEvent?: (type: string) => void, autoOpen?: boolean }} props
+ *           onEvent?: (type: string) => void, onRespond?: (type: string, payload: object) => Promise<object>,
+ *           autoOpen?: boolean }} props
  */
-export default function TemplateRenderer({ gift, media = {}, mode = "live", onEvent, autoOpen }) {
+export default function TemplateRenderer({ gift, media = {}, mode = "live", onEvent, onRespond, autoOpen }) {
   const template = getTemplate(gift?.templateId);
 
   const content = useMemo(
@@ -37,6 +38,7 @@ export default function TemplateRenderer({ gift, media = {}, mode = "live", onEv
       media={media}
       mode={mode}
       onEvent={onEvent}
+      onRespond={onRespond}
       autoOpen={autoOpen}
       Experience={template.Experience}
     />

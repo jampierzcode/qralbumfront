@@ -51,6 +51,11 @@ export default function GiftPage() {
     [slug]
   );
 
+  const onRespond = useCallback(
+    (type, payload) => publicRequest(`/public/gifts/${encodeURIComponent(slug)}/responses`, { method: "POST", body: { type, ...payload } }),
+    [slug]
+  );
+
   if (state.status === "loading") return <ShellLoading />;
   if (state.status === "error") {
     if (state.error.status === 404) {
@@ -65,5 +70,5 @@ export default function GiftPage() {
     );
   }
 
-  return <TemplateRenderer gift={state.gift} media={state.media} mode="live" onEvent={onEvent} />;
+  return <TemplateRenderer gift={state.gift} media={state.media} mode="live" onEvent={onEvent} onRespond={onRespond} />;
 }
