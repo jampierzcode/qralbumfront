@@ -19,13 +19,13 @@ const ids = process.argv.slice(2).length
 
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 for (const id of ids) {
-  const page = await browser.newPage({ viewport: { width: 480, height: 600 }, deviceScaleFactor: 2 });
+  // 693×520 = 4:3 exacto; activa la composición horizontal de cada plantilla (sin recortes).
+  const page = await browser.newPage({ viewport: { width: 693, height: 520 }, deviceScaleFactor: 2 });
   await page.goto(`${BASE}/demo/${id}?preview=1`, { waitUntil: "networkidle" });
   await page.waitForTimeout(Number(process.env.THUMB_DELAY || 4500));
   const png = await page.screenshot();
   const out = path.join(templatesDir, id, "thumbnail.webp");
-  // 4:3 recortando la parte superior (donde está la composición principal)
-  await sharp(png).resize(960, 720, { fit: "cover", position: "top" }).webp({ quality: 78 }).toFile(out);
+  await sharp(png).resize(960, 720, { fit: "cover" }).webp({ quality: 78 }).toFile(out);
   console.log(`✓ ${path.relative(process.cwd(), out)}`);
   await page.close();
 }

@@ -1,0 +1,512 @@
+/* ───────────────────────────────────────────────────────────────────────
+   Carta de amor · prefijo ll-
+   Oscura y elegante. Composición adaptable:
+     móvil vertical → texto arriba, sobre centrado; recuerdos en 2 columnas
+     horizontal     → texto a la izquierda, sobre a la derecha
+     escritorio     → sobre grande, carta sobre un "escritorio", mesa de 4 columnas
+   ─────────────────────────────────────────────────────────────────────── */
+
+.ll {
+  --ll-bg: #0f0b0e;
+  --ll-ink: #2d2320;
+  --ll-paper: #f6eee2;
+  --ll-paper-edge: #e8dac6;
+  --ll-cream: #f4ebdf;
+  --ll-gold: #c8a27a;
+  --ll-serif: "Cormorant Garamond Variable", ui-serif, Georgia, serif;
+  --ll-hand: "Caveat", "Segoe Script", "Bradley Hand", cursive;
+  --env-w: min(84vw, 380px);
+  position: relative;
+  min-height: 100dvh;
+  overflow-x: clip;
+  background:
+    radial-gradient(90% 60% at 50% 40%, #2a1a22 0%, transparent 65%),
+    radial-gradient(60% 40% at 50% 100%, #1d1216 0%, transparent 70%),
+    var(--ll-bg);
+  color: var(--ll-cream);
+}
+
+.ll-seal--wine { --seal: #8c2238; --seal-2: #4d0c1c; }
+.ll-seal--gold { --seal: #c79a4b; --seal-2: #7a5620; }
+.ll-seal--rose { --seal: #cf5f83; --seal-2: #7e2847; }
+
+.ll-eyebrow {
+  margin: 0 0 14px;
+  color: var(--ll-gold);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.ll-eyebrow--center {
+  text-align: center;
+}
+
+/* ── Sobre cerrado ───────────────────────────────────────────────────── */
+.ll-stage {
+  position: relative;
+  display: grid;
+  min-height: 100dvh;
+  align-content: center;
+  justify-items: center;
+  gap: clamp(28px, 6vh, 56px);
+  padding: calc(48px + var(--safe-top, 0px)) 20px calc(40px + var(--safe-bottom, 0px));
+  text-align: center;
+  isolation: isolate;
+}
+
+.ll-sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+.ll-teaser {
+  max-width: 13ch;
+  margin: 0;
+  font-family: var(--ll-serif);
+  font-size: clamp(2.6rem, 12vw, 5rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.ll-envelope-wrap {
+  position: relative;
+}
+
+.ll-envelope {
+  position: relative;
+  display: block;
+  width: var(--env-w);
+  aspect-ratio: 1.46;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  filter: drop-shadow(0 28px 40px rgb(0 0 0 / 0.55));
+}
+
+.ll-envelope:disabled {
+  cursor: default;
+}
+
+.ll-envelope:focus-visible {
+  outline: 2px solid var(--ll-gold);
+  outline-offset: 10px;
+  border-radius: 6px;
+}
+
+.ll-envelope > span {
+  position: absolute;
+  display: block;
+}
+
+.ll-envelope__back {
+  inset: 0;
+  z-index: 0;
+  border-radius: 6px;
+  background: linear-gradient(160deg, #d9c3a5, #bfa27f);
+}
+
+.ll-envelope__letter {
+  left: 6%;
+  right: 6%;
+  top: 7%;
+  bottom: 10%;
+  z-index: 2;
+  padding: 16% 12% 0;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--ll-paper), #efe3d2);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+}
+
+.ll-envelope__letter i {
+  display: block;
+  height: 5%;
+  margin-bottom: 7%;
+  border-radius: 999px;
+  background: rgb(45 35 32 / 0.16);
+}
+
+.ll-envelope__letter i:nth-child(2) {
+  width: 82%;
+}
+
+.ll-envelope__letter i:nth-child(3) {
+  width: 64%;
+}
+
+.ll-envelope__front {
+  inset: 0;
+  z-index: 3;
+  border-radius: 6px;
+  background:
+    linear-gradient(to top right, #e6d2b6 49.6%, transparent 50%) left bottom / 51% 100% no-repeat,
+    linear-gradient(to top left, #e2cdaf 49.6%, transparent 50%) right bottom / 51% 100% no-repeat,
+    linear-gradient(to top, #ecdcc3 0%, #e4cfb2 100%) center bottom / 100% 54% no-repeat,
+    #dcc6a6;
+  clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+}
+
+.ll-envelope__flap {
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: 62%;
+  background: linear-gradient(180deg, #efe0c8 0%, #dcc4a3 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: 50% 0;
+  backface-visibility: visible;
+}
+
+.ll-seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 5;
+  display: grid;
+  width: calc(var(--env-w) * 0.2);
+  height: calc(var(--env-w) * 0.2);
+  margin: calc(var(--env-w) * -0.1) 0 0 calc(var(--env-w) * -0.1);
+  place-items: center;
+  border-radius: 46% 54% 50% 50% / 52% 46% 54% 48%;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--seal) 70%, white), var(--seal) 38%, var(--seal-2) 100%);
+  box-shadow: inset 0 -3px 6px rgb(0 0 0 / 0.35), inset 0 2px 3px rgb(255 255 255 / 0.25), 0 4px 10px rgb(0 0 0 / 0.35);
+  color: rgb(255 240 230 / 0.85);
+  font-family: var(--ll-serif);
+  font-size: calc(var(--env-w) * 0.1);
+  font-style: italic;
+  font-weight: 600;
+  text-shadow: 0 -1px 0 rgb(0 0 0 / 0.35);
+}
+
+.ll-seal--static {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 28px;
+  font-size: 1.6rem;
+}
+
+.ll-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+  animation: ll-breathe 2.8s ease-in-out 2s infinite;
+}
+
+/* ── Lectura ─────────────────────────────────────────────────────────── */
+.ll-read {
+  display: block;
+}
+
+.ll-desk {
+  padding: calc(64px + var(--safe-top, 0px)) 14px 56px;
+}
+
+.ll-paper {
+  position: relative;
+  width: min(640px, 100%);
+  margin: 0 auto;
+  padding: 40px 26px 44px;
+  border-radius: 4px;
+  background:
+    linear-gradient(transparent 0 calc(100% - 1px), rgb(45 35 32 / 0.06) 0) 0 0 / 100% 2.05em,
+    radial-gradient(120% 90% at 50% 0%, #fbf6ee 0%, var(--ll-paper) 60%, var(--ll-paper-edge) 100%);
+  box-shadow: 0 40px 80px rgb(0 0 0 / 0.5), 0 2px 0 rgb(255 255 255 / 0.6) inset;
+  color: var(--ll-ink);
+}
+
+.ll-date {
+  margin: 0 0 20px;
+  font-family: var(--ll-serif);
+  font-size: 1rem;
+  font-style: italic;
+  text-align: right;
+  opacity: 0.7;
+}
+
+.ll-greeting {
+  margin: 0 0 16px;
+  font-family: var(--ll-hand);
+  font-size: clamp(2rem, 8vw, 2.6rem);
+  font-weight: 500;
+  line-height: 1.1;
+  color: #5a2330;
+}
+
+.ll-paragraph {
+  margin: 0 0 1.1em;
+  font-family: var(--ll-serif);
+  font-size: clamp(1.28rem, 5vw, 1.5rem);
+  font-weight: 450;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.ll-sentence {
+  display: inline;
+}
+
+.ll-signoff {
+  margin-top: 28px;
+  text-align: right;
+}
+
+.ll-closing {
+  margin: 0;
+  font-family: var(--ll-serif);
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+.ll-signature {
+  margin: 2px 0 0;
+  font-family: var(--ll-hand);
+  font-size: clamp(2.2rem, 9vw, 2.9rem);
+  font-weight: 500;
+  line-height: 1;
+  color: #5a2330;
+  transform: rotate(-4deg);
+  transform-origin: right center;
+}
+
+/* ── Recuerdos ───────────────────────────────────────────────────────── */
+.ll-memories {
+  padding: 40px 14px 72px;
+}
+
+/* Flex centrado: la última fila incompleta queda al centro de la "mesa". */
+.ll-table {
+  --cols: 2;
+  --gap-x: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px var(--gap-x);
+  max-width: 1100px;
+  margin: 24px auto 0;
+  padding: 8px 6px;
+  list-style: none;
+}
+
+.ll-memory {
+  flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap-x)) / var(--cols));
+  min-width: 0;
+}
+
+.ll-memory:nth-child(even) {
+  margin-top: 36px;
+}
+
+.ll-memory__button {
+  display: block;
+  width: 100%;
+  padding: 7px 7px 26px;
+  border: 0;
+  border-radius: 2px;
+  background: #fbf7f0;
+  box-shadow: 0 20px 40px rgb(0 0 0 / 0.45);
+  cursor: zoom-in;
+  touch-action: manipulation;
+}
+
+.ll-memory__button .xk-photo {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.ll-memory__button .xk-photo img {
+  object-fit: cover;
+}
+
+.ll-memory__button:focus-visible {
+  outline: 2px solid var(--ll-gold);
+  outline-offset: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ll-memory__button {
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  .ll-memory__button:hover {
+    transform: translateY(-6px) rotate(calc(var(--tilt) * -1));
+    box-shadow: 0 30px 60px rgb(0 0 0 / 0.55);
+  }
+}
+
+/* ── Final ───────────────────────────────────────────────────────────── */
+.ll-final {
+  position: relative;
+  display: grid;
+  min-height: 92dvh;
+  place-items: center;
+  padding: 60px 24px calc(60px + var(--safe-bottom, 0px));
+  overflow: hidden;
+  text-align: center;
+  background: radial-gradient(70% 50% at 50% 55%, #3a1c26 0%, transparent 70%);
+}
+
+.ll-hearts {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ll-final__inner {
+  position: relative;
+}
+
+.ll-final__message {
+  max-width: 15ch;
+  margin: 0 auto;
+  font-family: var(--ll-serif);
+  font-size: clamp(2.4rem, 11vw, 4.6rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.ll-final__from {
+  margin: 20px 0 0;
+  font-family: var(--ll-hand);
+  font-size: 2rem;
+  color: var(--ll-gold);
+}
+
+.ll-again {
+  margin-top: 36px;
+  min-height: 46px;
+  padding: 0 22px;
+  border: 1px solid rgb(244 235 223 / 0.3);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ll-cream);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.ll-again:hover {
+  background: rgb(244 235 223 / 0.08);
+}
+
+.ll-again:focus-visible {
+  outline: 2px solid var(--ll-gold);
+  outline-offset: 3px;
+}
+
+/* ── Tablet / escritorio ─────────────────────────────────────────────── */
+@media (min-width: 700px) {
+  .ll {
+    --env-w: min(60vw, 520px);
+  }
+
+  .ll-paper {
+    padding: 64px 72px 68px;
+  }
+
+  .ll-desk {
+    padding-top: calc(96px + var(--safe-top, 0px));
+    padding-bottom: 88px;
+  }
+
+  .ll-table {
+    --cols: 3;
+    --gap-x: 28px;
+    row-gap: 34px;
+  }
+
+  .ll-memory:nth-child(even) {
+    margin-top: 0;
+  }
+
+  .ll-memory:nth-child(3n + 2) {
+    margin-top: 48px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ll-table {
+    --cols: 4;
+  }
+
+  .ll-memory:nth-child(3n + 2) {
+    margin-top: 0;
+  }
+
+  .ll-memory:nth-child(even) {
+    margin-top: 56px;
+  }
+}
+
+/* ── Horizontal corto: texto a la izquierda, sobre a la derecha ──────── */
+@media (orientation: landscape) and (max-height: 520px) {
+  .ll {
+    --env-w: min(44vw, 58vh * 1.46, 440px);
+  }
+
+  .ll-stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    column-gap: 24px;
+    padding: 20px max(28px, var(--safe-left, 0px));
+    text-align: left;
+  }
+
+  .ll-stage__text {
+    grid-row: 1 / span 2;
+  }
+
+  .ll-teaser {
+    font-size: clamp(2.2rem, 7vw, 3.6rem);
+  }
+
+  .ll-hint {
+    grid-column: 2;
+    justify-self: center;
+  }
+
+  .ll-table {
+    --cols: 4;
+  }
+
+  .ll-memory:nth-child(n) {
+    margin-top: 0;
+  }
+
+  .ll-final {
+    min-height: 100dvh;
+  }
+}
+
+@keyframes ll-breathe {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 0.85; }
+}
+
+.ll[data-calm] .ll-hint {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-hint {
+    animation: none;
+  }
+}

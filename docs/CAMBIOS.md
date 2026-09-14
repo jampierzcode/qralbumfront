@@ -164,3 +164,22 @@ Verificación: `npm test` 26/26 · build OK · en modo producción (backend sirv
 **Experience-kit** nuevo (reutilizado por Love Letter): `Reveal` + `useInView`, `Photo`, `PhotoViewer`, `Particles` (pollen, petals, hearts, sparkles).
 
 Verificación: `npm run smoke` 5/5 · capturas revisadas en 390×844, 1440×900 y 844×390 · visor probado con teclado (escritorio) y deslizando (móvil) · sin errores de consola.
+
+## Fase 10 — Segunda plantilla: "Carta de amor"
+
+`src/templates/love-letter/` — deliberadamente distinta para probar el motor:
+
+- **El sobre es la pantalla de apertura** (`gate: "template"`): fondo oscuro con destellos, "Para Sofía · Tengo algo para ti", sobre con sello de cera (inicial del remitente, color configurable). Al tocarlo la plantilla llama `open()` (desbloquea la música en el mismo gesto).
+- Secuencia con **Motion**: el sello se rompe → la solapa se abre → la carta sale del sobre → el sobre se va → la carta aparece en papel.
+- **Texto progresivo**: cada párrafo revela sus oraciones al llegar; saludo y firma manuscritos (Caveat), cuerpo en Cormorant Garamond.
+- **Recuerdos** (3–8 fotos) que **caen sobre la mesa** como polaroids con resorte; visor al tocar.
+- **Mensaje final** con corazones, sello, firma, "Volver a abrir el sobre" y evento `completed`.
+- Schema con `text`, `textarea`, `date`, `images` (min 3 · max 8), `audio`, `select` (color del sello) y campos sólo del admin (`customerEditable: false`).
+- Composición: móvil vertical (sobre centrado, mesa de 2 columnas) · horizontal (texto a la izquierda, sobre a la derecha, mesa de 4) · tablet (3) · escritorio (sobre de 520px, carta sobre escritorio, mesa de 4 con la última fila centrada).
+
+**¿Hubo que modificar el core? No.** `git status` no muestra cambios en `gift-core/`, `src/engine/`, `src/editor/`, `src/admin/`, `src/public/` ni `src/portal/`. La plantilla se registró sola en el frontend y en el catálogo del backend (con sus colecciones sugeridas Amor y Aniversario), heredó editor, wizard, portal, validación, preview, laboratorio y tests de contrato.
+
+- Miniaturas reales generadas para ambas plantillas (`thumbnail.webp`, viewport 4:3 con composición horizontal).
+- `docs/CREAR_PLANTILLA.md`: guía paso a paso.
+
+Verificación: `npm test` 32/32 (6 contratos nuevos automáticos) · `npm run smoke` 10/10 (2 plantillas × 5 tamaños) · secuencia del sobre revisada cuadro a cuadro en 390×844 · música activa tras tocar el sobre · sin errores de consola.
