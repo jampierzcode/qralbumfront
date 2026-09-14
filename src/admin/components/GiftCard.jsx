@@ -10,7 +10,9 @@ import {
   MoreOutlined,
   QrcodeOutlined,
   RollbackOutlined,
+  SendOutlined,
 } from "@ant-design/icons";
+import ContentRequestDialog from "./ContentRequestDialog.jsx";
 import { adminApi, errorMessage } from "../api.js";
 import { giftTitle, giftUrl, templateName } from "../lib/gifts.js";
 import { timeAgo } from "../lib/format.js";
@@ -22,6 +24,7 @@ export function useGiftActions({ onChanged } = {}) {
   const { message, modal } = App.useApp();
   const navigate = useNavigate();
   const [share, setShare] = useState(null);
+  const [request, setRequest] = useState(null);
 
   const run = async (fn, success) => {
     try {
@@ -49,6 +52,7 @@ export function useGiftActions({ onChanged } = {}) {
         onClick: async () => ((await copyText(giftUrl(gift.slug))) ? message.success("Link copiado") : message.error("No se pudo copiar")),
       },
       { key: "qr", icon: <QrcodeOutlined />, label: "QR y compartir", disabled: !published, onClick: () => setShare(gift) },
+      { key: "request", icon: <SendOutlined />, label: "Solicitar contenido", disabled: archived, onClick: () => setRequest(gift) },
       { type: "divider" },
       {
         key: "duplicate",
@@ -80,10 +84,11 @@ export function useGiftActions({ onChanged } = {}) {
   const dialogs = (
     <>
       <ShareDialog gift={share} open={Boolean(share)} onClose={() => setShare(null)} />
+      <ContentRequestDialog gift={request} open={Boolean(request)} onClose={() => setRequest(null)} onChanged={() => onChanged?.({ id: request?.id, status: "collecting_content" })} />
     </>
   );
 
-  return { menuFor, dialogs, openShare: setShare };
+  return { menuFor, dialogs, openShare: setShare, openRequest: setRequest };
 }
 
 export default function GiftCard({ gift, actions, showCustomer = true }) {

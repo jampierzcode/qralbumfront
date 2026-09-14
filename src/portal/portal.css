@@ -1,0 +1,311 @@
+/* Portal del comprador. Prefijo pt-. Cálido, simple, pensado para el celular. */
+
+.pt {
+  --pt-bg: #fbf6f0;
+  --pt-surface: #ffffff;
+  --pt-text: #2a211c;
+  --pt-muted: #85776d;
+  --pt-accent: #d94f7a;
+  --pt-accent-dark: #b93a62;
+  --pt-border: #eadfd5;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background:
+    radial-gradient(90% 60% at 50% -10%, #fde3ea 0%, transparent 60%),
+    var(--pt-bg);
+  color: var(--pt-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pt *,
+.pt *::before,
+.pt *::after {
+  box-sizing: border-box;
+}
+
+.pt__inner {
+  width: min(560px, 100%);
+  margin: 0 auto;
+  padding: calc(32px + env(safe-area-inset-top, 0px)) 20px calc(40px + env(safe-area-inset-bottom, 0px));
+}
+
+.pt--center .pt__inner {
+  display: grid;
+  min-height: 100dvh;
+  place-content: center;
+  justify-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.pt-heart {
+  width: 44px;
+  height: 44px;
+  fill: var(--pt-accent);
+  animation: pt-beat 2.4s ease-in-out infinite;
+}
+
+.pt-eyebrow {
+  margin: 8px 0 -4px;
+  color: var(--pt-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pt-title {
+  margin: 0;
+  font-family: ui-serif, Georgia, "Times New Roman", serif;
+  font-size: clamp(1.7rem, 7vw, 2.3rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.pt-title--xl {
+  font-size: clamp(2rem, 9vw, 2.9rem);
+}
+
+.pt-text {
+  max-width: 30rem;
+  margin: 0;
+  color: var(--pt-muted);
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.pt-small {
+  margin: 0;
+  color: var(--pt-muted);
+  font-size: 0.85rem;
+}
+
+.pt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 22px;
+  border: 1px solid var(--pt-border);
+  border-radius: 999px;
+  background: var(--pt-surface);
+  color: var(--pt-text);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.pt-btn:active {
+  transform: scale(0.97);
+}
+
+.pt-btn:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--pt-accent) 40%, transparent);
+  outline-offset: 3px;
+}
+
+.pt-btn--primary {
+  border-color: transparent;
+  background: var(--pt-accent);
+  color: #fff;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--pt-accent) 30%, transparent);
+}
+
+.pt-btn--primary:hover {
+  background: var(--pt-accent-dark);
+}
+
+.pt-btn--primary:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.pt-btn--lg {
+  min-width: 220px;
+  min-height: 56px;
+  margin-top: 12px;
+  font-size: 1.05rem;
+}
+
+.pt-spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid color-mix(in srgb, var(--pt-accent) 25%, transparent);
+  border-top-color: var(--pt-accent);
+  border-radius: 50%;
+  animation: pt-spin 0.8s linear infinite;
+}
+
+/* Pasos */
+.pt--steps {
+  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+}
+
+.pt-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: calc(12px + env(safe-area-inset-top, 0px)) 20px 10px;
+  background: color-mix(in srgb, var(--pt-bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.pt-progress {
+  display: flex;
+  gap: 6px;
+  width: min(520px, 100%);
+  margin: 0 auto;
+}
+
+.pt-progress span {
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--pt-border);
+  transition: background 0.3s ease;
+}
+
+.pt-progress span.is-done {
+  background: var(--pt-accent);
+}
+
+.pt-top__row {
+  display: flex;
+  justify-content: space-between;
+  width: min(520px, 100%);
+  margin: 8px auto 0;
+  color: var(--pt-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.pt-save--error {
+  color: #c0392b;
+}
+
+.pt__inner--form {
+  display: grid;
+  gap: 18px;
+  padding-top: 20px;
+}
+
+.pt-form {
+  --sf-bg: #ffffff;
+  --sf-surface: #fffaf6;
+  --sf-border: var(--pt-border);
+  --sf-border-strong: #dccbbd;
+  --sf-text: var(--pt-text);
+  --sf-muted: var(--pt-muted);
+  --sf-accent: var(--pt-text);
+  --sf-accent-soft: #f6ece4;
+  --sf-focus: var(--pt-accent);
+  --sf-radius: 14px;
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.pt-form .sf-label {
+  font-size: 1rem;
+}
+
+.pt-form .sf-grid {
+  gap: 10px;
+}
+
+.pt-form .sf-add {
+  background: #fff;
+}
+
+.pt-alert {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #fdecee;
+  color: #a32942;
+  font-size: 0.95rem;
+}
+
+.pt-alert p {
+  margin: 0;
+}
+
+.pt-alert p + p {
+  margin-top: 4px;
+}
+
+.pt-bottom {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px max(20px, calc((100vw - 560px) / 2 + 20px)) calc(12px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--pt-border);
+  background: color-mix(in srgb, var(--pt-bg) 92%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.pt-bottom .pt-btn--primary {
+  flex: 0 1 60%;
+}
+
+/* Listo */
+.pt--done .pt__inner {
+  position: relative;
+}
+
+.pt-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+.pt-burst span {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--pt-accent);
+  opacity: 0;
+  animation: pt-burst 1.2s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+  animation-delay: calc(var(--i) * 30ms);
+  transform: rotate(calc(var(--i) * 36deg)) translateY(0);
+}
+
+.pt-burst span:nth-child(even) {
+  background: #f7b733;
+}
+
+@keyframes pt-burst {
+  0% { opacity: 1; transform: rotate(calc(var(--i) * 36deg)) translateY(-40px) scale(1); }
+  100% { opacity: 0; transform: rotate(calc(var(--i) * 36deg)) translateY(-150px) scale(0.4); }
+}
+
+@keyframes pt-beat {
+  0%, 100% { transform: scale(1); }
+  12% { transform: scale(1.12); }
+  24% { transform: scale(1); }
+}
+
+@keyframes pt-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pt-heart,
+  .pt-burst span {
+    animation: none;
+  }
+}

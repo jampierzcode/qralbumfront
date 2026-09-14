@@ -111,3 +111,17 @@ Se reemplazó por completo el admin anterior (tabla de clientes con password, da
 ### Verificación
 - `npm run build` OK · `npm test` 22/22.
 - Recorrido completo en Chrome (1440×900 y 390×844) **sin errores de consola**: login → crear cliente → wizard (colección, plantilla con preview animado, datos) → pasos del schema (mensaje, 3 fotos, canción) → vista previa → publicar → QR → editor con autoguardado → listado con filtros → plantillas → colecciones → móvil (inicio, regalos, editor, preview) → `/g/:slug`.
+
+## Fase 6 — Portal privado para que el cliente suba su contenido
+
+- **Admin → "Solicitar contenido"** (menú de cada regalo, editor y paso final del wizard): elige qué completará el cliente (campos `customerEditable` del schema) y el vencimiento; genera y **copia** el link; botón **WhatsApp** con mensaje listo ("Hola Rosa 💛 Para preparar la sorpresa para Andrea necesito…"), estado (activo, enviado, vencido, desactivado), último uso y **desactivar**.
+- **`/upload/:token`** (público, sin Ant Design, `noindex`):
+  1. Bienvenida: "Estamos preparando una sorpresa para Andrea 💛"
+  2. Wizard `1 de N` **generado desde el schema** sólo con los campos permitidos (`portalTitle` / `portalLabel`)
+  3. Autoguardado con indicador; fotos con la misma subida del admin (múltiple, cámara, compresión, progreso, reintento, reordenar con toque largo, reemplazar, eliminar, límites)
+  4. "Enviar contenido": valida lo que falta y lleva al paso correspondiente
+  5. "¡Listo! 💛 Recibimos todo para preparar tu regalo."
+  - Links inválidos, vencidos o desactivados muestran mensajes claros. Al recargar después de enviar se ve la pantalla de listo.
+- El cliente **no ve** admin, precios, otros clientes ni otros regalos.
+
+Verificación (Chrome, admin 1280×860 + celular táctil 390×844): admin genera el link → portal: bienvenida → nombre → mensaje → 4 fotos → canción → enviar → "¡Listo!"; el regalo queda `ready` con 4 fotos, canción y remitente. El portal no descarga código del admin. Sin errores de consola (salvo el 404 esperado del link inválido de prueba).

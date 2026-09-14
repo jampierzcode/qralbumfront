@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Button, Drawer } from "antd";
-import { ArrowLeftOutlined, ArrowRightOutlined, CloseOutlined, EyeOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, ArrowRightOutlined, CloseOutlined, EyeOutlined, SendOutlined } from "@ant-design/icons";
+import { useGiftActions } from "../components/GiftCard.jsx";
 import { BOUND_KEYS, getSteps } from "../../../gift-core/index.js";
 import SchemaForm from "../../editor/SchemaForm.jsx";
 import { useGiftEditor } from "../hooks/useGiftEditor.js";
@@ -36,6 +37,7 @@ export default function GiftSetupPage() {
     window.scrollTo({ top: 0 });
   };
 
+  const actions = useGiftActions({ onChanged: () => editor.reload() });
   const flow = usePublishFlow(editor, {
     onJump: (path) => {
       const key = path.split(".")[0];
@@ -124,6 +126,11 @@ export default function GiftSetupPage() {
                 <Link to={`/admin/gifts/${id}`}>
                   <Button>Abrir editor</Button>
                 </Link>
+                {editor.gift.status !== "published" && (
+                  <Button icon={<SendOutlined />} onClick={() => actions.openRequest(editor.gift)}>
+                    Pedir contenido al cliente
+                  </Button>
+                )}
                 {editor.gift.status === "published" ? (
                   <Button type="primary" size="large" onClick={flow.share}>
                     Link y QR
@@ -146,6 +153,7 @@ export default function GiftSetupPage() {
         </div>
       </Drawer>
       {flow.ui}
+      {actions.dialogs}
     </div>
   );
 }
