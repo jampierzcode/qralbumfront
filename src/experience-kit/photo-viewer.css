@@ -1,0 +1,118 @@
+.xk-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: calc(64px + env(safe-area-inset-top, 0px)) 12px calc(56px + env(safe-area-inset-bottom, 0px));
+  background: rgb(8 6 4 / 0.94);
+  color: #fff;
+  touch-action: pan-y;
+  animation: xk-viewer-in 0.25s ease both;
+}
+
+.xk-viewer__stage {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  animation: xk-viewer-photo 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.xk-viewer__photo {
+  width: auto !important;
+  max-width: 100%;
+  max-height: 100%;
+  background: transparent;
+  border-radius: 6px;
+}
+
+.xk-viewer__photo img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: calc(100dvh - 140px);
+}
+
+.xk-viewer__bar {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top, 0px));
+  right: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.xk-viewer__count {
+  font: 500 0.85rem/1 -apple-system, BlinkMacSystemFont, sans-serif;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+
+.xk-viewer__btn,
+.xk-viewer__nav {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.xk-viewer__btn:focus-visible,
+.xk-viewer__nav:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.xk-viewer__nav {
+  position: absolute;
+  top: 50%;
+  font-size: 2rem;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.xk-viewer__nav--prev {
+  left: 12px;
+}
+
+.xk-viewer__nav--next {
+  right: 12px;
+}
+
+@media (pointer: coarse) {
+  .xk-viewer__nav {
+    display: none;
+  }
+}
+
+.xk-viewer__caption {
+  position: absolute;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  margin: 0;
+  padding: 0 24px;
+  text-align: center;
+  opacity: 0.85;
+}
+
+@keyframes xk-viewer-in {
+  from { opacity: 0; }
+}
+
+@keyframes xk-viewer-photo {
+  from { opacity: 0; transform: scale(0.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xk-viewer,
+  .xk-viewer__stage {
+    animation: none;
+  }
+}

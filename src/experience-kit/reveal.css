@@ -1,0 +1,41 @@
+.xk-reveal {
+  opacity: 0;
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--xk-delay, 0ms),
+    transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) var(--xk-delay, 0ms),
+    filter 1.1s ease var(--xk-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.xk-reveal--up {
+  transform: translate3d(0, 28px, 0);
+}
+
+.xk-reveal--scale {
+  transform: scale(0.94);
+}
+
+.xk-reveal--fade {
+  filter: blur(6px);
+}
+
+.xk-reveal[data-visible] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xk-reveal {
+    transform: none !important;
+    filter: none !important;
+    transition: opacity 0.4s ease;
+  }
+}
+
+[data-reduced-motion] .xk-reveal {
+  transform: none !important;
+  filter: none !important;
+  transition: opacity 0.4s ease;
+}

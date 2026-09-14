@@ -143,3 +143,24 @@ Verificación: build OK · `npm run smoke` 5/5 para yellow-flowers · laboratori
 - `src/engine/audio.test.js`: sin reproducción antes de `unlock()`, suspender/retomar, duck para videos, cambio de pista.
 
 Verificación: `npm test` 26/26 · build OK · en modo producción (backend sirviendo `dist`): `/g/:slug` en 390×844 abre, suena la música tras el toque, `theme-color` de la plantilla, admin y preview en iframe sin errores ni violaciones de CSP.
+
+## Fase 9 — Plantilla "Flores amarillas" completa
+
+`src/templates/yellow-flowers/` = `manifest.js` · `schema.js` · `demo.js` · `Experience.jsx` · `Garden.jsx` · `styles.css`.
+
+**Narrativa (no una galería de archivos):**
+1. **Portada**: girasoles que crecen (tallo → hojas → flor que se abre) y se mecen; polen dorado en canvas; "Para Andrea", título y "con cariño, Diego".
+2. **La carta**: el mensaje aparece palabra por palabra al llegar; firma; **tiempo transcurrido** desde la fecha especial ("2 años, 11 meses y 24 días" o "Faltan N días").
+3. **Recuerdos que florecen**: las fotos como polaroids con girasol, inclinadas y superpuestas; aparecen al hacer scroll; al tocar abren el visor (deslizar / teclado / flechas). Nunca se muestran nombres de archivo.
+4. **Videos** (si hay, p. ej. álbumes legados): se reproducen inline y pausan la música.
+5. **Final**: "Que nunca te falten flores", firma, ramo, pétalos cayendo, "Ver de nuevo" y evento `completed`.
+
+**Composición adaptable (una sola plantilla, sin escalar):** móvil vertical 5 flores y recuerdos en columna escalonada · tablet 2 columnas · escritorio campo de 7 flores y collage de 3 columnas · horizontal corto con texto a la izquierda y jardín a la derecha. Touch y mouse equivalentes (hover sólo en punteros finos).
+
+**Rendimiento:** cada flor ≈ 20 nodos y sólo anima `transform`; partículas en **canvas con tope** (máx. 70, 30 en gama baja) que se pausan fuera de pantalla y con la pestaña oculta; fotos con `srcSet`/`sizes` y placeholder difuminado (nunca originales); tier bajo usa 5 flores y sin pétalos. `prefers-reduced-motion` y modo miniatura muestran el estado final sin animaciones. Fuente Fraunces cargada sólo con esta plantilla.
+
+**Eliminado del original** (`PageClientesV2`): ~150 nodos DOM sin CSS, CSS roto, partículas DOM ilimitadas, textos hardcodeados, galería de archivos con buscador por nombre de archivo, antd en el visor.
+
+**Experience-kit** nuevo (reutilizado por Love Letter): `Reveal` + `useInView`, `Photo`, `PhotoViewer`, `Particles` (pollen, petals, hearts, sparkles).
+
+Verificación: `npm run smoke` 5/5 · capturas revisadas en 390×844, 1440×900 y 844×390 · visor probado con teclado (escritorio) y deslizando (móvil) · sin errores de consola.
