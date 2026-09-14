@@ -55,3 +55,31 @@ Verificación: build OK; admin actual probado en Chrome (login, dashboard, clien
 - `npm run build` OK · `npm test` (Vitest) 15/15 de `gift-core`.
 - Chrome 390×844 (touch) y 1440×900: `/g/:slug` real creado vía API → pantalla de apertura → experiencia; **sin errores de consola**, **sin audio antes del toque**, música activa después, **no se descarga el admin**. `/demo/yellow-flowers` OK. `/c/<uuid>` y `/<uuid>` redirigen a `/g/:slug`. Slug inexistente muestra mensaje humano.
 - Transitorio: el admin antiguo sigue funcionando; los clientes creados con él después de la migración no tienen regalo nuevo (se reemplaza en la Fase 5).
+
+## Fase 4 — Sistema de schemas
+
+### El mismo schema se usa para
+1. **Generar el editor** → `src/editor/SchemaForm.jsx`
+2. **Validar en el frontend** → `validateContent(schema, values, { mode })` de `gift-core`
+3. **Validar en el backend** → el API importa el mismo `schema.js` de la plantilla y el mismo `gift-core`
+4. **Preparar los datos de la plantilla** → `prepareContent(schema, gift, media)`
+
+### DSL (`gift-core/fields.js`)
+Tipos: `text`, `textarea`, `date`, `number`, `select`, `toggle`, `color`, `image`, `images`, `video`, `audio`, `group`, `list`.
+Propiedades de cada campo: `label`, `description`, `placeholder`, `required`, `min`, `max`, `default`, `validate(value, { values })`, `editorStep`, `customerEditable`, `portalLabel`, `portalDescription` (+ `options`, `rows`, `fields`, `item`, `itemLabel` según el tipo).
+Modos de validación: `draft` (forma y máximos, para autoguardado) y `publish` (además obligatorios y mínimos). Opción `keys` para limitar campos (portal) y `assets` para verificar que la media exista y sea del tipo correcto.
+
+### Editor generado (`src/editor/`)
+- `SchemaForm`: pasos → campos; vista `admin` o `customer` (usa `portalLabel`); errores por ruta (`chapters.2.title`); sin Ant Design (lo reutiliza el portal).
+- Controles: texto con contador, textarea autoajustable, fecha, número, select nativo (mejor en móvil), switch, color, grupos y listas (agregar, eliminar, subir/bajar).
+- **Fotos (`ImagesField`)**: selección múltiple, **cámara** en dispositivos táctiles, **preview inmediato**, **compresión en el navegador** (máx. 2560px JPEG), **progreso individual**, **reintento**, **reordenar** (mantener presionado en touch · arrastrar con mouse · teclado), **reemplazar**, **eliminar**, contador `7/12`, avisos claros al superar el máximo, primera foto marcada como portada. Hasta 3 subidas simultáneas.
+- **Archivo único (`MediaField`)**: foto, canción o video con preview/reproductor, progreso, reintento, cambiar y quitar.
+- Inputs de 16px (evita el zoom de iOS) y áreas táctiles ≥ 44px.
+- **Playground de desarrollo** `/dev/schema/:templateId` (sólo `npm run dev`): editor generado + validación de publicación + valor saneado en vivo, con subida simulada.
+
+### Tests de contrato de plantillas (`src/templates/templates.contract.test.js`)
+Se aplican **solos** a cada carpeta nueva: registro, manifest completo, tipos y etiquetas del schema, pasos para el comprador, **el demo pasa la validación de publicación**, `prepareContent` resuelve toda la media, archivos obligatorios presentes.
+
+### Verificación
+- `npm test`: 22/22 · build OK.
+- Chrome 390×844 y 1280×900 en el playground: contador y error de máximo, subida múltiple con progreso, error simulado con "Reintentar", eliminar, reordenar con mouse (orden verificado en el valor), vista comprador limitada a campos editables. Sin errores de consola.

@@ -47,7 +47,7 @@ export default defineSchema({
     }),
     importantDate: f.date({
       label: "Fecha especial",
-      portalLabel: "¿Una fecha importante? (opcional)",
+      portalLabel: "¿Una fecha importante?",
       description: "El día que se conocieron, su aniversario…",
       editorStep: "message",
     }),
@@ -62,7 +62,7 @@ export default defineSchema({
     }),
     song: f.audio({
       label: "Canción",
-      portalLabel: "Canción (opcional)",
+      portalLabel: "Canción",
       description: "Sonará al abrir el regalo.",
       editorStep: "music",
     }),
