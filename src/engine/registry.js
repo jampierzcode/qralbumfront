@@ -4,6 +4,8 @@
 import { lazy } from "react";
 
 const modules = import.meta.glob("../templates/*/index.js", { eager: true });
+// Miniatura opcional generada con `npm run templates:thumbnails` (se detecta sola).
+const thumbnails = import.meta.glob("../templates/*/thumbnail.webp", { eager: true, query: "?url", import: "default" });
 
 const REQUIRED = ["manifest", "schema", "demo", "loadExperience"];
 
@@ -21,7 +23,8 @@ function register() {
     if (definition.manifest.id !== folder) {
       throw new Error(`La plantilla "${folder}" tiene manifest.id "${definition.manifest.id}". Deben coincidir.`);
     }
-    map.set(folder, Object.freeze({ ...definition, Experience: lazy(definition.loadExperience) }));
+    const thumbnail = definition.thumbnail || thumbnails[`../templates/${folder}/thumbnail.webp`] || null;
+    map.set(folder, Object.freeze({ ...definition, thumbnail, Experience: lazy(definition.loadExperience) }));
   }
   return map;
 }

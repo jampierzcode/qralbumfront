@@ -125,3 +125,13 @@ Se reemplazó por completo el admin anterior (tabla de clientes con password, da
 - El cliente **no ve** admin, precios, otros clientes ni otros regalos.
 
 Verificación (Chrome, admin 1280×860 + celular táctil 390×844): admin genera el link → portal: bienvenida → nombre → mensaje → 4 fotos → canción → enviar → "¡Listo!"; el regalo queda `ready` con 4 fotos, canción y remitente. El portal no descarga código del admin. Sin errores de consola (salvo el 404 esperado del link inválido de prueba).
+
+## Fase 7 — Preview responsive y herramientas
+
+- **Laboratorio** `/admin/lab/:templateId` (botón "Responsive" en Plantillas): el **mismo regalo** a la vez en iPhone mini 375×812, iPhone 390×844, horizontal 844×390, iPad 768×1024 y Escritorio 1440×900. Fuente: contenido demo o **un regalo real** (por id). Modo "Uno" con selector de dispositivo, pantalla de apertura on/off y "Reiniciar todos".
+- Cada marco es un iframe con el **viewport real**: la plantilla adapta su composición con media queries; no se escala la composición, sólo el marco.
+- **`npm run smoke`** (`scripts/smoke.mjs`, playwright-core con Chrome del sistema): recorre cada plantilla (y opcionalmente `SMOKE_SLUG`) en los 5 tamaños; falla si hay errores de consola, excepciones, **audio antes del gesto**, **scroll horizontal** o no encuentra cómo abrir la experiencia (`.gs-gate__button` o `[data-gift-open]`). Capturas en `artifacts/smoke/` (fuera de git).
+- **`npm run templates:thumbnails`**: genera `src/templates/<id>/thumbnail.webp` desde el render real del demo. El registro la detecta sola (sin editar `index.js`).
+- `npm run demo:media`: regenera los medios de demo propios.
+
+Verificación: build OK · `npm run smoke` 5/5 para yellow-flowers · laboratorio en Chrome con 5 iframes y sin errores.

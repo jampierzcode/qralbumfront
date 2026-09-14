@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { App, Button, Form, Input, Modal, Segmented, Switch, Tooltip } from "antd";
-import { EditOutlined, ExperimentOutlined, PlayCircleOutlined } from "@ant-design/icons";
+import { Link } from "react-router-dom";
+import { ColumnWidthOutlined, EditOutlined, ExperimentOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import { adminApi, errorMessage } from "../api.js";
 import { useRequest } from "../hooks/useRequest.js";
 import { occasionLabel } from "../lib/gifts.js";
@@ -153,6 +154,13 @@ export default function TemplatesPage() {
                 <Button icon={<EditOutlined />} onClick={() => setEditing(t)}>
                   Editar
                 </Button>
+                <Tooltip title="Ver en todos los tamaños de pantalla">
+                  <Link to={`/admin/lab/${t.templateId}`}>
+                    <Button icon={<ColumnWidthOutlined />} disabled={!t.available}>
+                      Responsive
+                    </Button>
+                  </Link>
+                </Tooltip>
                 {import.meta.env.DEV && (
                   <Tooltip title="Editor generado desde el schema (sólo desarrollo)">
                     <Button icon={<ExperimentOutlined />} href={`/dev/schema/${t.templateId}`} target="_blank" aria-label="Schema playground" />

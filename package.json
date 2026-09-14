@@ -21,7 +21,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "smoke": "node scripts/smoke.mjs",
+    "templates:thumbnails": "node scripts/template-thumbnails.mjs",
+    "demo:media": "node scripts/generate-demo-media.mjs"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "6.1.1",
