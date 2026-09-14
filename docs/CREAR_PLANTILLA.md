@@ -43,6 +43,7 @@ export default defineManifest({
   supportsMusic: true,
   soundtrack: "song",                  // campo de audio que controla el shell
   gate: "shell",                       // "shell" = pantalla "toca para abrir" común · "template" = la plantilla llama open()
+  collectsResponses: [],               // ["rsvp"] si los visitantes confirman asistencia
   gateCopy: { eyebrow: "Tienes un regalo", title: "Para {recipientName}", fallbackTitle: "Para ti", button: "Toca para abrir" },
   theme: { background: "#0b0b0f", foreground: "#f6f3ee", accent: "#f5c451" },
 });
@@ -109,6 +110,7 @@ Recibe **sólo** estas props:
 | `onEvent` | `onEvent("completed")` cuando se llega al final |
 | `env` | `{ tier: "low"|"medium"|"high", reducedMotion, isTouch }` |
 | `opened` / `open` | Sólo con `gate: "template"`: llama `open()` **dentro del gesto** del usuario (desbloquea la música) y marca el elemento con `data-gift-open` |
+| `respond` | `respond("rsvp", { name, answer: "yes"\|"maybe"\|"no", guests, message })` → Promise. Sólo si el manifest declara `collectsResponses: ["rsvp"]`. En preview/demo se simula sin guardar. El admin ve las respuestas en el editor → **Confirmaciones**. |
 
 Reglas:
 - **No** hacer fetch, **no** usar el router, **no** lógica de admin.
@@ -118,7 +120,7 @@ Reglas:
 - Usar `100dvh`/`100svh` y `var(--safe-top)` / `var(--safe-bottom)`.
 - Importar las fuentes dentro de `Experience.jsx` (se cargan sólo con la plantilla).
 
-Bloques reutilizables en `src/experience-kit/`: `Reveal`/`useInView`, `Photo`, `PhotoViewer`, `Particles` (`pollen`, `petals`, `hearts`, `sparkles`), `MusicToggle` (lo pone el shell). Se agrega algo al kit sólo cuando lo usan 2+ plantillas. Motion (`motion/react`) está disponible.
+Bloques reutilizables en `src/experience-kit/`: `Reveal`/`useInView`, `Photo`, `PhotoViewer`, `Particles` (`pollen`, `petals`, `hearts`, `sparkles`, `confetti`), `ConfettiBurst`, `Countdown`/`useCountdown`, `useAudioState` (reproductores propios: `audio.getPosition()`, `audio.seek()`), `MusicToggle` (lo pone el shell). Se agrega algo al kit sólo cuando lo usan 2+ plantillas. Motion (`motion/react`) está disponible.
 
 ## 7. Probar
 

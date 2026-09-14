@@ -1,13 +1,14 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Dropdown, Segmented, Select } from "antd";
-import { ArrowLeftOutlined, EyeOutlined, MoreOutlined, QrcodeOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, EyeOutlined, MoreOutlined, QrcodeOutlined, TeamOutlined } from "@ant-design/icons";
 import SchemaForm from "../../editor/SchemaForm.jsx";
 import { useGiftEditor } from "../hooks/useGiftEditor.js";
 import { giftTitle, occasionLabel, templateName } from "../lib/gifts.js";
 import { EmptyState, StatusBadge } from "../components/ui.jsx";
 import { PageSkeleton } from "../components/Skeletons.jsx";
 import DevicePreview from "../components/DevicePreview.jsx";
+import ResponsesDrawer from "../components/ResponsesDrawer.jsx";
 import { CustomerPicker } from "../components/customers.jsx";
 import { useGiftActions } from "../components/GiftCard.jsx";
 import { SaveIndicator, scrollToField, usePublishFlow } from "../components/PublishFlow.jsx";
@@ -18,6 +19,7 @@ export default function GiftEditorPage() {
   const editor = useGiftEditor(id);
   const [tab, setTab] = useState("edit");
   const [device, setDevice] = useState("mobile");
+  const [responsesOpen, setResponsesOpen] = useState(false);
   const formRef = useRef(null);
 
   const flow = usePublishFlow(editor, {
@@ -52,7 +54,11 @@ export default function GiftEditorPage() {
 
   const { gift, template } = editor;
   const published = gift.status === "published";
-  const menu = actions.menuFor(gift).filter((item) => item.key !== "edit");
+  const collectsRsvp = template?.manifest.collectsResponses?.includes("rsvp");
+  const menu = [
+    ...(collectsRsvp ? [{ key: "responses", icon: <TeamOutlined />, label: "Confirmaciones", onClick: () => setResponsesOpen(true) }] : []),
+    ...actions.menuFor(gift).filter((item) => item.key !== "edit"),
+  ];
 
   if (!template) {
     return (
@@ -73,6 +79,11 @@ export default function GiftEditorPage() {
           <StatusBadge status={gift.status} />
         </div>
         <SaveIndicator save={editor.save} />
+        {collectsRsvp && (
+          <Button className="adm-editor__desktop-only" icon={<TeamOutlined />} onClick={() => setResponsesOpen(true)}>
+            Confirmaciones
+          </Button>
+        )}
         <Button className="adm-editor__desktop-only" icon={<EyeOutlined />} onClick={() => editor.flush().then(() => navigate(`/admin/gifts/${id}/preview`))}>
           Preview
         </Button>
@@ -132,6 +143,7 @@ export default function GiftEditorPage() {
         </Button>
       )}
       {flow.ui}
+      {collectsRsvp && <ResponsesDrawer gift={gift} open={responsesOpen} onClose={() => setResponsesOpen(false)} />}
       {actions.dialogs}
     </div>
   );

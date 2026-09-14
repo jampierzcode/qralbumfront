@@ -183,3 +183,25 @@ Verificación: `npm run smoke` 5/5 · capturas revisadas en 390×844, 1440×900 
 - `docs/CREAR_PLANTILLA.md`: guía paso a paso.
 
 Verificación: `npm test` 32/32 (6 contratos nuevos automáticos) · `npm run smoke` 10/10 (2 plantillas × 5 tamaños) · secuencia del sobre revisada cuadro a cuadro en 390×844 · música activa tras tocar el sobre · sin errores de consola.
+
+## Plantillas de cumpleaños + confirmación de asistencia
+
+### Arreglos del admin
+- Galería de Plantillas: las tarjetas podían montarse unas sobre otras; ahora encogen y los botones pasan a otra línea.
+- Portadas de colección sin imagen: plantillas apiladas como tarjetas; colección vacía muestra "Próximamente".
+
+### Cambio del core (documentado)
+Las invitaciones necesitan que el invitado **responda** (confirmar asistencia) y eso no se podía expresar con `onEvent`:
+- `manifest.collectsResponses` + prop `respond(type, payload)` para plantillas. `GiftPage` lo envía al API; en preview/demo se simula.
+- `AudioController.getPosition()` / `seek()` para reproductores dentro de una plantilla.
+- Experience-kit: `Countdown`/`useCountdown`, `ConfettiBurst`, partículas `confetti` multicolor, `useAudioState`.
+- Admin: botón **Confirmaciones** en el editor (resumen Van / Tal vez / No van, lista, copiar lista, eliminar) para plantillas que reciben respuestas.
+
+### `birthday` — Feliz cumpleaños (felicitación)
+Portada con foto o video + botón de play (apertura) · "Hoy celebramos tu vida" con polaroid y frase manuscrita · Momentos con pestañas **Fotos / Mensajes de amigos** · cuenta regresiva a su cumpleaños · "Esta canción es para ti" con **reproductor propio** y nota "Te queremos" · final con globos, confeti, Ver todas las fotos / Leer mensajes / Compartir. Estilos **Clásico**, **Moderno (neón)** y **Minimalista**.
+
+### `kids-party` — Súper cumpleaños (invitación infantil)
+Temas **Superhéroes, Princesas, Dinosaurios, Espacio** (textos propios de cada tema y escenario SVG fijo detrás). Portada con la foto del niño en marco de cómic y "¡MATEO CUMPLE 6!" · mensaje en globos de diálogo · detalles de la misión (fecha, hora, lugar) · mapa con **Google Maps / Waze** · cuenta regresiva · **¿Vienes?**: nombre, cuántas personas, Sí / Tal vez / No (queda recordado en ese celular y se puede cambiar) · álbum · ¡Gracias! con WhatsApp para dudas.
+Límite honesto: no hay ilustraciones de personajes como las del mockup (se usa la foto real del niño); se pueden sumar como fotos de portada si se consiguen.
+
+Verificación: `npm test` 44/44 · `npm run smoke` 20/20 (4 plantillas × 5 tamaños) · e2e real: invitación publicada → invitado confirma desde el celular (3 personas) → recarga recuerda la confirmación → admin la ve en Confirmaciones. Sin errores de consola.
