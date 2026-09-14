@@ -35,7 +35,21 @@ export default function GiftPage() {
     document.title = name ? `Un regalo para ${name}` : templateName || "Tienes un regalo";
   }, [state]);
 
-  const onEvent = useCallback((type) => sendGiftEvent(slug, type), [slug]);
+  // Cada tipo de evento se registra una vez por sesión del navegador (recargar no duplica aperturas).
+  const onEvent = useCallback(
+    (type) => {
+      if (!["opened", "completed", "music_started"].includes(type)) return;
+      const key = `gift-event:${slug}:${type}`;
+      try {
+        if (sessionStorage.getItem(key)) return;
+        sessionStorage.setItem(key, "1");
+      } catch {
+        /* modo privado: se envía igual */
+      }
+      sendGiftEvent(slug, type);
+    },
+    [slug]
+  );
 
   if (state.status === "loading") return <ShellLoading />;
   if (state.status === "error") {

@@ -91,6 +91,33 @@ export default function ExperienceShell({ manifest, schema, content, media, mode
     emit("opened");
   }, [audio, emit, env.isTouch, manifest.preferFullscreen, mode]);
 
+  // Evento único cuando la música empieza de verdad.
+  useEffect(() => {
+    let reported = false;
+    return audio.subscribe(() => {
+      if (!reported && audio.getState().playing) {
+        reported = true;
+        emit("music_started");
+      }
+    });
+  }, [audio, emit]);
+
+  // Color de la barra del navegador en móviles acorde a la plantilla.
+  useEffect(() => {
+    if (mode === "preview" || mode === "thumbnail") return;
+    let meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "theme-color";
+      document.head.appendChild(meta);
+    }
+    const previous = meta.content;
+    meta.content = manifest.theme?.background || "#0b0b0f";
+    return () => {
+      meta.content = previous;
+    };
+  }, [manifest, mode]);
+
   // Pausa la música cuando la pestaña se oculta y la retoma al volver.
   useEffect(() => {
     const onVisibility = () => (document.hidden ? audio.suspend() : audio.resume());

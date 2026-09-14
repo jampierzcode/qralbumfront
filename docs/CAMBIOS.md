@@ -135,3 +135,11 @@ Verificación (Chrome, admin 1280×860 + celular táctil 390×844): admin genera
 - `npm run demo:media`: regenera los medios de demo propios.
 
 Verificación: build OK · `npm run smoke` 5/5 para yellow-flowers · laboratorio en Chrome con 5 iframes y sin errores.
+
+## Fase 8 — ExperienceShell completo
+
+- **Responsabilidades del shell** (toda experiencia pública pasa por él): carga (skeleton propio), error boundary con reintento, **"toca para abrir"** (texto y colores desde el manifest, o delegado a la plantilla con `gate: "template"` + `open()`), **desbloqueo de audio en el gesto** (nunca autoplay), `MusicToggle` flotante con safe-area, **pausa al ocultar la pestaña** y retoma al volver, `prefers-reduced-motion` (`env.reducedMotion` + `data-reduced-motion`), `100dvh` y variables `--safe-*`, **tier de rendimiento** (`env.tier`), pantalla completa opcional (`preferFullscreen`, sólo táctil y en vivo), color de la barra del navegador (`theme-color`) según la plantilla.
+- **Eventos**: `opened`, `music_started` (cuando realmente suena) y `completed` (lo emite la plantilla). En `/g/:slug` se registran **una vez por sesión** (recargar no infla las aperturas). En preview/demo no se registra nada.
+- `src/engine/audio.test.js`: sin reproducción antes de `unlock()`, suspender/retomar, duck para videos, cambio de pista.
+
+Verificación: `npm test` 26/26 · build OK · en modo producción (backend sirviendo `dist`): `/g/:slug` en 390×844 abre, suena la música tras el toque, `theme-color` de la plantilla, admin y preview en iframe sin errores ni violaciones de CSP.
