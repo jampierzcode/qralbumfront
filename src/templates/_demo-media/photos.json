@@ -1,0 +1,42 @@
+{
+  "sunset": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAQBQCdASoYAB4APulcp02pJSOiN/VYASAdCWgAnTM0QPrMv/0HTLIryJfyGqAUisqYAP7u01aR3P6OEzNSu26FZyBjDJSAlVpPyzFCHbkM68tbGMKEvH+AT2vUK03Nx0Un+WErQ72/SGG31Ya6U36H6EqwAAAA"
+  },
+  "sunflowers": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRu4AAABXRUJQVlA4IOIAAABwBQCdASoYAB4APu1or1CppaQiqAqpMB2JbACsL3cVciVNZt0MwDZmvcarw9kmosFoBq0AAP7eb1VaqLcMUbdEPKtQi+/vz/SD81AP588U9y9HTLTOXt3GVABia2guSiL0lsD+pE5RthxFfbYuZWMZ96Ec6iTIV+tLWOsz3u0d9vNv8HnhBsFsQG55vfgYcL8mbLh84gEsrU+a/4lXPL/GzaMT9KTr6q20kdJjzcaskO+m/XVvRb2VZnzfthzNdvuavSPEdUT9R+LfudnogeSqLH4OIxbDTYy4+G26SB6UrOgA"
+  },
+  "city-lights": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRhQBAABXRUJQVlA4IAgBAADwBQCdASoYAB4APu1sqlEppaOiqAqpMB2JQBbdJ3QWQYF2tIRiUAJ08esqr/upJZ8haJcfdax1pAD+wNfzDVMLLItyvOO9raQLEhJdQ7Qxma0gzzoNn6KcjPh34mMZZW30bAKYTrVJD9ePczFJSWYEafjKrE4V6lFZOXmVzT77PyGBzDB2Rw9IN+W22N/pdb5rS9PisFCUKdSzNjqBX+9UeAeW8xCM3beA7Mhatk/tgjvdarJRucOaKlGsQbEis0wSDPgXVB3Em1OL02QZ3FjRjaN0VoL0c/zgAeWV/+NYR6jH/8btCnLfuO7m927TuTG9FbxW34ZewdWZXrHkhVDwIAsa2w26AAA="
+  },
+  "coffee": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAABQBQCdASoYAB4APu1kq06ppaQiKA1RMB2JYgAEPV8ZAyk+MZ+SMMCCREWFcIhWEmeOwqQA/nDa0wVqmotARQICT/Hx0OP+mirLydv6djDQmZefPXg9DDf+96WVI/1bSx35/p7BS2B4yIA0rOjWL6bpQZlHOYaka77cUMsHbji4an0EVOPWbRNGj8PUMog8jbwB0kO467wGePDQbK9AAAAA"
+  },
+  "mountains": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAABwBQCdASoYAB4APu1gpk6ppSMiMBgMATAdiWYAeDIGv5kiV8wpbjkaFGt2SEAmFhEp/IOAAP7vuRN4PzFXU/5O46umpV/4Mj4ycsH4Wnsf+Rr8n7ghzEpfrGFOPt7QzDdzof0jf02NxVSvTzahDVd/SLW8079V+ecNSKWJ7ct4C2izcAHdoTT9QAA="
+  },
+  "stars": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAAAQBACdASoYAB4APu1gqE4ppSOjMBgMATAdiWMArAAXQdYR4/t5G/1sIAD+8Dy7XVIfyMaQsaXRlpUYZVGGemdMM5F8aYwWAAA="
+  },
+  "blossoms": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAQBACdASoYAB4APu1wsFKppiSiqAgBMB2JTQ4K2/E2BWCRZ+Kkb8luAAD+7vEdpBYGnEkgTKTDuyc3xVyJ+H7JZXH62dhCmOQT6GxsNVYb+H/XrY1SU8CiVazfywjstqkDfd0DC92cu1Jpwdz/GZs2S0ugKjmWmgBUKBgEefSAAA=="
+  },
+  "beach": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAACwAwCdASoYAB4APu1iqE2ppaOiMAgBMB2JQBdjXAALM8FPlDHkAADxaDmGVuOl43k7pPs8JhyH/xv75Ojx7oNycMCmmztQOBxGyI1Do6QwiDLeRCrQQpVyBvWUstZLpVZcAAAA"
+  }
+}

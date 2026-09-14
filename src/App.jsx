@@ -1,55 +1,34 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import PrivateRoute from "./components/PrivateRoute";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import "@ant-design/v5-patch-for-react-19";
-import LoginPage from "./pages/LoginPage";
-import Dashboard from "./pages/Dashboard";
-import ClientesPage from "./pages/ClientesPage";
-import PublicPage from "./pages/PublicPage";
-import Layouts from "./components/Layouts";
-import PublicAlbumPage from "./pages/PageClientesV2";
+import { lazy, Suspense } from "react";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 
-function App() {
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
+const GiftPage = lazy(() => import("./public/GiftPage.jsx"));
+const DemoPage = lazy(() => import("./public/DemoPage.jsx"));
+const FramePage = lazy(() => import("./public/FramePage.jsx"));
+const LegacyRedirect = lazy(() => import("./public/LegacyRedirect.jsx"));
+const AdminApp = lazy(() => import("./admin/AdminApp.jsx"));
 
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Layouts>
-                  <Dashboard />
-                </Layouts>
-              </PrivateRoute>
-            }
-          >
-            <Route path="dashboard" element={<Dashboard />} />
-          </Route>
+const LEGACY_UUID = /^\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/?$/i;
 
-          <Route
-            path="/clientes"
-            element={
-              <PrivateRoute roles={["superadmin", "admin"]}>
-                <Layouts>
-                  <ClientesPage />
-                </Layouts>
-              </PrivateRoute>
-            }
-          />
-
-          <Route path="/:uuid" element={<PublicPage />} />
-          <Route path="/c/:uuid" element={<PublicAlbumPage />} />
-
-          <Route path="*" element={<h2>404 no encontrado</h2>} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  );
+// Links antiguos /<uuid> sin cargar el admin.
+function RootSwitch() {
+  const { pathname } = useLocation();
+  const legacy = pathname.match(LEGACY_UUID);
+  if (legacy) return <LegacyRedirect uuid={legacy[1]} />;
+  return <AdminApp />;
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/g/:slug" element={<GiftPage />} />
+          <Route path="/demo/:templateId" element={<DemoPage />} />
+          <Route path="/frame" element={<FramePage />} />
+          <Route path="/c/:uuid" element={<LegacyRedirect />} />
+          <Route path="/*" element={<RootSwitch />} />
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
+  );
+}

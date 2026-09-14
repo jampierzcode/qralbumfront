@@ -1,0 +1,62 @@
+.xk-music {
+  position: fixed;
+  top: calc(14px + env(safe-area-inset-top, 0px));
+  right: calc(14px + env(safe-area-inset-right, 0px));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  min-width: 40px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--gift-fg, #fff) 22%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gift-bg, #000) 55%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--gift-fg, #fff);
+  font: 500 0.8rem/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.2s ease;
+}
+
+.xk-music:focus-visible {
+  outline: 2px solid var(--gift-accent, #f5c451);
+  outline-offset: 3px;
+}
+
+.xk-music__bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+
+.xk-music__bars i {
+  width: 3px;
+  height: 4px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.8;
+}
+
+.xk-music.is-playing .xk-music__bars i {
+  animation: xk-music-bar 1s ease-in-out infinite;
+}
+
+.xk-music.is-playing .xk-music__bars i:nth-child(2) { animation-delay: -0.3s; }
+.xk-music.is-playing .xk-music__bars i:nth-child(3) { animation-delay: -0.6s; }
+.xk-music.is-playing .xk-music__bars i:nth-child(4) { animation-delay: -0.15s; }
+
+@keyframes xk-music-bar {
+  0%, 100% { height: 4px; }
+  50% { height: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xk-music.is-playing .xk-music__bars i {
+    animation: none;
+    height: 10px;
+  }
+}

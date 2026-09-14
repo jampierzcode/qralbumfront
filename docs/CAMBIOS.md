@@ -24,3 +24,34 @@ Verificación (Chrome, 390×844): login → `/clientes` → recarga mantiene la 
 - Scripts: `npm run dev` (puerto 3000), `npm run build`, `npm run preview`, `npm test` (Vitest).
 
 Verificación: build OK; admin actual probado en Chrome (login, dashboard, clientes) sin errores de consola.
+
+## Fase 3 — Motor multiplantilla
+
+### Qué cambió
+- **`gift-core/`** (ESM puro, sin dependencias, compartido con el backend): `defineManifest`, `defineSchema`, DSL de campos `f.*`, `prepareContent` (defaults, nombres enlazados, resolución de media a `{ src, srcSet, width, height, placeholder }` sin nombres de archivo), `validateContent`, `collectAssetIds`.
+- **`src/engine/`**
+  - `registry.js`: registra **solas** las carpetas `src/templates/<id>/index.js` (`import.meta.glob`); ignora carpetas `_*`; valida que exporten `manifest`, `schema`, `demo`, `loadExperience` y que `manifest.id` coincida con la carpeta. Cada experiencia se carga diferida (chunk propio).
+  - `TemplateRenderer.jsx`: `templateId` → registro → `prepareContent(schema)` → `ExperienceShell` → `Experience`.
+  - `ExperienceShell.jsx`: carga/errores (error boundary), pantalla **"toca para abrir"** configurable por manifest (`gateCopy`, `theme`) o delegada a la plantilla (`gate: "template"` + `open()`), audio desbloqueado en el gesto (nunca autoplay), `MusicToggle`, pausa al ocultar pestaña, `data-tier`, `data-reduced-motion`, safe-area y `100dvh`, eventos (`opened`), pantalla completa opcional.
+  - `audio.js` / `useAudio.js`: controlador de música (unlock, toggle, duck para videos, suspend/resume, cambio de pista en vivo).
+  - `environment.js`: tier `low|medium|high`, reduced motion, touch, ahorro de datos.
+- **Contrato de una plantilla** (lo único que recibe `Experience`): `content` (preparado), `media`, `mode` (`live|preview|demo|thumbnail`), `audio`, `onEvent`, `env`, `opened`, `open`. Una plantilla no hace fetch, no usa el router ni conoce el admin.
+- **Rutas públicas** (sin Ant Design, carga diferida):
+  - `/g/:slug` → `GiftPage` (única ruta de regalos; `document.title` con el nombre).
+  - `/demo/:templateId` → demo con contenido de ejemplo.
+  - `/frame` → destino del iframe de preview (recibe el regalo por `postMessage` del mismo origen).
+  - `/c/:uuid` y `/:uuid` → redirección de links y QR legados.
+- El admin anterior pasa a `src/admin/AdminApp.jsx` (lazy): antd, su reset CSS y Tailwind sólo se descargan en el admin.
+- Plantilla `yellow-flowers` registrada: `manifest`, `schema` (definitivo), `demo` y una `Experience` inicial (la completa llega en la Fase 9).
+- `src/templates/_demo-media/`: fotos ilustradas y melodía de caja musical **propias** (sin derechos de terceros), generadas por `scripts/generate-demo-media.mjs`.
+- Eliminados: `PublicPage.jsx`, `PageClientesV2.jsx` (reemplazados por la plantilla), `react-slick`, `slick-carousel`.
+
+### Tamaño de la experiencia pública
+| | Antes (CRA) | Ahora |
+|---|---|---|
+| JS al abrir un regalo | 458 KB gzip (todo el admin incluido) | ~80 KB gzip (React + router + motor + plantilla) |
+
+### Verificación
+- `npm run build` OK · `npm test` (Vitest) 15/15 de `gift-core`.
+- Chrome 390×844 (touch) y 1440×900: `/g/:slug` real creado vía API → pantalla de apertura → experiencia; **sin errores de consola**, **sin audio antes del toque**, música activa después, **no se descarga el admin**. `/demo/yellow-flowers` OK. `/c/<uuid>` y `/<uuid>` redirigen a `/g/:slug`. Slug inexistente muestra mensaje humano.
+- Transitorio: el admin antiguo sigue funcionando; los clientes creados con él después de la migración no tienen regalo nuevo (se reemplaza en la Fase 5).
