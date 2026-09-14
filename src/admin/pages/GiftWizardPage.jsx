@@ -7,7 +7,7 @@ import { getTemplate } from "../../engine/registry.js";
 import { adminApi, errorMessage } from "../api.js";
 import { useRequest } from "../hooks/useRequest.js";
 import { occasionLabel } from "../lib/gifts.js";
-import { EmptyState, PageHeader, TemplateThumb } from "../components/ui.jsx";
+import { CollectionCover, EmptyState, PageHeader } from "../components/ui.jsx";
 import { Skel } from "../components/Skeletons.jsx";
 import { CustomerPicker } from "../components/customers.jsx";
 import { TemplateChoiceCard, TemplateDemoModal } from "../components/TemplateCards.jsx";
@@ -33,16 +33,6 @@ export function WizardProgress({ current, total, label }) {
         Paso {current} de {total}
         {label ? ` · ${label}` : ""}
       </span>
-    </div>
-  );
-}
-
-function CollectionCover({ collection }) {
-  const ids = collection.templateIds.slice(0, 4);
-  if (collection.coverUrl) return <img src={collection.coverUrl} alt="" loading="lazy" />;
-  return (
-    <div className="adm-mosaic">
-      {ids.length ? ids.map((id) => <div key={id}><TemplateThumb templateId={id} /></div>) : <div style={{ background: "var(--adm-hover)" }} />}
     </div>
   );
 }
@@ -152,7 +142,7 @@ export default function GiftWizardPage() {
           {templatesInStep.length === 0 && !catalog.loading ? (
             <EmptyState title="Esta colección aún no tiene plantillas" text="Asígnale plantillas desde Colecciones o elige otra ocasión." action={<Button onClick={() => go("collection")}>Elegir otra colección</Button>} />
           ) : (
-            <div className="adm-choice-grid">
+            <div className="adm-choice-grid adm-choice-grid--wide">
               {templatesInStep.map((l) => (
                 <TemplateChoiceCard
                   key={l.templateId}

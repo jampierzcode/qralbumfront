@@ -41,6 +41,33 @@ export function EmptyState({ icon = "♡", title, text, action }) {
   );
 }
 
+/** Portada de colección: imagen subida o hasta 3 plantillas apiladas como tarjetas. */
+export function CollectionCover({ collection, emptyLabel = "Próximamente" }) {
+  if (collection.coverUrl) return <img src={collection.coverUrl} alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />;
+  const ids = collection.templateIds.slice(0, 3);
+  const layouts = {
+    1: [{}],
+    2: [{ "--rot": "-5deg", "--dx": "-9%" }, { "--rot": "5deg", "--dx": "9%", "--dy": "4%" }],
+    3: [{ "--rot": "-7deg", "--dx": "-14%", "--dy": "3%" }, { "--dy": "-2%", zIndex: 2 }, { "--rot": "7deg", "--dx": "14%", "--dy": "5%" }],
+  };
+  return (
+    <div className={`adm-stack adm-stack--${ids.length}`} aria-hidden="true">
+      {ids.length === 0 ? (
+        <div className="adm-stack__empty">
+          <span>＋</span>
+          {emptyLabel}
+        </div>
+      ) : (
+        ids.map((id, i) => (
+          <div key={id} className="adm-stack__card" style={layouts[ids.length][i]}>
+            <TemplateThumb templateId={id} />
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
+
 /** Miniatura de una plantilla: imagen propia o composición con su paleta. */
 export function TemplateThumb({ templateId, size, className = "" }) {
   const template = getTemplate(templateId);

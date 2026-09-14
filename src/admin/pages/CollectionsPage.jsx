@@ -4,24 +4,14 @@ import { CameraOutlined, PlusOutlined } from "@ant-design/icons";
 import { adminApi, errorMessage } from "../api.js";
 import { useRequest } from "../hooks/useRequest.js";
 import { plural } from "../lib/format.js";
-import { EmptyState, PageHeader, TemplateThumb } from "../components/ui.jsx";
+import { CollectionCover, EmptyState, PageHeader, TemplateThumb } from "../components/ui.jsx";
 import { RowsSkeleton } from "../components/Skeletons.jsx";
 import SortableList from "../components/SortableList.jsx";
 
-function Cover({ collection }) {
+function Cover({ collection, large = false }) {
   return (
-    <div className="adm-cover">
-      {collection.coverUrl ? (
-        <img src={collection.coverUrl} alt="" />
-      ) : (
-        <div className="adm-mosaic">
-          {collection.templateIds.slice(0, 4).map((id) => (
-            <div key={id}>
-              <TemplateThumb templateId={id} />
-            </div>
-          ))}
-        </div>
-      )}
+    <div className={large ? "adm-choice__media" : "adm-cover"} style={large ? { borderRadius: 14 } : undefined}>
+      <CollectionCover collection={collection} emptyLabel={large ? "Sin plantillas" : ""} />
     </div>
   );
 }
@@ -94,8 +84,8 @@ function CollectionDrawer({ collection, templates, open, onClose, onSaved }) {
           <div className="adm-field">
             <span className="adm-field__label">Portada</span>
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <div style={{ width: 140 }}>
-                <Cover collection={collection} />
+              <div style={{ width: 180 }}>
+                <Cover collection={collection} large />
               </div>
               <Button icon={<CameraOutlined />} loading={uploading} onClick={() => fileInput.current?.click()}>
                 {collection.coverUrl ? "Cambiar portada" : "Subir portada"}

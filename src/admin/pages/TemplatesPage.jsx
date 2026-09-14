@@ -119,14 +119,14 @@ export default function TemplatesPage() {
           )}
         />
       ) : (
-        <div className="adm-choice-grid">
+        <div className="adm-choice-grid adm-choice-grid--wide">
           {items.map((t) => (
             <article key={t.templateId} className="adm-template-card" style={{ opacity: t.isActive ? 1 : 0.6 }}>
               <div className="adm-choice__media" style={{ borderRadius: 16 }}>
                 <LiveTemplateThumb templateId={t.templateId} />
                 <span className="adm-choice__count">{plural(t.giftsCount, "regalo", "regalos")}</span>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
+              <div className="adm-template-card__head">
                 <div>
                   <h3 className="adm-choice__title">{t.name}</h3>
                   <p className="adm-choice__text">{t.description}</p>

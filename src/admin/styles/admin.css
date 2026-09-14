@@ -973,11 +973,90 @@ button.adm-row:hover {
 .adm-template-card {
   display: grid;
   gap: 12px;
+  min-width: 0;
+  align-content: start;
+}
+
+.adm-template-card > * {
+  min-width: 0;
 }
 
 .adm-template-card__actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+}
+
+.adm-template-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.adm-template-card__head > div {
+  min-width: 0;
+}
+
+.adm-choice-grid--wide {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 32px 24px;
+}
+
+/* Portada de colección sin imagen: plantillas apiladas como tarjetas */
+.adm-stack {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(80% 70% at 50% 100%, #ece6dc 0%, transparent 70%),
+    #f4f1ec;
+}
+
+.adm-stack__card {
+  position: absolute;
+  top: 16%;
+  left: 17%;
+  width: 66%;
+  border-radius: 10px;
+  box-shadow: 0 14px 30px rgb(27 26 24 / 0.22);
+  transform: translate(var(--dx, 0), var(--dy, 0)) rotate(var(--rot, 0deg));
+  transition: transform 0.35s ease;
+}
+
+.adm-stack__card .adm-thumb {
+  border-radius: 10px;
+}
+
+.adm-stack--1 .adm-stack__card {
+  top: 10%;
+  left: 10%;
+  width: 80%;
+}
+
+.adm-choice:hover .adm-stack__card:nth-child(1) { --rot: -9deg; --dx: -12%; }
+.adm-choice:hover .adm-stack__card:nth-child(3) { --rot: 9deg; --dx: 12%; }
+
+.adm-stack__empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  color: var(--adm-muted);
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.adm-stack__empty span {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1.5px dashed #cfc8bd;
+  border-radius: 14px;
+  font-size: 20px;
 }
 
 /* ── Wizard ────────────────────────────────────────────────────────────── */
