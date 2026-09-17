@@ -32,6 +32,10 @@ api.interceptors.response.use(
 /** Mensaje humano de un error de API. */
 export function errorMessage(error, fallback = "Ocurrió un error. Intenta nuevamente.") {
   if (!error?.response) return error?.message && !/Network Error/.test(error.message) ? error.message : "Sin conexión con el servidor.";
+  // 502/503/504 = el servidor no respondió (apagado o reiniciándose): no es culpa de lo que escribió.
+  if (!error.response.data?.error && error.response.status >= 502) {
+    return "No pudimos conectar con el servidor. Revisa que esté encendido e inténtalo de nuevo.";
+  }
   return error.response.data?.error || fallback;
 }
 
