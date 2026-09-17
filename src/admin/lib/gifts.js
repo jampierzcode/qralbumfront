@@ -8,6 +8,20 @@ export const STATUS = {
   archived: { label: "Archivado", tone: "stone" },
 };
 
+// Revisión de los regalos de un referido.
+export const REVIEW = {
+  none: { label: "Sin enviar", tone: "neutral" },
+  pending: { label: "Por aprobar", tone: "amber" },
+  approved: { label: "Aprobado", tone: "green" },
+  rejected: { label: "Rechazado", tone: "red" },
+};
+
+export function money(amount, currency = "PEN") {
+  if (amount === null || amount === undefined) return "—";
+  const symbol = currency === "PEN" ? "S/" : `${currency} `;
+  return `${symbol}${Number(amount).toFixed(2)}`;
+}
+
 export const STATUS_FILTERS = [
   { value: "", label: "Todos" },
   { value: "draft", label: "Borradores" },

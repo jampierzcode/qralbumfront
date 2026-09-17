@@ -1,11 +1,14 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Dropdown, Segmented, Select } from "antd";
-import { ArrowLeftOutlined, EyeOutlined, MoreOutlined, QrcodeOutlined, TeamOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, EyeOutlined, MoreOutlined, QrcodeOutlined, SendOutlined, SolutionOutlined, TeamOutlined } from "@ant-design/icons";
 import SchemaForm from "../../editor/SchemaForm.jsx";
 import { useGiftEditor } from "../hooks/useGiftEditor.js";
 import { giftTitle, occasionLabel, templateName } from "../lib/gifts.js";
-import { EmptyState, StatusBadge } from "../components/ui.jsx";
+import { EmptyState, ReviewBadge, StatusBadge } from "../components/ui.jsx";
+import { SubmitDialog, ReviewDrawer } from "../components/ReviewFlow.jsx";
+import { useIsReferral } from "../auth.jsx";
+import { money } from "../lib/gifts.js";
 import { PageSkeleton } from "../components/Skeletons.jsx";
 import DevicePreview from "../components/DevicePreview.jsx";
 import ResponsesDrawer from "../components/ResponsesDrawer.jsx";
@@ -20,6 +23,9 @@ export default function GiftEditorPage() {
   const [tab, setTab] = useState("edit");
   const [device, setDevice] = useState("mobile");
   const [responsesOpen, setResponsesOpen] = useState(false);
+  const [submitOpen, setSubmitOpen] = useState(false);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const isReferral = useIsReferral();
   const formRef = useRef(null);
 
   const flow = usePublishFlow(editor, {
@@ -54,6 +60,9 @@ export default function GiftEditorPage() {
 
   const { gift, template } = editor;
   const published = gift.status === "published";
+  const pendingReview = gift.reviewStatus === "pending";
+  // El referido no publica: envía a aprobación y tú publicas al aprobar.
+  const canShare = gift.canShare !== false && published;
   const collectsRsvp = template?.manifest.collectsResponses?.includes("rsvp");
   const menu = [
     ...(collectsRsvp ? [{ key: "responses", icon: <TeamOutlined />, label: "Confirmaciones", onClick: () => setResponsesOpen(true) }] : []),
@@ -77,6 +86,7 @@ export default function GiftEditorPage() {
         <div className="adm-editor__title">
           <strong>{giftTitle(gift)}</strong>
           <StatusBadge status={gift.status} />
+          <ReviewBadge reviewStatus={gift.reviewStatus} />
         </div>
         <SaveIndicator save={editor.save} />
         {collectsRsvp && (
@@ -87,7 +97,21 @@ export default function GiftEditorPage() {
         <Button className="adm-editor__desktop-only" icon={<EyeOutlined />} onClick={() => editor.flush().then(() => navigate(`/admin/gifts/${id}/preview`))}>
           Preview
         </Button>
-        {published ? (
+        {isReferral ? (
+          canShare ? (
+            <Button type="primary" icon={<QrcodeOutlined />} onClick={flow.share}>
+              <span className="adm-editor__desktop-only">Link y QR</span>
+            </Button>
+          ) : (
+            <Button type="primary" icon={<SendOutlined />} disabled={pendingReview} onClick={() => setSubmitOpen(true)}>
+              {pendingReview ? "Esperando aprobación" : "Enviar a aprobación"}
+            </Button>
+          )
+        ) : pendingReview ? (
+          <Button type="primary" icon={<SolutionOutlined />} onClick={() => setReviewOpen(true)}>
+            Revisar
+          </Button>
+        ) : published ? (
           <Button type="primary" icon={<QrcodeOutlined />} onClick={flow.share}>
             <span className="adm-editor__desktop-only">Link y QR</span>
           </Button>
@@ -104,6 +128,21 @@ export default function GiftEditorPage() {
       <div className="adm-editor__tabs">
         <Segmented block value={tab} onChange={setTab} options={[{ value: "edit", label: "Editar" }, { value: "preview", label: "Preview" }]} />
       </div>
+
+      {isReferral && gift.reviewStatus !== "approved" && (
+        <div className={`adm-banner ${gift.reviewStatus === "rejected" ? "adm-banner--warn" : ""}`}>
+          {gift.reviewStatus === "pending" && <span>Enviado a aprobación. Apenas se apruebe verás el link y el QR.</span>}
+          {gift.reviewStatus === "rejected" && (
+            <span>Rechazado{gift.reviewNote ? `: ${gift.reviewNote}` : "."} Corrige y vuelve a enviarlo.</span>
+          )}
+          {(!gift.reviewStatus || gift.reviewStatus === "none") && (
+            <span>
+              Termina el regalo y envíalo a aprobación{gift.price ? ` (${money(gift.price, gift.currency)})` : ""}. El link y el QR
+              aparecen cuando se apruebe.
+            </span>
+          )}
+        </div>
+      )}
 
       <div className="adm-editor__body" data-tab={tab}>
         <div className="adm-editor__form" ref={formRef}>
@@ -143,6 +182,8 @@ export default function GiftEditorPage() {
         </Button>
       )}
       {flow.ui}
+      <SubmitDialog gift={gift} open={submitOpen} onClose={() => setSubmitOpen(false)} onDone={editor.reload} />
+      <ReviewDrawer gift={gift} open={reviewOpen} onClose={() => setReviewOpen(false)} onChanged={editor.reload} />
       {collectsRsvp && <ResponsesDrawer gift={gift} open={responsesOpen} onClose={() => setResponsesOpen(false)} />}
       {actions.dialogs}
     </div>

@@ -70,6 +70,25 @@ export const adminApi = {
     });
   },
 
+  submitGift: (giftId, body) => data(api.post(`/admin/gifts/${giftId}/submit`, body)),
+  uploadPaymentProof: (giftId, file) => {
+    const form = new FormData();
+    form.append("kind", "image");
+    form.append("file", file, file.name);
+    return uploadWithProgress(`${API_BASE}/admin/gifts/${giftId}/payment-proof`, form, {
+      headers: { Authorization: `Bearer ${getToken()}` },
+    });
+  },
+  paymentProof: (giftId) => data(api.get(`/admin/gifts/${giftId}/payment-proof`)),
+  reviewGift: (giftId, body) => data(api.post(`/admin/gifts/${giftId}/review`, body)),
+  setGiftPaid: (giftId, paid) => data(api.post(`/admin/gifts/${giftId}/paid`, { paid })),
+
+  referrals: () => data(api.get("/admin/referrals")),
+  createReferral: (body) => data(api.post("/admin/referrals", body)),
+  updateReferral: (id, body) => data(api.patch(`/admin/referrals/${id}`, body)),
+  referralAccount: (id) => data(api.get(`/admin/referrals/${id}/account`)),
+  myAccount: () => data(api.get("/admin/account")),
+
   contentRequests: (giftId) => data(api.get(`/admin/gifts/${giftId}/content-requests`)),
   createContentRequest: (giftId, body) => data(api.post(`/admin/gifts/${giftId}/content-requests`, body)),
   revokeContentRequest: (id) => data(api.post(`/admin/content-requests/${id}/revoke`)),

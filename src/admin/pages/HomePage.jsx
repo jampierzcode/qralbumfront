@@ -11,6 +11,7 @@ import { RowsSkeleton, Skel } from "../components/Skeletons.jsx";
 
 const STATS = [
   { key: "total", label: "Regalos", to: "/admin/gifts" },
+  { key: "pendingReview", label: "Por aprobar", to: "/admin/gifts?reviewStatus=pending", onlyWhenPositive: true },
   { key: "draft", label: "Borradores", to: "/admin/gifts?status=draft" },
   { key: "collectingContent", label: "Esperando contenido", to: "/admin/gifts?status=collecting_content" },
   { key: "published", label: "Publicados", to: "/admin/gifts?status=published" },
@@ -50,7 +51,7 @@ export default function HomePage() {
 
       {!error && (
         <div className="adm-stats">
-          {STATS.map((s) => {
+          {STATS.filter((s) => !s.onlyWhenPositive || (data?.stats?.[s.key] || 0) > 0).map((s) => {
             const content = (
               <>
                 <span className="adm-stat__label">{s.label}</span>

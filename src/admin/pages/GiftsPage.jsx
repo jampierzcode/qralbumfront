@@ -30,6 +30,7 @@ export default function GiftsPage() {
 
   const filters = {
     status: params.get("status") || "",
+    reviewStatus: params.get("reviewStatus") || "",
     collectionId: params.get("collectionId") || "",
     templateId: params.get("templateId") || "",
     customerId: params.get("customerId") || "",
@@ -77,6 +78,16 @@ export default function GiftsPage() {
       />
 
       <div className="adm-chips" role="tablist" aria-label="Estado">
+        {/* Atajo para revisar lo que mandaron los referidos. */}
+        <button
+          type="button"
+          role="tab"
+          aria-selected={filters.reviewStatus === "pending"}
+          className={`adm-chip ${filters.reviewStatus === "pending" ? "is-active" : ""}`}
+          onClick={() => setFilter("reviewStatus", filters.reviewStatus === "pending" ? "" : "pending")}
+        >
+          Por aprobar
+        </button>
         {STATUS_FILTERS.map((f) => (
           <button
             key={f.value}
@@ -84,7 +95,13 @@ export default function GiftsPage() {
             role="tab"
             aria-selected={filters.status === f.value}
             className={`adm-chip ${filters.status === f.value ? "is-active" : ""}`}
-            onClick={() => setFilter("status", f.value)}
+            onClick={() => {
+              const next = new URLSearchParams(params);
+              f.value ? next.set("status", f.value) : next.delete("status");
+              next.delete("reviewStatus");
+              setParams(next, { replace: true });
+              setPages(1);
+            }}
           >
             {f.label}
           </button>

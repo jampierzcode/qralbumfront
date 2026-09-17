@@ -1235,6 +1235,15 @@ button.adm-row:hover {
     display: none !important;
   }
 
+  /* En móvil sólo cabe una etiqueta: se queda la más informativa (la última). */
+  .adm-editor__title .adm-status {
+    display: none;
+  }
+
+  .adm-editor__title .adm-status:last-child {
+    display: inline-flex;
+  }
+
   .adm-editor__body {
     grid-template-columns: 1fr;
   }
@@ -1648,4 +1657,62 @@ button.adm-row:hover {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ── Referidos: aprobación y cuenta ───────────────────────────────────────── */
+.adm-status--red { background: #fde8e8; color: #b42318; }
+
+.adm-section-title {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.adm-row--button {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  align-items: center;
+  gap: 12px;
+}
+
+.adm-row--button:hover {
+  background: #faf9f7;
+}
+
+.adm-banner {
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  border: 1px solid #e6e4df;
+  border-radius: 12px;
+  background: #faf9f7;
+  color: #57534e;
+  font-size: 13px;
+}
+
+.adm-banner--warn {
+  border-color: #f3d9a4;
+  background: #fdf7ea;
+  color: #a15c07;
+}
+
+.adm-note {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #faf9f7;
+  font-size: 13px;
+}
+
+.adm-proof {
+  display: block;
+  margin-top: 6px;
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+  border: 1px solid #e6e4df;
+  border-radius: 12px;
+  background: #faf9f7;
 }

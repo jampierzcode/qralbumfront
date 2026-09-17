@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { STATUS } from "../lib/gifts.js";
+import { REVIEW, STATUS } from "../lib/gifts.js";
 import { getTemplate } from "../../engine/registry.js";
 
 export function StatusBadge({ status }) {
   const meta = STATUS[status] || { label: status, tone: "neutral" };
+  return <span className={`adm-status adm-status--${meta.tone}`}>{meta.label}</span>;
+}
+
+/** Estado de aprobación de un regalo creado por un referido. */
+export function ReviewBadge({ reviewStatus }) {
+  if (!reviewStatus || reviewStatus === "none") return null;
+  const meta = REVIEW[reviewStatus];
   return <span className={`adm-status adm-status--${meta.tone}`}>{meta.label}</span>;
 }
 

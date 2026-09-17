@@ -3,6 +3,8 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { Drawer, Dropdown } from "antd";
 import {
   AppstoreOutlined,
+  WalletOutlined,
+  SolutionOutlined,
   FolderOutlined,
   GiftOutlined,
   HomeOutlined,
@@ -11,16 +13,23 @@ import {
   PlusOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import { useAuth } from "../auth.jsx";
+import { useAuth, useIsReferral } from "../auth.jsx";
 import { initials } from "../lib/format.js";
 
-const NAV = [
+const BASE_NAV = [
   { to: "/admin", label: "Inicio", icon: <HomeOutlined />, end: true },
   { to: "/admin/gifts", label: "Regalos", icon: <GiftOutlined /> },
   { to: "/admin/customers", label: "Clientes", icon: <TeamOutlined /> },
+];
+
+const ADMIN_NAV = [
   { to: "/admin/templates", label: "Plantillas", icon: <AppstoreOutlined /> },
   { to: "/admin/collections", label: "Colecciones", icon: <FolderOutlined /> },
+  { to: "/admin/referrals", label: "Referidos", icon: <SolutionOutlined /> },
 ];
+
+// El referido ve su cuenta por pagar en vez del catálogo.
+const REFERRAL_NAV = [{ to: "/admin/account", label: "Mi cuenta", icon: <WalletOutlined /> }];
 
 export function Brand() {
   return (
@@ -37,8 +46,10 @@ export function Brand() {
 
 export default function AdminLayout({ children }) {
   const { user, logout } = useAuth();
+  const isReferral = useIsReferral();
   const location = useLocation();
   const [moreOpen, setMoreOpen] = useState(false);
+  const NAV = [...BASE_NAV, ...(isReferral ? REFERRAL_NAV : ADMIN_NAV)];
 
   return (
     <div className="adm-shell">

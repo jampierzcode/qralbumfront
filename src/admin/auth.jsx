@@ -45,6 +45,11 @@ export function AuthProvider({ children }) {
 
 export const useAuth = () => useContext(AuthContext);
 
+/** Un referido usa el mismo panel, pero sólo ve lo suyo y no administra el catálogo. */
+export function useIsReferral() {
+  return useContext(AuthContext)?.user?.role === "referido";
+}
+
 export function RequireAuth({ children }) {
   const { user } = useAuth();
   const location = useLocation();

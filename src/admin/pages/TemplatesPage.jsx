@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { App, Button, Form, Input, Modal, Segmented, Switch, Tooltip } from "antd";
+import { App, Button, Form, Input, InputNumber, Modal, Segmented, Switch, Tooltip } from "antd";
 import { Link } from "react-router-dom";
 import { ColumnWidthOutlined, EditOutlined, ExperimentOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import { adminApi, errorMessage } from "../api.js";
 import { useRequest } from "../hooks/useRequest.js";
-import { occasionLabel } from "../lib/gifts.js";
+import { money, occasionLabel } from "../lib/gifts.js";
 import { plural } from "../lib/format.js";
 import { EmptyState, PageHeader } from "../components/ui.jsx";
 import { GiftGridSkeleton } from "../components/Skeletons.jsx";
@@ -40,12 +40,27 @@ function EditTemplateModal({ template, onClose, onSaved }) {
       }}
     >
       <p className="adm-muted">El nombre y la descripción comerciales. Déjalos vacíos para usar los del código.</p>
-      <Form form={form} layout="vertical" initialValues={{ name: template.nameOverride || "", description: template.descriptionOverride || "" }}>
+      <Form
+        form={form}
+        layout="vertical"
+        initialValues={{
+          name: template.nameOverride || "",
+          description: template.descriptionOverride || "",
+          referralPrice: template.referralPrice ?? null,
+        }}
+      >
         <Form.Item name="name" label="Nombre visible">
           <Input placeholder={template.manifest?.name} maxLength={120} />
         </Form.Item>
         <Form.Item name="description" label="Descripción">
           <Input.TextArea placeholder={template.manifest?.description} autoSize={{ minRows: 2, maxRows: 5 }} maxLength={1000} />
+        </Form.Item>
+        <Form.Item
+          name="referralPrice"
+          label="Precio para referidos"
+          tooltip="Lo que un referido te paga por cada regalo de esta plantilla."
+        >
+          <InputNumber min={0} step={1} prefix="S/" style={{ width: "100%" }} placeholder="Sin precio" />
         </Form.Item>
       </Form>
     </Modal>
@@ -144,6 +159,7 @@ export default function TemplatesPage() {
                 ))}
               </div>
               <p className="adm-muted adm-small" style={{ margin: 0 }}>
+                {t.referralPrice !== null && t.referralPrice !== undefined ? `Referidos: ${money(t.referralPrice)} · ` : ""}
                 {t.collections.length ? `En ${t.collections.map((c) => c.name).join(", ")}` : "Sin colección"}
                 {t.manifest ? ` · v${t.manifest.version}` : ""}
               </p>

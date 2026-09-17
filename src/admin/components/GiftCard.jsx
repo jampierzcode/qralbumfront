@@ -11,12 +11,15 @@ import {
   QrcodeOutlined,
   RollbackOutlined,
   SendOutlined,
+  SolutionOutlined,
 } from "@ant-design/icons";
 import ContentRequestDialog from "./ContentRequestDialog.jsx";
+import { SubmitDialog, ReviewDrawer } from "./ReviewFlow.jsx";
+import { useIsReferral } from "../auth.jsx";
 import { adminApi, errorMessage } from "../api.js";
 import { giftTitle, giftUrl, templateName } from "../lib/gifts.js";
 import { timeAgo } from "../lib/format.js";
-import { StatusBadge, TemplateThumb } from "./ui.jsx";
+import { ReviewBadge, StatusBadge, TemplateThumb } from "./ui.jsx";
 import ShareDialog, { copyText } from "./ShareDialog.jsx";
 
 /** Acciones de un regalo (menú de tarjeta o del editor). */
@@ -25,6 +28,9 @@ export function useGiftActions({ onChanged } = {}) {
   const navigate = useNavigate();
   const [share, setShare] = useState(null);
   const [request, setRequest] = useState(null);
+  const [submit, setSubmit] = useState(null);
+  const [review, setReview] = useState(null);
+  const isReferral = useIsReferral();
 
   const run = async (fn, success) => {
     try {
@@ -41,17 +47,32 @@ export function useGiftActions({ onChanged } = {}) {
   const menuFor = (gift) => {
     const published = gift.status === "published";
     const archived = gift.status === "archived";
+    // Sin aprobación no hay link ni QR para el referido.
+    const shareable = published && gift.canShare !== false;
+    const pending = gift.reviewStatus === "pending";
     return [
+      ...(isReferral && !shareable
+        ? [{
+            key: "submit",
+            icon: <SendOutlined />,
+            label: pending ? "Esperando aprobación" : "Enviar a aprobación",
+            disabled: pending || archived,
+            onClick: () => setSubmit(gift),
+          }]
+        : []),
+      ...(!isReferral && pending
+        ? [{ key: "review", icon: <SolutionOutlined />, label: "Revisar y aprobar", onClick: () => setReview(gift) }]
+        : []),
       { key: "edit", icon: <EditOutlined />, label: "Editar", onClick: () => navigate(`/admin/gifts/${gift.id}`) },
       { key: "preview", icon: <EyeOutlined />, label: "Preview", onClick: () => navigate(`/admin/gifts/${gift.id}/preview`) },
       {
         key: "copy",
         icon: <CopyOutlined />,
-        label: published ? "Copiar link" : "Copiar link (publícalo primero)",
-        disabled: !published,
+        label: shareable ? "Copiar link" : isReferral ? "Copiar link (falta aprobación)" : "Copiar link (publícalo primero)",
+        disabled: !shareable,
         onClick: async () => ((await copyText(giftUrl(gift.slug))) ? message.success("Link copiado") : message.error("No se pudo copiar")),
       },
-      { key: "qr", icon: <QrcodeOutlined />, label: "QR y compartir", disabled: !published, onClick: () => setShare(gift) },
+      { key: "qr", icon: <QrcodeOutlined />, label: "QR y compartir", disabled: !shareable, onClick: () => setShare(gift) },
       { key: "request", icon: <SendOutlined />, label: "Solicitar contenido", disabled: archived, onClick: () => setRequest(gift) },
       { type: "divider" },
       {
@@ -84,6 +105,8 @@ export function useGiftActions({ onChanged } = {}) {
   const dialogs = (
     <>
       <ShareDialog gift={share} open={Boolean(share)} onClose={() => setShare(null)} />
+      <SubmitDialog gift={submit} open={Boolean(submit)} onClose={() => setSubmit(null)} onDone={() => onChanged?.({ id: submit?.id, reviewStatus: "pending" })} />
+      <ReviewDrawer gift={review} open={Boolean(review)} onClose={() => setReview(null)} onChanged={(g) => onChanged?.(g)} />
       <ContentRequestDialog gift={request} open={Boolean(request)} onClose={() => setRequest(null)} onChanged={() => onChanged?.({ id: request?.id, status: "collecting_content" })} />
     </>
   );
@@ -98,6 +121,7 @@ export default function GiftCard({ gift, actions, showCustomer = true }) {
         <TemplateThumb templateId={gift.templateId} />
         <span className="adm-gift-card__status">
           <StatusBadge status={gift.status} />
+          <ReviewBadge reviewStatus={gift.reviewStatus} />
         </span>
       </Link>
       <div className="adm-gift-card__body">
@@ -108,7 +132,9 @@ export default function GiftCard({ gift, actions, showCustomer = true }) {
           <span className="adm-gift-card__meta">
             {[showCustomer && gift.customer?.name, templateName(gift.templateId)].filter(Boolean).join(" · ")}
           </span>
-          <span className="adm-gift-card__meta">Editado {timeAgo(gift.updatedAt)}</span>
+          <span className="adm-gift-card__meta">
+            {gift.createdBy ? `${gift.createdBy.name} · ` : ""}Editado {timeAgo(gift.updatedAt)}
+          </span>
         </div>
         {actions && (
           <Dropdown trigger={["click"]} menu={{ items: actions.menuFor(gift) }} placement="bottomRight">
