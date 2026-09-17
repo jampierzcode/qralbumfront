@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { App, Button, Drawer, Input, InputNumber, Modal, Popconfirm, Tag } from "antd";
+import { App, Button, Drawer, Input, InputNumber, Modal, Popconfirm, Switch, Tag } from "antd";
 import { CheckOutlined, CloseOutlined, PaperClipOutlined } from "@ant-design/icons";
 import { adminApi, errorDetails, errorMessage } from "../api.js";
 import { giftTitle, money, templateName } from "../lib/gifts.js";
@@ -91,6 +91,7 @@ export function ReviewDrawer({ gift, open, onClose, onChanged }) {
   const [price, setPrice] = useState(gift?.price ?? null);
   const [note, setNote] = useState("");
   const [proof, setProof] = useState(null);
+  const [paid, setPaid] = useState(false);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -98,6 +99,7 @@ export function ReviewDrawer({ gift, open, onClose, onChanged }) {
     setPrice(gift.price ?? null);
     setNote("");
     setProof(null);
+    setPaid(Boolean(gift.paidAt));
     if (gift.hasPaymentProof) adminApi.paymentProof(gift.id).then(setProof).catch(() => {});
   }, [open, gift]);
 
@@ -166,6 +168,16 @@ export function ReviewDrawer({ gift, open, onClose, onChanged }) {
           />
         </label>
 
+        <label className="adm-pay-toggle">
+          <Switch checked={paid} onChange={setPaid} />
+          <span>
+            Ya me pagó
+            <span className="adm-muted adm-small" style={{ display: "block" }}>
+              Actívalo si ya recibiste el Yape: se registra al aprobar.
+            </span>
+          </span>
+        </label>
+
         <label className="adm-field">
           <span className="adm-field__label">Nota (la ve el referido)</span>
           <Input.TextArea rows={2} maxLength={300} value={note} onChange={(e) => setNote(e.target.value)} />
@@ -177,7 +189,12 @@ export function ReviewDrawer({ gift, open, onClose, onChanged }) {
             size="large"
             icon={<CheckOutlined />}
             loading={busy}
-            onClick={() => run(() => adminApi.reviewGift(gift.id, { action: "approve", price, note: note.trim() || undefined }), "Aprobado y publicado")}
+            onClick={() =>
+              run(
+                () => adminApi.reviewGift(gift.id, { action: "approve", price, paid, note: note.trim() || undefined }),
+                paid ? "Aprobado, publicado y pago registrado" : "Aprobado y publicado"
+              )
+            }
           >
             Aprobar y publicar
           </Button>
