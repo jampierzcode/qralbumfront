@@ -30,7 +30,7 @@
   --cb-ribbon-dark: #0c2478;
 
   /* ancho del ramo: de él salen tarjeta, tallo y radio del abanico */
-  --cb-w: min(430px, 92vw);
+  --cb-w: min(420px, 87vw);
 
   position: relative;
   min-height: 100dvh;
@@ -174,9 +174,9 @@
   bottom: 0;
   width: 78%;
   height: auto;
-  /* por delante de los tallos: los carritos salen de entre las rosas.
+  /* detrás de los carritos: el ramo se ve y las cajitas quedan encima.
      pointer-events none para que el toque llegue igual a cada carrito. */
-  z-index: 20;
+  z-index: 1;
   pointer-events: none;
   transform: translateX(-50%);
   filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.55));
@@ -193,7 +193,7 @@
 
 .cb-car {
   --cb-card-w: calc(var(--cb-w) * 0.2);
-  --cb-stem: calc(var(--cb-w) * (0.27 + var(--row) * 0.075));
+  --cb-stem: calc(var(--cb-w) * (0.235 + var(--row) * 0.07));
   position: absolute;
   left: 50%;
   bottom: 0;
@@ -210,12 +210,11 @@
   z-index: calc(10 - var(--row) * 5);
 }
 
+/* Separador invisible: coloca la cajita a su altura sin dibujar tallo
+   (en el ramo real las cajitas salen de entre las rosas, sin palitos). */
 .cb-car__stem {
-  width: calc(var(--cb-w) * 0.011);
+  width: 1px;
   height: var(--cb-stem);
-  border-radius: 999px;
-  background: linear-gradient(180deg, #2f3540, #14171d);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
 .cb-car__photo {

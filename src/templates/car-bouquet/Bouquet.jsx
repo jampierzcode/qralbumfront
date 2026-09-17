@@ -60,16 +60,23 @@ function Rose({ cx, cy, r, seed = 0 }) {
 function Wrap() {
   // Domo de rosas: de atrás hacia adelante para que se vean superpuestas.
   const dome = [
-    ...Array.from({ length: 9 }, (_, i) => {
-      const a = (i / 9) * Math.PI * 2 + 0.28;
-      return { cx: 160 + Math.cos(a) * 102, cy: 152 + Math.sin(a) * 56, r: 26, seed: i * 27 };
+    // anillo exterior
+    ...Array.from({ length: 14 }, (_, i) => {
+      const a = (i / 14) * Math.PI * 2 + 0.28;
+      return { cx: 160 + Math.cos(a) * 114, cy: 152 + Math.sin(a) * 66, r: 24, seed: i * 27 };
     }),
+    // anillo intermedio
+    ...Array.from({ length: 10 }, (_, i) => {
+      const a = (i / 10) * Math.PI * 2 + 0.75;
+      return { cx: 160 + Math.cos(a) * 76, cy: 150 + Math.sin(a) * 44, r: 25, seed: i * 41 + 15 };
+    }),
+    // anillo interior
     ...Array.from({ length: 6 }, (_, i) => {
-      const a = (i / 6) * Math.PI * 2 + 0.9;
-      return { cx: 160 + Math.cos(a) * 58, cy: 148 + Math.sin(a) * 32, r: 27, seed: i * 41 + 15 };
+      const a = (i / 6) * Math.PI * 2 + 1.4;
+      return { cx: 160 + Math.cos(a) * 38, cy: 146 + Math.sin(a) * 22, r: 24, seed: i * 53 + 9 };
     }),
-    { cx: 142, cy: 140, r: 28, seed: 7 },
-    { cx: 182, cy: 152, r: 27, seed: 53 },
+    { cx: 150, cy: 140, r: 25, seed: 7 },
+    { cx: 176, cy: 150, r: 24, seed: 53 },
   ];
 
   // Hojas de papel negro que abren detrás del ramo.
