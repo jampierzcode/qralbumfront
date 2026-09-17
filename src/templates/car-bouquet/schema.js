@@ -1,0 +1,113 @@
+import { defineSchema, f } from "../../../gift-core/index.js";
+
+export default defineSchema({
+  version: 1,
+  steps: [
+    { id: "who", title: "Para quién es", portalTitle: "¿Para quién es el ramo?" },
+    { id: "bouquet", title: "Los carritos", portalTitle: "Arma tu ramo" },
+    { id: "message", title: "Carta", portalTitle: "Escribe tu mensaje" },
+    { id: "media", title: "Fotos y música", portalTitle: "Sus fotos y su canción" },
+    { id: "extras", title: "Extras" },
+  ],
+  fields: {
+    recipientName: f.text({
+      label: "Nombre de quien recibe",
+      portalLabel: "¿Cómo se llama?",
+      placeholder: "Mateo",
+      required: true,
+      max: 40,
+      editorStep: "who",
+    }),
+    senderName: f.text({
+      label: "De parte de",
+      portalLabel: "¿Quién lo envía?",
+      placeholder: "Andrea",
+      max: 40,
+      editorStep: "who",
+    }),
+    title: f.text({
+      label: "Título de la portada",
+      description: "Lo grande que se ve al abrir. Ej. «Feliz 30 de septiembre».",
+      default: "Un ramo que no se marchita",
+      placeholder: "Feliz cumpleaños",
+      max: 60,
+      editorStep: "who",
+    }),
+    cars: f.list({
+      label: "Carritos del ramo",
+      itemLabel: "Carrito",
+      description: "De 3 a 9. Cada uno se toca y abre su mensaje.",
+      required: true,
+      min: 3,
+      max: 9,
+      editorStep: "bouquet",
+      item: f.group({
+        fields: {
+          photo: f.image({
+            label: "Foto del carrito",
+            description: "Mejor con el fondo recortado (PNG o WEBP con transparencia).",
+            required: true,
+          }),
+          name: f.text({ label: "Nombre del carrito", placeholder: "Camaro SS", max: 40 }),
+          message: f.textarea({
+            label: "Mensaje de este carrito",
+            placeholder: "Porque contigo hasta el tráfico se disfruta…",
+            required: true,
+            min: 4,
+            max: 400,
+            rows: 3,
+          }),
+        },
+      }),
+    }),
+    palette: f.select({
+      label: "Color del ramo",
+      options: [
+        { value: "blue", label: "Azul neón" },
+        { value: "fire", label: "Rojo fuego" },
+        { value: "nitro", label: "Verde nitro" },
+        { value: "violet", label: "Morado" },
+      ],
+      default: "blue",
+      editorStep: "bouquet",
+      customerEditable: false,
+    }),
+    message: f.textarea({
+      label: "Carta",
+      portalLabel: "Tu mensaje",
+      description: "Aparece palabra por palabra después del ramo.",
+      placeholder: "Sé que amas los carritos desde niño…",
+      required: true,
+      min: 10,
+      max: 600,
+      rows: 5,
+      editorStep: "message",
+    }),
+    photos: f.images({
+      label: "Álbum de fotos",
+      portalLabel: "Sus fotos",
+      description: "Opcional. Hasta 12.",
+      max: 12,
+      editorStep: "media",
+    }),
+    song: f.audio({
+      label: "Canción",
+      description: "Empieza a sonar al abrir el ramo.",
+      editorStep: "media",
+    }),
+    videos: f.list({
+      label: "Videos",
+      description: "Opcional. Se muestran al final.",
+      itemLabel: "Video",
+      max: 3,
+      item: f.video({ label: "Video" }),
+      editorStep: "extras",
+    }),
+    finalLine: f.text({
+      label: "Frase final",
+      default: "Que nunca te falte camino por recorrer",
+      max: 70,
+      editorStep: "extras",
+    }),
+  },
+});
