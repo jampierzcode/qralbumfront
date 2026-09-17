@@ -205,3 +205,25 @@ Temas **Superhéroes, Princesas, Dinosaurios, Espacio** (textos propios de cada 
 Límite honesto: no hay ilustraciones de personajes como las del mockup (se usa la foto real del niño); se pueden sumar como fotos de portada si se consiguen.
 
 Verificación: `npm test` 44/44 · `npm run smoke` 20/20 (4 plantillas × 5 tamaños) · e2e real: invitación publicada → invitado confirma desde el celular (3 personas) → recarga recuerda la confirmación → admin la ve en Confirmaciones. Sin errores de consola.
+
+## Colección de bodas — 4 invitaciones + kit compartido
+
+### `_wedding-kit/` — lo que comparten todas las bodas
+Carpeta privada (empieza con `_`, los registros la ignoran). Un diseño nuevo de boda **no inventa campos**: elige de aquí los que usa, así el comprador siempre llena la misma información.
+
+- `fields.js`: novios, foto, frase, mensaje de invitación · invitado, **número de accesos** y nota personal · ceremonia y recepción (hora, lugar, dirección, referencia, Maps) · dress code, itinerario, mesa de regalos, notas · confirmaciones (activar, fecha límite, WhatsApp) · galería, canción, hashtag, link para compartir fotos, mensaje final. Claves compatibles con la lista de invitados (`eventDate`, `eventTime`, `venueName`, `rsvpEnabled`).
+- `format.js`: fechas largas en español, `28.11.27`, horas 12 h, monograma y links a **Google Maps, Waze, WhatsApp y Google Calendar**.
+- Bloques: `EventBlock` (ceremonia/recepción), `Timeline` (itinerario), `RsvpForm` (nombre, accesos, mensaje, Sí/No, recuerda la respuesta en ese celular y ofrece WhatsApp), `PhotoShare` (QR al álbum de los invitados), `Icons`.
+- `wedding-kit.css` (prefijo `wk-`) **sin colores propios**: cada diseño define `--wk-ink`, `--wk-accent`, `--wk-surface`, `--wk-input-bg`… y el mismo formulario se ve dorado, azul o verde.
+- Media de demostración propia: novios, argollas, eucalipto, ramo, acuarelas azules, altar y primer baile (SVG generados con `npm run demo:media`).
+
+### Las cuatro plantillas
+- **`wedding-gold` · Boda dorada** — mármol con filigrana dorada y eucalipto: portada con sello para abrir, invitación con el pase del invitado, cuenta regresiva con "agendar el día", ceremonia y recepción, dress code, itinerario, mesa de regalos, confirmación y galería. Paletas dorado / oro rosa / esmeralda.
+- **`wedding-navy` · Boda azul noche** — azul profundo con acuarelas: se abre tocando el **sello de cera** con las iniciales y cada detalle llega en su propia tarjeta en forma de arco. Sellos dorado / azul / vino.
+- **`wedding-classic` · Boda clásica (menú)** — portada a sangre y **menú de accesos**: ceremonia, ubicación (Maps y Waze), itinerario, vestimenta, galería, mesa de regalos, notas y confirmación se abren en su propia pantalla (se cierran con ✕, el fondo o Esc). Acentos azul / olivo / vino.
+- **`wedding-greenery` · Boda eucalipto** — **Save the date** con arco de eucalipto, invitación en tarjeta verde con monograma y número de accesos, y **"Comparte tus fotos"** con QR al álbum de los invitados. También entra en la colección Save the date.
+
+### Catálogo
+Colecciones nuevas **Boda** y **Save the date**; el backend las crea al arrancar (idempotente) para que una plantilla nueva caiga sola en su colección sin correr el seed a mano.
+
+Verificación: `npm test` 68/68 (24 contratos nuevos automáticos) · `npm run smoke` 40/40 (8 plantillas × 5 tamaños) · miniaturas generadas del render real · backend 88/88 con los 4 schemas nuevos cargados desde el repositorio del frontend.

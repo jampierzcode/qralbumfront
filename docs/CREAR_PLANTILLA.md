@@ -135,6 +135,42 @@ npm run templates:thumbnails -- mi-plantilla         # miniatura para el admin
 
 En el admin: **Plantillas → Responsive** muestra el mismo regalo en 375×812, 390×844, 844×390, 768×1024 y 1440×900.
 
+## 7 bis. Si es una invitación de boda
+
+No empieces de cero: **`src/templates/_wedding-kit/`** ya trae los campos, los formatos
+y los bloques que comparten todas las bodas (ver su `README.md`).
+
+```js
+// schema.js de un diseño de boda
+import { defineSchema } from "../../../gift-core/index.js";
+import { steps, w } from "../_wedding-kit/fields.js";
+
+export default defineSchema({
+  version: 1,
+  steps: steps("couple", "guest", "event", "details", "rsvp", "media"),
+  fields: {
+    brideName: w.bride(),
+    groomName: w.groom(),
+    recipientName: w.guestName(),
+    passes: w.passes(),
+    eventDate: w.weddingDate(),
+    eventTime: w.ceremonyTime(),
+    venueName: w.ceremonyVenue(),
+    address: w.ceremonyAddress(),
+    rsvpEnabled: w.rsvpEnabled(),
+    // …y lo propio del diseño (sellos, marcos, paletas).
+  },
+});
+```
+
+En `Experience.jsx` usa `EventBlock`, `Timeline`, `RsvpForm` y `PhotoShare`, importa
+`_wedding-kit/wedding-kit.css` y define en tu elemento raíz las variables `--wk-*`
+(colores y tipografías). En `manifest.js`: `defaultCollections: ["boda"]` y
+`collectsResponses: ["rsvp"]`.
+
+Diseños ya hechos como referencia: `wedding-gold`, `wedding-navy`, `wedding-classic`
+y `wedding-greenery`.
+
 ## 8. Publicarla
 
 Reinicia el backend: la plantilla aparece sola en **Plantillas** (activa) y en sus `defaultCollections`. Desde el admin puedes ocultarla, cambiar su nombre comercial, ordenarla y asignarla a otras colecciones. Queda disponible en el wizard, el editor y el portal del comprador sin más cambios.
