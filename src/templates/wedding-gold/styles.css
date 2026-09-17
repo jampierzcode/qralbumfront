@@ -553,8 +553,9 @@
   }
 
   .wg-cover__photo {
-    width: 100%;
-    margin: 0;
+    /* en apaisado manda el alto: la foto se achica para que la portada quepa */
+    width: min(190px, 30vw);
+    margin: 0 auto;
     grid-row: span 7;
   }
 
@@ -568,6 +569,10 @@
     grid-column: 2;
   }
 
+  .wg-names {
+    font-size: clamp(2.2rem, 7vw, 3rem);
+  }
+
   .wg-divider--cover {
     margin-inline: 0;
   }
@@ -576,9 +581,10 @@
     justify-content: flex-start;
   }
 
-  .wg-seal::after {
+  .wg-seal {
     flex-direction: row;
     align-self: start;
+    justify-self: start;
     margin-top: 0.6rem;
   }
 }
@@ -621,6 +627,11 @@
 
   .wg-cover__date {
     justify-content: flex-start;
+  }
+
+  .wg-seal {
+    flex-direction: row;
+    justify-self: start;
   }
 
   .wg-events {
