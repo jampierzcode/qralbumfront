@@ -1,7 +1,9 @@
 import { demoMedia } from "../_demo-media/index.js";
+import { demoBaby } from "./media/index.js";
 
-const { media, refs, song } = demoMedia(["blossoms", "balloons", "gift", "cake", "bouquet"]);
-const [cover, ...photos] = refs;
+const { media: photoMedia, refs: photos, song } = demoMedia(["blossoms", "bouquet", "greenery", "gift"]);
+// Portada del demo: la ilustración de la bebé en rosado (el demo es "girl").
+const { media: babyMedia, ref: cover } = demoBaby("baby-girl");
 
 // El baby shower es en 18 días para que el demo muestre la cuenta regresiva.
 const shower = new Date(Date.now() + 18 * 86400000);
@@ -36,5 +38,5 @@ export default {
       finalMessage: "Gracias por acompañarnos en la espera más linda de nuestra vida.",
     },
   },
-  media,
+  media: { ...babyMedia, ...photoMedia },
 };

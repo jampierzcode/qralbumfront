@@ -256,6 +256,8 @@ Plantilla nueva (`baby-shower`): invitación mágica para darle la bienvenida al
 - **Secciones**: portada · anuncio (con la fecha probable de nacimiento) · detalles con **código de vestimenta** · mapa (Google Maps y Waze) · cuenta regresiva · **mesa de regalos** (ideas + link) · confirmación de asistencia · álbum de la dulce espera · agradecimiento firmado por los papás.
 - **Ideas de regalo con su icono**: si la idea dice "pañales", "biberones", "mantita" o "toallitas" se le pone el icono que le toca; si no, rota por la lista.
 - **Confirmación (`respond("rsvp", …)`)**: nombre, cuántos vienen, un deseo para el bebé y Sí / Tal vez / No podré ir. Recuerda la respuesta en ese celular y ofrece WhatsApp para dudas.
+- **Ilustración de portada por defecto** (`media/baby-boy.webp`, `media/baby-girl.webp`): la foto dejó de ser obligatoria. Si el comprador no sube ecografía ni foto de la pancita, el medallón muestra al bebé en azul o en rosado según el género. El demo usa la ilustración rosada.
+- **Cielo con color de verdad**: la paleta se subió de tono (antes quedaba lavada y los títulos blancos no se leían) y el mar de nubes bajó para dejarle la pantalla al cielo. Los títulos llevan sombra en el tono profundo del género (`--bsh-deep`) y los chips sobre el cielo van en blanco sólido.
 - Tipografías ya instaladas: Fraunces (títulos), Nunito (texto) y Caveat (los detalles escritos a mano).
 
 ### Catálogo

@@ -9,6 +9,7 @@ import Photo from "../../experience-kit/Photo.jsx";
 import PhotoViewer from "../../experience-kit/PhotoViewer.jsx";
 import Reveal, { useInView } from "../../experience-kit/Reveal.jsx";
 import Icon from "./Icons.jsx";
+import { babyIllustration } from "./media/index.js";
 import Scenery from "./Scenery.jsx";
 import "./styles.css";
 
@@ -236,6 +237,8 @@ export default function BabyShowerExperience({ content, mode, onEvent, respond, 
     photos = [], finalMessage,
   } = content;
   const copy = COPY[gender] || COPY.girl;
+  // Sin foto propia, la portada usa la ilustración del bebé que toca (azul o rosada).
+  const cover = coverPhoto?.src ? coverPhoto : babyIllustration(gender);
   const calm = env.reducedMotion || mode === "thumbnail" || env.tier === "low";
   const isOpen = opened && mode !== "thumbnail";
   const [burst, setBurst] = useState(0);
@@ -288,7 +291,7 @@ export default function BabyShowerExperience({ content, mode, onEvent, respond, 
         <div className="bsh-medallion">
           <Icon name="crown" className="bsh-medallion__crown" />
           <div className="bsh-medallion__ring">
-            <Photo image={coverPhoto} sizes="(min-width: 1024px) 32vw, 72vw" loading="eager" className="bsh-medallion__img" />
+            <Photo image={cover} sizes="(min-width: 1024px) 32vw, 72vw" loading="eager" className="bsh-medallion__img" />
           </div>
         </div>
         <div className="bsh-cover__text">
@@ -319,7 +322,7 @@ export default function BabyShowerExperience({ content, mode, onEvent, respond, 
               {announceMessage}
             </Reveal>
             <Reveal className="bsh-frame" delay={250}>
-              <Photo image={photos[0] || coverPhoto} sizes="(min-width: 1024px) 26vw, 64vw" />
+              <Photo image={photos[0] || cover} sizes="(min-width: 1024px) 26vw, 64vw" />
               <span className="bsh-frame__tape" aria-hidden="true" />
             </Reveal>
             <Reveal className="bsh-cloud bsh-cloud--alt" delay={350}>
@@ -487,7 +490,7 @@ export default function BabyShowerExperience({ content, mode, onEvent, respond, 
             <Reveal className="bsh-medallion bsh-medallion--small" delay={150}>
               <Icon name="crown" className="bsh-medallion__crown" />
               <div className="bsh-medallion__ring">
-                <Photo image={coverPhoto} sizes="(min-width: 1024px) 24vw, 52vw" className="bsh-medallion__img" />
+                <Photo image={cover} sizes="(min-width: 1024px) 24vw, 52vw" className="bsh-medallion__img" />
               </div>
             </Reveal>
             <Reveal className="bsh-card bsh-final__card" delay={250}>

@@ -51,9 +51,8 @@ export default defineSchema({
     }),
     coverPhoto: f.image({
       label: "Foto de portada",
-      portalLabel: "Una foto de la pancita o la ecografía",
-      description: "Aparece dentro del medallón con la corona. Mejor vertical y con buena luz.",
-      required: true,
+      portalLabel: "Una foto de la pancita o la ecografía (opcional)",
+      description: "Aparece dentro del medallón con la corona. Si la dejas vacía se usa la ilustración del bebé (azul o rosada, según el género).",
       editorStep: "cover",
     }),
     greeting: f.text({

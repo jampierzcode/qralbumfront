@@ -8,34 +8,34 @@ const rand = (seed) => {
 
 const PALETTES = {
   girl: {
-    sky: ["#f2a3c9", "#ffd2e4", "#fff3f8"],
-    glow: "#ffd9ec",
-    moon: "#ffeab4",
-    star: "#fff4cf",
-    cloudBack: "#ffe4f0",
-    cloud: "#ffffff",
-    hill: "#f8c7dd",
-    balloons: ["#ff9ec7", "#ffc2dd", "#ffe3b0"],
+    sky: ["#e2669d", "#f7a5c7", "#ffd3e5"],
+    glow: "#ffcfe4",
+    moon: "#ffe6a8",
+    star: "#fff1c4",
+    cloudBack: "#ffbfda",
+    cloud: "#ffe7f1",
+    hill: "#f5a8cb",
+    balloons: ["#ff7fb6", "#ffb3d4", "#ffd98f"],
   },
   boy: {
-    sky: ["#77abe8", "#c4ddfa", "#f0f7ff"],
-    glow: "#d8ebff",
-    moon: "#ffefbe",
-    star: "#fff7d8",
-    cloudBack: "#dbecfd",
-    cloud: "#ffffff",
-    hill: "#a6cbf3",
-    balloons: ["#7fb2ea", "#a9d3f7", "#ffe3b0"],
+    sky: ["#2d6cc2", "#79abe6", "#c8dff8"],
+    glow: "#cde3ff",
+    moon: "#ffeaad",
+    star: "#fff6d8",
+    cloudBack: "#b4d3f5",
+    cloud: "#e2effd",
+    hill: "#8bbaed",
+    balloons: ["#5b98df", "#9ecdf5", "#ffd98f"],
   },
   surprise: {
-    sky: ["#ab9ae4", "#ffd7e8", "#f3fbff"],
-    glow: "#eadff9",
-    moon: "#ffeab4",
-    star: "#fff4cf",
-    cloudBack: "#eadff9",
-    cloud: "#ffffff",
-    hill: "#c9b7ef",
-    balloons: ["#ff9ec7", "#7fb2ea", "#ffe3b0"],
+    sky: ["#775bc4", "#c096dd", "#ffd3e5"],
+    glow: "#e0d0f6",
+    moon: "#ffe6a8",
+    star: "#fff1c4",
+    cloudBack: "#d6c0ef",
+    cloud: "#f1e6fb",
+    hill: "#b396e3",
+    balloons: ["#ff7fb6", "#5b98df", "#ffd98f"],
   },
 };
 
@@ -108,20 +108,20 @@ export default function Scenery({ gender = "girl" }) {
       <Balloon x={1210} y={330} s={0.62} color={p.balloons[1]} />
       <Balloon x={300} y={620} s={0.8} color={p.balloons[2]} />
 
-      {/* Mar de nubes */}
-      <g fill={p.cloudBack} opacity=".85">
-        <ellipse cx="180" cy="880" rx="230" ry="80" />
-        <ellipse cx="620" cy="830" rx="190" ry="66" />
-        <ellipse cx="1120" cy="870" rx="240" ry="78" />
-        <ellipse cx="1500" cy="820" rx="180" ry="62" />
+      {/* Mar de nubes (bajo y teñido: el cielo se queda con el protagonismo) */}
+      <g fill={p.cloudBack} opacity=".7">
+        <ellipse cx="180" cy="960" rx="230" ry="72" />
+        <ellipse cx="620" cy="920" rx="190" ry="60" />
+        <ellipse cx="1120" cy="950" rx="240" ry="70" />
+        <ellipse cx="1500" cy="910" rx="180" ry="56" />
       </g>
-      <path d="M-40 1200V1010c150-70 290-10 430-40s250-110 420-80 250 120 420 90 240-80 410-40v260Z" fill={p.hill} opacity=".9" />
+      <path d="M-40 1200V1085c150-62 290-8 430-36s250-98 420-70 250 106 420 78 240-70 410-34v177Z" fill={p.hill} opacity=".85" />
       <g fill={p.cloud}>
-        <ellipse cx="120" cy="1090" rx="300" ry="120" />
-        <ellipse cx="520" cy="1130" rx="260" ry="110" />
-        <ellipse cx="900" cy="1080" rx="320" ry="130" />
-        <ellipse cx="1330" cy="1130" rx="290" ry="120" />
-        <rect x="0" y="1120" width="1600" height="90" />
+        <ellipse cx="120" cy="1180" rx="300" ry="92" />
+        <ellipse cx="520" cy="1205" rx="260" ry="86" />
+        <ellipse cx="900" cy="1175" rx="320" ry="100" />
+        <ellipse cx="1330" cy="1205" rx="290" ry="92" />
+        <rect x="0" y="1190" width="1600" height="30" />
       </g>
     </svg>
   );

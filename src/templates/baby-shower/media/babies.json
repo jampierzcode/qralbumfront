@@ -1,0 +1,12 @@
+{
+  "baby-boy": {
+    "width": 900,
+    "height": 900,
+    "placeholder": "data:image/webp;base64,UklGRugAAABXRUJQVlA4INwAAACQBQCdASoYABgAPu1oqU+ppaOiKA1RMB2JaACdM2XggAONnpD4LH0Tph8w6XaaicDfpCDrAAD+31u/SxPSZLuvqpcUSTdBbDd1XZTz5hbaxpiEXLpJ2v0ZV8uDmc1O0SSDjYftnNUPrbOg8bjvWyBUA5LPx7X9CgIRfI6823nVEfiCljbfynmNFoXC7WwpgONsq5IbPJtZDE+BFF+vMYX5KJ2C5i/71gTip0wCTvESd3oYmPjqMAE3mFu3hJx4BnKNhWOr5tR1uqwAPSx7TM6aI2gOGBjgFN9ogAAA"
+  },
+  "baby-girl": {
+    "width": 900,
+    "height": 900,
+    "placeholder": "data:image/webp;base64,UklGRtoAAABXRUJQVlA4IM4AAACQBQCdASoYABgAPu1srVIppaQiqAgBMB2JZgCdMyX+Ac1YGEhveAPjKUVqH9JdDXyby2PCAAD+31uiaIFCSLy3k8m+6ptYjKu4fwt0IHOEqokcAu67C6FGzQ3qcgJ+7bnmiNIZsqPrNr4XLm7jwlhCB9EXn3uOXYJMUh1wTfmZ1gQZ0dKE/ltWUk+Dff4K641UM3VRsjmyQru91J32JkndHptXK0vUwJrg4Nw/MTUg7UYlbJF5qYOEvKrg9/UlqY3QYawTnzAHX8y7lsAAAA=="
+  }
+}

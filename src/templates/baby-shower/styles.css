@@ -14,6 +14,7 @@
   --bsh-card: #fffdfe;
   --bsh-glass: rgb(255 255 255 / 0.55);
   --bsh-tint: #fff0f7;
+  --bsh-deep: rgb(140 20 80 / 0.55);
   --bsh-shadow: rgb(105 45 80 / 0.22);
   --bsh-serif: "Fraunces Variable", "Cormorant Garamond Variable", Georgia, serif;
   --bsh-sans: "Nunito Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -33,6 +34,7 @@
   --bsh-ink-soft: #64799e;
   --bsh-card: #fbfdff;
   --bsh-tint: #eef5ff;
+  --bsh-deep: rgb(10 45 100 / 0.55);
   --bsh-shadow: rgb(25 55 110 / 0.22);
 }
 
@@ -43,6 +45,7 @@
   --bsh-ink-soft: #7f6b9e;
   --bsh-card: #fefcff;
   --bsh-tint: #f6f0ff;
+  --bsh-deep: rgb(55 25 110 / 0.55);
   --bsh-shadow: rgb(70 45 110 / 0.22);
 }
 
@@ -75,7 +78,7 @@
   display: block;
   width: var(--size, 52px);
   color: #fff;
-  opacity: 0.62;
+  opacity: 0.5;
   filter: drop-shadow(0 8px 14px rgb(60 30 70 / 0.18));
   animation: bsh-float 9s ease-in-out infinite;
   animation-delay: var(--delay, 0s);
@@ -96,7 +99,7 @@
   letter-spacing: -0.01em;
   text-align: center;
   color: #fff;
-  text-shadow: 0 3px 0 rgb(255 255 255 / 0.35), 0 10px 26px var(--bsh-shadow);
+  text-shadow: 0 1px 3px var(--bsh-deep), 0 6px 18px var(--bsh-deep), 0 14px 40px var(--bsh-deep);
 }
 
 .bsh-heading {
@@ -110,12 +113,12 @@
 
 .bsh-name {
   font-size: clamp(3rem, 15vw, 6rem);
-  background: linear-gradient(170deg, #fff 30%, var(--bsh-gold));
+  background: linear-gradient(170deg, #fff 26%, #ffe08a 62%, var(--bsh-gold));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   text-shadow: none;
-  filter: drop-shadow(0 6px 16px var(--bsh-shadow));
+  filter: drop-shadow(0 2px 2px var(--bsh-deep)) drop-shadow(0 10px 26px var(--bsh-deep));
 }
 
 .bsh-eyebrow {
@@ -125,7 +128,7 @@
   line-height: 1;
   letter-spacing: 0.02em;
   color: #fff;
-  text-shadow: 0 2px 2px rgb(255 255 255 / 0.5), 0 8px 20px var(--bsh-shadow);
+  text-shadow: 0 1px 3px var(--bsh-deep), 0 6px 18px var(--bsh-deep);
 }
 
 /* ── Paneles ─────────────────────────────────────────────────────────── */
@@ -277,10 +280,11 @@
   margin: 0;
   padding: 6px 16px;
   border-radius: 999px;
-  background: var(--bsh-glass);
+  background: rgb(255 255 255 / 0.88);
   color: var(--bsh-ink);
   font-weight: 700;
   font-size: 0.85rem;
+  box-shadow: 0 8px 20px var(--bsh-shadow);
 }
 
 /* Anuncio */
@@ -380,11 +384,12 @@
   gap: 10px;
   padding: 10px 20px;
   border-radius: 999px;
-  background: var(--bsh-glass);
+  background: rgb(255 255 255 / 0.9);
   color: var(--bsh-ink);
   font-family: var(--bsh-script);
   font-size: 1.5rem;
   line-height: 1;
+  box-shadow: 0 10px 24px var(--bsh-shadow);
 }
 
 .bsh-due .bsh-icon {
@@ -551,9 +556,10 @@
 .bsh-whatsapp {
   padding: 9px 18px;
   border-radius: 999px;
-  background: var(--bsh-glass);
+  background: rgb(255 255 255 / 0.88);
   color: var(--bsh-ink);
   text-decoration: none;
+  box-shadow: 0 8px 20px var(--bsh-shadow);
 }
 
 /* Cuenta regresiva */
