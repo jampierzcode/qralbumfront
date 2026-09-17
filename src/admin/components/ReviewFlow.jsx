@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { App, Button, Drawer, Input, InputNumber, Modal, Popconfirm, Switch, Tag } from "antd";
 import { CheckOutlined, CloseOutlined, PaperClipOutlined } from "@ant-design/icons";
 import { adminApi, errorDetails, errorMessage } from "../api.js";
-import { giftTitle, money, templateName } from "../lib/gifts.js";
+import { giftTitle, money, templateName, whatsappUrl } from "../lib/gifts.js";
 import { formatDate, timeAgo } from "../lib/format.js";
 import { ReviewBadge } from "./ui.jsx";
 
@@ -98,6 +98,94 @@ export function SubmitDialog({ gift, open, onClose, onDone }) {
         {file ? file.name : "Adjuntar comprobante (opcional)"}
       </Button>
     </Modal>
+  );
+}
+
+/** El vendedor revisa el pedido de su cliente final: ve el comprobante y lo acepta o rechaza. */
+export function OrderDrawer({ gift, open, onClose, onChanged }) {
+  const { message } = App.useApp();
+  const [proof, setProof] = useState(null);
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!open || !gift) return;
+    setNote("");
+    setProof(null);
+    if (gift.hasClientProof) adminApi.clientProof(gift.id).then(setProof).catch(() => {});
+  }, [open, gift]);
+
+  if (!gift) return null;
+
+  const run = async (action, success) => {
+    setBusy(true);
+    try {
+      const result = await adminApi.reviewOrder(gift.id, { action, note: note.trim() || undefined });
+      message.success(success);
+      onChanged?.(result);
+      onClose();
+    } catch (err) {
+      message.error(errorMessage(err));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Drawer open={open} onClose={onClose} title="Pedido de tu cliente" width={440}>
+      <div style={{ display: "grid", gap: 18 }}>
+        <div>
+          <h3 style={{ margin: "0 0 4px" }}>{gift.requesterName || "Cliente"}</h3>
+          <p className="adm-muted adm-small" style={{ margin: 0 }}>
+            {templateName(gift.templateId)} · {gift.requesterPhone || "sin WhatsApp"} · pedido {timeAgo(gift.requestedAt)}
+          </p>
+          <div style={{ marginTop: 8 }}>
+            <Tag color="blue">{money(gift.salePrice, gift.currency)}</Tag>
+            {gift.hasClientProof ? <Tag color="green">Con comprobante</Tag> : <Tag>Sin comprobante</Tag>}
+          </div>
+        </div>
+
+        <div>
+          <span className="adm-field__label">Comprobante</span>
+          {proof ? (
+            <a href={proof.url} target="_blank" rel="noreferrer">
+              <img src={proof.thumbUrl || proof.url} alt="Comprobante del cliente" className="adm-proof" />
+            </a>
+          ) : (
+            <p className="adm-muted adm-small" style={{ margin: 0 }}>
+              No adjuntó comprobante. Revisa tu Yape o escríbele por WhatsApp.
+            </p>
+          )}
+        </div>
+
+        <label className="adm-field">
+          <span className="adm-field__label">Nota interna</span>
+          <Input.TextArea rows={2} maxLength={300} value={note} onChange={(e) => setNote(e.target.value)} />
+        </label>
+
+        <div style={{ display: "grid", gap: 8 }}>
+          <Button type="primary" size="large" icon={<CheckOutlined />} loading={busy} onClick={() => run("accept", "Pedido aceptado")}>
+            Aceptar pedido
+          </Button>
+          <Popconfirm
+            title="¿Rechazar este pedido?"
+            description="El regalo queda marcado como rechazado. Avísale a tu cliente por WhatsApp."
+            okText="Rechazar"
+            cancelText="Cancelar"
+            onConfirm={() => run("reject", "Pedido rechazado")}
+          >
+            <Button danger size="large" icon={<CloseOutlined />} loading={busy}>
+              Rechazar
+            </Button>
+          </Popconfirm>
+          {gift.requesterPhone && (
+            <Button href={whatsappUrl(`Hola ${gift.requesterName || ""} 👋 recibí tu pedido`, gift.requesterPhone)} target="_blank">
+              Escribirle por WhatsApp
+            </Button>
+          )}
+        </div>
+      </div>
+    </Drawer>
   );
 }
 

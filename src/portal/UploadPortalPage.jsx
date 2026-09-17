@@ -37,6 +37,7 @@ export default function UploadPortalPage() {
   const [save, setSave] = useState("idle");
   const [issues, setIssues] = useState([]);
   const [submitting, setSubmitting] = useState(false);
+  const [proof, setProof] = useState({ uploading: false, done: false, error: null });
 
   const dirty = useRef(false);
   const timer = useRef(null);
@@ -169,8 +170,12 @@ export default function UploadPortalPage() {
           ))}
         </div>
         <Heart />
-        <h1 className="pt-title">¡Listo! 💛</h1>
-        <p className="pt-text">Recibimos todo para preparar {name ? `el regalo de ${name}` : "tu regalo"}. Te avisaremos cuando esté listo.</p>
+        <h1 className="pt-title">{data.order ? "¡Solicitud enviada! 💛" : "¡Listo! 💛"}</h1>
+        <p className="pt-text">
+          {data.order
+            ? `${data.order.sellerName || "Tu vendedor"} revisará tu pago y te enviará el link de tu regalo por WhatsApp.`
+            : `Recibimos todo para preparar ${name ? `el regalo de ${name}` : "tu regalo"}. Te avisaremos cuando esté listo.`}
+        </p>
         <p className="pt-small">Ya puedes cerrar esta página.</p>
       </Screen>
     );
@@ -192,6 +197,21 @@ export default function UploadPortalPage() {
       </Screen>
     );
   }
+
+  const uploadProof = async (file) => {
+    if (!file) return;
+    setProof({ uploading: true, done: false, error: null });
+    try {
+      const form = new FormData();
+      form.append("kind", "image");
+      form.append("file", file, file.name);
+      const res = await fetch(`${API}/${encodeURIComponent(token)}/payment-proof`, { method: "POST", body: form });
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || "No pudimos subir tu comprobante.");
+      setProof({ uploading: false, done: true, error: null });
+    } catch (error) {
+      setProof({ uploading: false, done: false, error: error.message });
+    }
+  };
 
   const step = steps[stepIndex];
   const isLast = stepIndex === steps.length - 1;
@@ -219,6 +239,13 @@ export default function UploadPortalPage() {
       setSubmitting(false);
       return;
     }
+    // En un pedido falta el paso del pago antes de enviar.
+    if (data.order && stage !== "pago") {
+      setStage("pago");
+      window.scrollTo({ top: 0 });
+      setSubmitting(false);
+      return;
+    }
     try {
       await publicRequest(`/portal/${encodeURIComponent(token)}/submit`, { method: "POST" });
       setStage("done");
@@ -230,6 +257,54 @@ export default function UploadPortalPage() {
       setSubmitting(false);
     }
   };
+
+  if (stage === "pago") {
+    const order = data.order;
+    return (
+      <Screen className="pt--pago">
+        <p className="pt-eyebrow">Último paso</p>
+        <h1 className="pt-title">Paga tu regalo</h1>
+        <p className="pt-text">
+          {order.price !== null ? (
+            <>
+              Tu regalo cuesta <strong>S/{order.price.toFixed(2)}</strong>. Paga con cualquiera de estas opciones y envía tu
+              solicitud: {order.sellerName || "el vendedor"} te mandará el link cuando confirme el pago.
+            </>
+          ) : (
+            <>Coordina el pago con {order.sellerName || "el vendedor"} y envía tu solicitud.</>
+          )}
+        </p>
+
+        {order.methods.length > 0 && (
+          <ul className="pt-pay">
+            {order.methods.map((m) => (
+              <li key={m.id} className="pt-pay__item">
+                <span className="pt-pay__type">{m.typeLabel}</span>
+                <span className="pt-pay__ref">{m.reference}</span>
+                <span className="pt-pay__holder">{[m.holder, m.bank, m.notes].filter(Boolean).join(" · ")}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <label className={`pt-btn pt-upload ${proof.uploading ? "is-busy" : ""}`}>
+          {proof.uploading ? "Subiendo…" : proof.done || order.hasProof ? "Comprobante adjunto ✓ (cambiar)" : "Adjuntar comprobante (opcional)"}
+          <input type="file" accept="image/*" hidden onChange={(e) => uploadProof(e.target.files?.[0])} />
+        </label>
+        {proof.error && <p className="pt-error">{proof.error}</p>}
+        <p className="pt-small">Adjuntarlo hace que te aprueben más rápido, pero puedes enviarlo también por WhatsApp.</p>
+
+        <div className="pt-actions">
+          <button type="button" className="pt-btn" onClick={() => setStage("steps")}>
+            Volver
+          </button>
+          <button type="button" className="pt-btn pt-btn--primary" onClick={submit} disabled={submitting}>
+            {submitting ? "Enviando…" : "Enviar solicitud"}
+          </button>
+        </div>
+      </Screen>
+    );
+  }
 
   return (
     <div className="pt pt--steps">
@@ -289,7 +364,7 @@ export default function UploadPortalPage() {
         )}
         {isLast ? (
           <button type="button" className="pt-btn pt-btn--primary" onClick={submit} disabled={submitting}>
-            {submitting ? "Enviando…" : "Enviar contenido"}
+            {submitting ? "Enviando…" : data.order ? "Continuar al pago" : "Enviar contenido"}
           </button>
         ) : (
           <button type="button" className="pt-btn pt-btn--primary" onClick={() => (persist(), goTo(stepIndex + 1))}>

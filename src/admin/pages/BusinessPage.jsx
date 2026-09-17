@@ -5,6 +5,7 @@ import { money } from "../lib/gifts.js";
 import { PageHeader } from "../components/ui.jsx";
 import { PageSkeleton } from "../components/Skeletons.jsx";
 import PaymentMethods from "../components/PaymentMethods.jsx";
+import StoreSettings from "../components/StoreSettings.jsx";
 import { TemplateThumb } from "../components/ui.jsx";
 
 /** Mi negocio: a cuánto vendo cada plantilla y con qué me pagan. */
@@ -26,7 +27,7 @@ export default function BusinessPage() {
 
   return (
     <div className="adm-page">
-      <PageHeader title="Mi negocio" subtitle="Tus precios de venta y cómo te pagan tus clientes" />
+      <PageHeader title="Mi negocio" subtitle="Tus precios, cómo te pagan y tu link para recibir pedidos" />
 
       <section className="adm-section">
         <h2 className="adm-section-title">Mis precios</h2>
@@ -65,6 +66,8 @@ export default function BusinessPage() {
       </section>
 
       <PaymentMethods />
+
+      <StoreSettings />
     </div>
   );
 }

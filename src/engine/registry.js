@@ -1,11 +1,12 @@
 // Registro de plantillas del frontend.
 // Cada carpeta src/templates/<id>/index.js se registra SOLA (import.meta.glob).
-// Las carpetas que empiezan con "_" (ej. _demo-media) se ignoran.
+// Las carpetas que empiezan con "_" (ej. _demo-media, o una plantilla a medio hacer) se ignoran
+// también al compilar: el patrón del glob las deja fuera del bundle.
 import { lazy } from "react";
 
-const modules = import.meta.glob("../templates/*/index.js", { eager: true });
+const modules = import.meta.glob("../templates/[!_]*/index.js", { eager: true });
 // Miniatura opcional generada con `npm run templates:thumbnails` (se detecta sola).
-const thumbnails = import.meta.glob("../templates/*/thumbnail.webp", { eager: true, query: "?url", import: "default" });
+const thumbnails = import.meta.glob("../templates/[!_]*/thumbnail.webp", { eager: true, query: "?url", import: "default" });
 
 const REQUIRED = ["manifest", "schema", "demo", "loadExperience"];
 

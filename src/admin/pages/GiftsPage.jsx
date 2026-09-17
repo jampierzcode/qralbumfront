@@ -31,6 +31,7 @@ export default function GiftsPage() {
   const filters = {
     status: params.get("status") || "",
     reviewStatus: params.get("reviewStatus") || "",
+    requestStatus: params.get("requestStatus") || "",
     collectionId: params.get("collectionId") || "",
     templateId: params.get("templateId") || "",
     customerId: params.get("customerId") || "",
@@ -78,6 +79,16 @@ export default function GiftsPage() {
       />
 
       <div className="adm-chips" role="tablist" aria-label="Estado">
+        {/* Pedidos que llegaron por el link público. */}
+        <button
+          type="button"
+          role="tab"
+          aria-selected={filters.requestStatus === "pending"}
+          className={`adm-chip ${filters.requestStatus === "pending" ? "is-active" : ""}`}
+          onClick={() => setFilter("requestStatus", filters.requestStatus === "pending" ? "" : "pending")}
+        >
+          Pedidos nuevos
+        </button>
         {/* Atajo para revisar lo que mandaron los referidos. */}
         <button
           type="button"
@@ -99,6 +110,7 @@ export default function GiftsPage() {
               const next = new URLSearchParams(params);
               f.value ? next.set("status", f.value) : next.delete("status");
               next.delete("reviewStatus");
+              next.delete("requestStatus");
               setParams(next, { replace: true });
               setPages(1);
             }}

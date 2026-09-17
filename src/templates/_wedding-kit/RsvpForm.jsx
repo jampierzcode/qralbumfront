@@ -146,7 +146,7 @@ export default function RsvpForm({
           {t.whatsapp}
         </a>
       )}
-      {deadline && <p className="wk-rsvp__deadline">Confirma antes del {formatLongDate(deadline)}</p>}
+      {deadline && <p className="wk-rsvp__deadline">Confirma antes del {formatLongDate(deadline).toLowerCase()}</p>}
     </form>
   );
 }

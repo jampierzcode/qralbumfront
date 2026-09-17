@@ -92,6 +92,11 @@ export const adminApi = {
   updatePaymentMethod: (id, body) => data(api.patch(`/admin/payment-methods/${id}`, body)),
   deletePaymentMethod: (id) => api.delete(`/admin/payment-methods/${id}`),
   ownerPaymentMethods: () => data(api.get("/admin/owner-payment-methods")),
+  store: () => data(api.get("/admin/store")),
+  updateStore: (body) => data(api.patch("/admin/store", body)),
+  reviewOrder: (giftId, body) => data(api.post(`/admin/gifts/${giftId}/order-review`, body)),
+  clientProof: (giftId) => data(api.get(`/admin/gifts/${giftId}/client-proof`)),
+
   myCatalog: () => data(api.get("/admin/my-catalog")),
   setCatalogPrice: (templateId, salePrice) => data(api.put(`/admin/my-catalog/${templateId}`, { salePrice })),
 

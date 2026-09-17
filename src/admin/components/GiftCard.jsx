@@ -20,7 +20,7 @@ import { useIsReferral } from "../auth.jsx";
 import { adminApi, errorMessage } from "../api.js";
 import { giftTitle, giftUrl, money, templateName } from "../lib/gifts.js";
 import { timeAgo } from "../lib/format.js";
-import { ReviewBadge, StatusBadge, TemplateThumb } from "./ui.jsx";
+import { RequestBadge, ReviewBadge, StatusBadge, TemplateThumb } from "./ui.jsx";
 import ShareDialog, { copyText } from "./ShareDialog.jsx";
 
 /** Acciones de un regalo (menú de tarjeta o del editor). */
@@ -145,6 +145,7 @@ export default function GiftCard({ gift, actions, showCustomer = true }) {
         <span className="adm-gift-card__status">
           <StatusBadge status={gift.status} />
           <ReviewBadge reviewStatus={gift.reviewStatus} />
+          <RequestBadge requestStatus={gift.requestStatus} />
         </span>
       </Link>
       <div className="adm-gift-card__body">
@@ -156,7 +157,8 @@ export default function GiftCard({ gift, actions, showCustomer = true }) {
             {[showCustomer && gift.customer?.name, templateName(gift.templateId)].filter(Boolean).join(" · ")}
           </span>
           <span className="adm-gift-card__meta">
-            {gift.createdBy ? `${gift.createdBy.name} · ` : ""}Editado {timeAgo(gift.updatedAt)}
+            {gift.requesterName ? `Pedido de ${gift.requesterName} · ` : gift.createdBy ? `${gift.createdBy.name} · ` : ""}
+            Editado {timeAgo(gift.updatedAt)}
           </span>
           <GiftMoney gift={gift} />
         </div>

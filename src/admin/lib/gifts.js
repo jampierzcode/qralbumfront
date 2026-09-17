@@ -9,6 +9,13 @@ export const STATUS = {
 };
 
 // Revisión de los regalos de un referido.
+export const REQUEST = {
+  draft: { label: "Pedido sin terminar", tone: "neutral" },
+  pending: { label: "Pedido nuevo", tone: "blue" },
+  accepted: { label: "Pedido aceptado", tone: "green" },
+  rejected: { label: "Pedido rechazado", tone: "red" },
+};
+
 export const REVIEW = {
   none: { label: "Sin enviar", tone: "neutral" },
   pending: { label: "Por aprobar", tone: "amber" },
@@ -39,6 +46,8 @@ export const uploadUrl = (token) => `${PUBLIC_BASE}/upload/${token}`;
 // Link de sólo lectura para que el comprador vea cómo va su lista de invitados.
 export const guestListUrl = (token) => `${PUBLIC_BASE}/lista/${token}`;
 export const demoUrl = (templateId) => `${PUBLIC_BASE}/demo/${templateId}`;
+// Tienda pública del vendedor: los clientes finales piden desde aquí.
+export const storeUrl = (handle) => `${PUBLIC_BASE}/pedir/${handle}`;
 
 export function whatsappUrl(text, phone) {
   const digits = (phone || "").replace(/\D/g, "");
