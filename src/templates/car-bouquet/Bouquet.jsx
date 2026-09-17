@@ -2,77 +2,165 @@
 // Cada carrito es un botón que abre su mensaje; en la portada (dim) sólo se ve la silueta.
 import Photo from "../../experience-kit/Photo.jsx";
 
-/** Papel de regalo, moño y florecitas (todo SVG, hereda los colores del tema). */
-function Wrap() {
-  const flower = (cx, cy, r, i) => (
-    <g key={`${cx}-${cy}`}>
-      {Array.from({ length: 5 }, (_, p) => (
-        <ellipse
-          key={p}
-          cx={cx}
-          cy={cy - r * 0.58}
-          rx={r * 0.46}
-          ry={r * 0.62}
-          fill={p % 2 ? "var(--cb-petal)" : "var(--cb-petal-2)"}
-          transform={`rotate(${p * 72 + i * 13} ${cx} ${cy})`}
-        />
-      ))}
-      <circle cx={cx} cy={cy} r={r * 0.24} fill="var(--cb-pollen)" />
-    </g>
-  );
+/**
+ * Rosa de satén: la cinta enrollada en espiral, con las sombras entre pliegues
+ * y un brillo arriba a la izquierda. Es como se ven las rosas de tela del ramo real.
+ */
+function Rose({ cx, cy, r, seed = 0 }) {
+  const n = (v) => Number(v.toFixed(1));
+  const start = (seed * Math.PI) / 180;
+
+  const spiral = (from, to, steps = 54) => {
+    let d = "";
+    for (let i = 0; i <= steps; i++) {
+      const k = i / steps;
+      const t = start + k * 2.7 * Math.PI * 2;
+      const rad = r * (from + k * (to - from));
+      d += `${i === 0 ? "M" : " L"}${n(cx + Math.cos(t) * rad)} ${n(cy + Math.sin(t) * rad * 0.95)}`;
+    }
+    return d;
+  };
+
+  const path = spiral(0.12, 0.84);
 
   return (
-    <svg className="cb-wrap" viewBox="0 0 320 300" fill="none" aria-hidden="true">
-      {/* hojas largas que asoman por detrás del papel */}
-      <g className="cb-wrap__leaves">
-        {[
-          [58, 96, -46], [262, 96, 46], [34, 128, -70], [286, 128, 70], [92, 72, -24], [228, 72, 24], [160, 62, 0],
-        ].map(([x, y, r], i) => (
-          <ellipse
-            key={i}
-            cx={x}
-            cy={y}
-            rx="14"
-            ry={i > 4 ? 46 : 40}
-            fill="var(--cb-leaf)"
-            opacity={i % 2 ? 0.7 : 0.95}
-            transform={`rotate(${r} ${x} ${y})`}
+    <g>
+      {/* lóbulos del borde: rompen el círculo perfecto */}
+      {[18, 90, 162, 234, 306].map((a) => {
+        const t = ((a + seed) * Math.PI) / 180;
+        return (
+          <circle
+            key={a}
+            cx={n(cx + Math.cos(t) * r * 0.72)}
+            cy={n(cy + Math.sin(t) * r * 0.68)}
+            r={n(r * 0.34)}
+            fill="url(#cb-rose-out)"
           />
+        );
+      })}
+      <circle cx={cx} cy={cy} r={n(r * 0.86)} fill="url(#cb-rose-out)" />
+      {/* pliegues: primero la sombra, encima la cinta */}
+      <path d={path} fill="none" stroke="var(--cb-rose-dark)" strokeWidth={n(r * 0.33)} strokeLinecap="round" />
+      <path d={path} fill="none" stroke="url(#cb-rose-mid)" strokeWidth={n(r * 0.19)} strokeLinecap="round" />
+      {/* brillo de satén */}
+      <path
+        d={`M${n(cx - r * 0.56)} ${n(cy - r * 0.34)} A ${n(r * 0.66)} ${n(r * 0.66)} 0 0 1 ${n(cx - r * 0.06)} ${n(cy - r * 0.68)}`}
+        fill="none"
+        stroke="#fff"
+        strokeWidth={n(r * 0.1)}
+        strokeLinecap="round"
+        opacity=".3"
+      />
+      <ellipse cx={n(cx + r * 0.06)} cy={n(cy - r * 0.04)} rx={n(r * 0.14)} ry={n(r * 0.12)} fill="var(--cb-rose-light)" opacity=".55" />
+    </g>
+  );
+}
+
+/** Papel negro, domo de rosas y moño de satén (SVG; los colores salen del tema). */
+function Wrap() {
+  // Domo de rosas: de atrás hacia adelante para que se vean superpuestas.
+  const dome = [
+    ...Array.from({ length: 9 }, (_, i) => {
+      const a = (i / 9) * Math.PI * 2 + 0.28;
+      return { cx: 160 + Math.cos(a) * 102, cy: 152 + Math.sin(a) * 56, r: 26, seed: i * 27 };
+    }),
+    ...Array.from({ length: 6 }, (_, i) => {
+      const a = (i / 6) * Math.PI * 2 + 0.9;
+      return { cx: 160 + Math.cos(a) * 58, cy: 148 + Math.sin(a) * 32, r: 27, seed: i * 41 + 15 };
+    }),
+    { cx: 142, cy: 140, r: 28, seed: 7 },
+    { cx: 182, cy: 152, r: 27, seed: 53 },
+  ];
+
+  // Hojas de papel negro que abren detrás del ramo.
+  const sheets = [
+    "M160 206 L26 96 L4 142 L114 222Z",
+    "M160 206 L294 96 L316 142 L206 222Z",
+    "M160 206 L58 44 L104 34 L156 160Z",
+    "M160 206 L262 44 L216 34 L164 160Z",
+    "M160 210 L120 68 L152 58 L166 170Z",
+    "M160 210 L200 68 L168 58 L154 170Z",
+    "M160 214 L6 198 L16 244 L132 234Z",
+    "M160 214 L314 198 L304 244 L188 234Z",
+  ];
+
+  return (
+    <svg className="cb-wrap" viewBox="0 0 320 340" fill="none" aria-hidden="true">
+      <defs>
+        <radialGradient id="cb-rose-out" cx=".34" cy=".28" r=".8">
+          <stop offset="0" stopColor="var(--cb-rose-light)" />
+          <stop offset=".4" stopColor="var(--cb-rose)" />
+          <stop offset=".78" stopColor="var(--cb-rose-dark)" />
+          <stop offset="1" stopColor="var(--cb-rose-dark)" />
+        </radialGradient>
+        <radialGradient id="cb-rose-mid" cx=".38" cy=".3" r=".72">
+          <stop offset="0" stopColor="var(--cb-rose-light)" />
+          <stop offset=".62" stopColor="var(--cb-rose)" />
+          <stop offset="1" stopColor="var(--cb-rose)" />
+        </radialGradient>
+        <linearGradient id="cb-sheet" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="var(--cb-paper-light)" />
+          <stop offset=".5" stopColor="var(--cb-paper)" />
+          <stop offset="1" stopColor="var(--cb-paper-dark)" />
+        </linearGradient>
+        <linearGradient id="cb-cone" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="var(--cb-paper-dark)" />
+          <stop offset=".42" stopColor="var(--cb-paper-light)" />
+          <stop offset=".6" stopColor="var(--cb-paper)" />
+          <stop offset="1" stopColor="var(--cb-paper-dark)" />
+        </linearGradient>
+        <linearGradient id="cb-satin" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="var(--cb-ribbon-light)" />
+          <stop offset=".45" stopColor="var(--cb-ribbon)" />
+          <stop offset="1" stopColor="var(--cb-ribbon-dark)" />
+        </linearGradient>
+      </defs>
+
+      {/* papel negro abierto en puntas detrás del ramo */}
+      <g className="cb-wrap__sheets">
+        {sheets.map((d, i) => (
+          <path key={i} d={d} fill="url(#cb-sheet)" stroke="rgba(255,255,255,.1)" strokeWidth="1" opacity={i % 2 ? 0.94 : 1} />
         ))}
       </g>
 
-      {/* cono de papel: arriba ancho, abajo en punta */}
-      <path d="M56 96 L264 96 L184 288 Q160 298 136 288 Z" fill="var(--cb-paper)" />
-      {/* pliegue izquierdo y derecho para dar volumen */}
-      <path d="M56 96 L160 124 L136 288 Q128 292 120 286 Z" fill="var(--cb-paper-dark)" opacity=".6" />
-      <path d="M264 96 L160 124 L184 288 Q192 292 200 286 Z" fill="var(--cb-paper-light)" opacity=".45" />
-      {/* boca del cono (lo que se ve del interior) */}
-      <path d="M56 96 Q160 80 264 96 Q160 132 56 96Z" fill="var(--cb-paper-dark)" opacity=".75" />
-      <path d="M56 96 Q160 80 264 96 Q160 120 56 96Z" fill="var(--cb-paper-light)" opacity=".45" />
-      <g stroke="var(--cb-paper-dark)" strokeWidth="1.4" opacity=".4">
-        <path d="M92 112 L146 288" />
-        <path d="M160 126 L160 292" />
-        <path d="M228 112 L174 288" />
-      </g>
-      {/* brillo del papel */}
-      <path d="M118 132 L150 130 L134 286 L124 288Z" fill="#fff" opacity=".1" />
-
-      {/* moño */}
-      <g className="cb-wrap__bow">
-        <path d="M160 206 C 112 172, 74 204, 106 232 C 126 248, 152 230, 160 206Z" fill="var(--cb-ribbon)" />
-        <path d="M160 206 C 208 172, 246 204, 214 232 C 194 248, 168 230, 160 206Z" fill="var(--cb-ribbon)" />
-        <path d="M160 206 C 132 190, 106 198, 104 214 C 124 206, 146 208, 160 206Z" fill="var(--cb-ribbon-dark)" opacity=".7" />
-        <path d="M160 206 C 188 190, 214 198, 216 214 C 196 206, 174 208, 160 206Z" fill="var(--cb-ribbon-dark)" opacity=".7" />
-        <path d="M152 214 C 142 244, 126 268, 112 284 L 144 278 C 152 254, 156 232, 158 216Z" fill="var(--cb-ribbon-dark)" />
-        <path d="M168 214 C 178 244, 194 268, 208 284 L 176 278 C 168 254, 164 232, 162 216Z" fill="var(--cb-ribbon-dark)" />
-        <circle cx="160" cy="208" r="13" fill="var(--cb-ribbon-light)" />
+      {/* domo de rosas */}
+      <g className="cb-wrap__roses">
+        {dome.map((rose, i) => (
+          <Rose key={i} {...rose} />
+        ))}
       </g>
 
-      {/* florecitas del relleno, asomando sobre el papel */}
-      <g className="cb-wrap__flowers">
+      {/* cono de papel negro */}
+      <path d="M76 202 L244 202 L188 330 Q160 342 132 330 Z" fill="url(#cb-cone)" />
+      <path d="M76 202 Q160 188 244 202 Q160 224 76 202Z" fill="var(--cb-paper-dark)" opacity=".9" />
+      <g stroke="var(--cb-paper-dark)" strokeWidth="1.4" opacity=".55">
+        <path d="M100 212 L142 330" />
+        <path d="M160 214 L160 336" />
+        <path d="M220 212 L178 330" />
+      </g>
+      <path d="M128 216 L148 214 L138 330 L130 332Z" fill="#fff" opacity=".07" />
+
+      {/* tul con brillos */}
+      <g className="cb-wrap__glitter" fill="#fff">
         {[
-          [70, 74, 19], [250, 74, 18], [112, 58, 15], [208, 58, 16], [42, 106, 13], [278, 106, 13], [160, 50, 14],
-        ].map(([x, y, r], i) => flower(x, y, r, i))}
+          [68, 206, 1.6], [96, 232, 1.2], [128, 214, 1], [150, 252, 1.5], [180, 224, 1.1], [206, 248, 1.4],
+          [238, 208, 1.3], [112, 278, 1.2], [196, 288, 1], [160, 306, 1.4], [84, 250, 1], [252, 232, 1.1],
+          [58, 176, 1.2], [268, 174, 1.3], [142, 300, 1], [176, 268, 1.2],
+        ].map(([x, y, r], i) => (
+          <circle key={i} cx={x} cy={y} r={r} opacity={i % 3 === 0 ? 0.85 : 0.5} />
+        ))}
+      </g>
+
+      {/* moño de satén */}
+      <g className="cb-wrap__bow" transform="translate(22 22) scale(0.86)">
+        <path d="M160 244 C 112 210, 70 242, 104 272 C 126 290, 152 268, 160 244Z" fill="url(#cb-satin)" />
+        <path d="M160 244 C 208 210, 250 242, 216 272 C 194 290, 168 268, 160 244Z" fill="url(#cb-satin)" />
+        <path d="M160 244 C 132 228, 104 236, 102 254 C 124 244, 146 246, 160 244Z" fill="var(--cb-ribbon-dark)" opacity=".65" />
+        <path d="M160 244 C 188 228, 216 236, 218 254 C 196 244, 174 246, 160 244Z" fill="var(--cb-ribbon-dark)" opacity=".65" />
+        <path d="M150 254 C 140 284, 122 310, 108 328 L 142 322 C 150 296, 154 272, 156 256Z" fill="url(#cb-satin)" />
+        <path d="M170 254 C 180 284, 198 310, 212 328 L 178 322 C 170 296, 166 272, 164 256Z" fill="url(#cb-satin)" />
+        <circle cx="160" cy="246" r="13" fill="var(--cb-ribbon-light)" />
+        <circle cx="156" cy="242" r="5" fill="#fff" opacity=".45" />
       </g>
     </svg>
   );

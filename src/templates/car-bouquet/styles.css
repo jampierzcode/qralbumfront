@@ -14,19 +14,20 @@
   --cb-ink: #eaf2ff;
   --cb-soft: #93a6c8;
 
-  /* paleta azul neón (por defecto) */
+  /* papel negro: igual en todas las paletas, como el ramo real */
+  --cb-paper: #16181d;
+  --cb-paper-light: #343a44;
+  --cb-paper-dark: #05060a;
+
+  /* paleta azul (por defecto): rosas y moño de satén azul */
   --cb-neon: #35c8ff;
   --cb-neon-2: #7a6bff;
-  --cb-paper: #2f6ad6;
-  --cb-paper-light: #5d97f0;
-  --cb-paper-dark: #1b3f8f;
-  --cb-ribbon: #7fb4ff;
-  --cb-ribbon-light: #cfe4ff;
-  --cb-ribbon-dark: #3a6bc4;
-  --cb-petal: #8fc4ff;
-  --cb-petal-2: #c9e2ff;
-  --cb-pollen: #ffd45e;
-  --cb-leaf: #2f9e63;
+  --cb-rose: #1f52d6;
+  --cb-rose-light: #74a0ff;
+  --cb-rose-dark: #0a1c63;
+  --cb-ribbon: #2158e0;
+  --cb-ribbon-light: #9dbdff;
+  --cb-ribbon-dark: #0c2478;
 
   /* ancho del ramo: de él salen tarjeta, tallo y radio del abanico */
   --cb-w: min(430px, 92vw);
@@ -43,40 +44,34 @@
 .cb[data-palette="fire"] {
   --cb-neon: #ff5a3d;
   --cb-neon-2: #ffb02e;
-  --cb-paper: #c9282f;
-  --cb-paper-light: #ef5a52;
-  --cb-paper-dark: #8a1620;
-  --cb-ribbon: #ff8a5c;
-  --cb-ribbon-light: #ffd8c2;
-  --cb-ribbon-dark: #b3402a;
-  --cb-petal: #ffb8a0;
-  --cb-petal-2: #ffe2d2;
+  --cb-rose: #c81f33;
+  --cb-rose-light: #ff7a72;
+  --cb-rose-dark: #63030f;
+  --cb-ribbon: #d42134;
+  --cb-ribbon-light: #ff9b95;
+  --cb-ribbon-dark: #6e0713;
 }
 
 .cb[data-palette="nitro"] {
   --cb-neon: #7dff6a;
   --cb-neon-2: #35c8ff;
-  --cb-paper: #1f8f4d;
-  --cb-paper-light: #4fc47c;
-  --cb-paper-dark: #10603a;
-  --cb-ribbon: #8fe5a8;
-  --cb-ribbon-light: #d9ffe4;
-  --cb-ribbon-dark: #2c7a4e;
-  --cb-petal: #b6f0c4;
-  --cb-petal-2: #e4ffea;
+  --cb-rose: #17a05a;
+  --cb-rose-light: #6ef0a4;
+  --cb-rose-dark: #043b21;
+  --cb-ribbon: #17a05a;
+  --cb-ribbon-light: #8ef5b8;
+  --cb-ribbon-dark: #04452a;
 }
 
 .cb[data-palette="violet"] {
   --cb-neon: #b98bff;
   --cb-neon-2: #ff6ad5;
-  --cb-paper: #6b3fd4;
-  --cb-paper-light: #9a72f0;
-  --cb-paper-dark: #43248f;
-  --cb-ribbon: #c1a4ff;
-  --cb-ribbon-light: #ecdfff;
-  --cb-ribbon-dark: #6a49b8;
-  --cb-petal: #d6bcff;
-  --cb-petal-2: #f1e6ff;
+  --cb-rose: #7a33d6;
+  --cb-rose-light: #c99bff;
+  --cb-rose-dark: #2e0a63;
+  --cb-ribbon: #7a33d6;
+  --cb-ribbon-light: #d3b3ff;
+  --cb-ribbon-dark: #310d6b;
 }
 
 /* ── Fondo ───────────────────────────────────────────────────────────────── */
@@ -177,8 +172,12 @@
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 54%;
+  width: 78%;
   height: auto;
+  /* por delante de los tallos: los carritos salen de entre las rosas.
+     pointer-events none para que el toque llegue igual a cada carrito. */
+  z-index: 20;
+  pointer-events: none;
   transform: translateX(-50%);
   filter: drop-shadow(0 12px 22px rgba(0, 0, 0, 0.55));
 }
@@ -194,7 +193,7 @@
 
 .cb-car {
   --cb-card-w: calc(var(--cb-w) * 0.2);
-  --cb-stem: calc(var(--cb-w) * (0.19 + var(--row) * 0.075));
+  --cb-stem: calc(var(--cb-w) * (0.27 + var(--row) * 0.075));
   position: absolute;
   left: 50%;
   bottom: 0;
@@ -215,7 +214,7 @@
   width: calc(var(--cb-w) * 0.011);
   height: var(--cb-stem);
   border-radius: 999px;
-  background: linear-gradient(180deg, #46b877, #1f7a4a);
+  background: linear-gradient(180deg, #2f3540, #14171d);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
