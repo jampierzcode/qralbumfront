@@ -8,7 +8,7 @@ import "@ant-design/v5-patch-for-react-19";
 import "antd/dist/reset.css";
 import "@fontsource-variable/inter";
 import "./styles/admin.css";
-import { AuthProvider, RequireAuth } from "./auth.jsx";
+import { AuthProvider, RequireAdmin, RequireAuth } from "./auth.jsx";
 import AdminLayout from "./layout/AdminLayout.jsx";
 import { PageSkeleton } from "./components/Skeletons.jsx";
 
@@ -57,9 +57,10 @@ const theme = {
   },
 };
 
-function Protected({ children, bare = false }) {
+function Protected({ children, bare = false, adminOnly = false }) {
+  const Guard = adminOnly ? RequireAdmin : RequireAuth;
   return (
-    <RequireAuth>
+    <Guard>
       {bare ? (
         <Suspense fallback={<PageSkeleton />}>{children}</Suspense>
       ) : (
@@ -67,7 +68,7 @@ function Protected({ children, bare = false }) {
           <Suspense fallback={<PageSkeleton />}>{children}</Suspense>
         </AdminLayout>
       )}
-    </RequireAuth>
+    </Guard>
   );
 }
 
@@ -87,11 +88,11 @@ export default function AdminApp() {
             <Route path="/admin/gifts/:id" element={<Protected bare><GiftEditorPage /></Protected>} />
             <Route path="/admin/customers" element={<Protected><CustomersPage /></Protected>} />
             <Route path="/admin/customers/:id" element={<Protected><CustomerDetailPage /></Protected>} />
-            <Route path="/admin/templates" element={<Protected><TemplatesPage /></Protected>} />
-            <Route path="/admin/collections" element={<Protected><CollectionsPage /></Protected>} />
-            <Route path="/admin/referrals" element={<Protected><ReferralsPage /></Protected>} />
+            <Route path="/admin/templates" element={<Protected adminOnly><TemplatesPage /></Protected>} />
+            <Route path="/admin/collections" element={<Protected adminOnly><CollectionsPage /></Protected>} />
+            <Route path="/admin/referrals" element={<Protected adminOnly><ReferralsPage /></Protected>} />
             <Route path="/admin/account" element={<Protected><AccountPage /></Protected>} />
-            <Route path="/admin/lab/:templateId?" element={<Protected bare><TemplateLabPage /></Protected>} />
+            <Route path="/admin/lab/:templateId?" element={<Protected bare adminOnly><TemplateLabPage /></Protected>} />
             {/* Rutas anteriores */}
             <Route path="/dashboard" element={<Navigate to="/admin" replace />} />
             <Route path="/clientes" element={<Navigate to="/admin/customers" replace />} />

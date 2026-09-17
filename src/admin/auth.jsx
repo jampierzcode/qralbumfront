@@ -50,6 +50,15 @@ export function useIsReferral() {
   return useContext(AuthContext)?.user?.role === "referido";
 }
 
+/** Rutas sólo del dueño: un referido que llegue aquí (link guardado, sesión previa) vuelve a Inicio. */
+export function RequireAdmin({ children }) {
+  const { user } = useAuth();
+  const location = useLocation();
+  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+  if (user.role === "referido") return <Navigate to="/admin" replace />;
+  return children;
+}
+
 export function RequireAuth({ children }) {
   const { user } = useAuth();
   const location = useLocation();
