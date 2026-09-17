@@ -13,7 +13,10 @@ const SAVE_DELAY = 800;
 function Screen({ children, className = "" }) {
   return (
     <div className={`pt ${className}`}>
-      <div className="pt__inner">{children}</div>
+      <div className="pt__inner">
+        <img className="pt-logo" src="/logo-brand.png" alt="MiAlbumQr" width="480" height="377" />
+        {children}
+      </div>
     </div>
   );
 }
@@ -47,7 +50,7 @@ export default function UploadPortalPage() {
   const pendingRemovals = useRef(new Set());
 
   useEffect(() => {
-    document.title = "Completa tu regalo";
+    document.title = "Completa tu regalo · MiAlbumQr";
     const meta = document.createElement("meta");
     meta.name = "robots";
     meta.content = "noindex";

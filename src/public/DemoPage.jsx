@@ -16,7 +16,7 @@ export default function DemoPage() {
   const gift = useMemo(() => (template ? { templateId, ...template.demo.gift } : null), [template, templateId]);
 
   useEffect(() => {
-    if (template) document.title = `${template.manifest.name} · Demo`;
+    if (template) document.title = `${template.manifest.name} · Demo · MiAlbumQr`;
   }, [template]);
 
   if (!template) return <ShellMessage title="Esta plantilla no existe" />;

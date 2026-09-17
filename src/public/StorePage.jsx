@@ -78,6 +78,7 @@ export default function StorePage() {
     <div className="pt st">
       <div className="pt__inner st__inner">
         <header className="st__head">
+          <img className="st__logo" src="/logo-brand.png" alt="MiAlbumQr" width="480" height="377" />
           <p className="st__eyebrow">Regalos digitales</p>
           <h1 className="st__title">{seller.name}</h1>
           <p className="st__muted">

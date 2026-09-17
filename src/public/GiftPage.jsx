@@ -32,7 +32,8 @@ export default function GiftPage() {
     if (state.status !== "ready") return;
     const name = state.gift.recipientName;
     const templateName = getTemplate(state.gift.templateId)?.manifest.name;
-    document.title = name ? `Un regalo para ${name}` : templateName || "Tienes un regalo";
+    const headline = name ? `Un regalo para ${name}` : templateName || "Tienes un regalo";
+    document.title = `${headline} · MiAlbumQr`;
   }, [state]);
 
   // Cada tipo de evento se registra una vez por sesión del navegador (recargar no duplica aperturas).

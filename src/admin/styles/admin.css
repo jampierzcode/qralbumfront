@@ -61,15 +61,11 @@
 }
 
 .adm-brand__mark {
-  display: grid;
-  place-items: center;
+  display: block;
   width: 30px;
   height: 30px;
   border-radius: 9px;
-  background: var(--adm-text);
-  color: #fff;
-  font-size: 16px;
-  line-height: 1;
+  object-fit: contain;
 }
 
 .adm-brand__name {

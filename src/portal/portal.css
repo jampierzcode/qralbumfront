@@ -377,3 +377,16 @@
 .pt-actions .pt-btn {
   flex: 1;
 }
+
+/* ── Logo de MiAlbumQr en las páginas que ve el cliente ──────────────────── */
+.pt-logo {
+  display: block;
+  width: auto;
+  height: clamp(58px, 16vw, 78px);
+  margin: 0 auto 18px;
+  object-fit: contain;
+}
+
+.pt--center .pt-logo {
+  margin-bottom: 4px;
+}
