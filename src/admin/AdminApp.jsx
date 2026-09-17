@@ -28,6 +28,7 @@ const CollectionsPage = lazy(() => import("./pages/CollectionsPage.jsx"));
 const TemplateLabPage = lazy(() => import("./pages/TemplateLabPage.jsx"));
 const ReferralsPage = lazy(() => import("./pages/ReferralsPage.jsx"));
 const AccountPage = lazy(() => import("./pages/AccountPage.jsx"));
+const BusinessPage = lazy(() => import("./pages/BusinessPage.jsx"));
 
 const theme = {
   token: {
@@ -92,6 +93,7 @@ export default function AdminApp() {
             <Route path="/admin/collections" element={<Protected adminOnly><CollectionsPage /></Protected>} />
             <Route path="/admin/referrals" element={<Protected adminOnly><ReferralsPage /></Protected>} />
             <Route path="/admin/account" element={<Protected><AccountPage /></Protected>} />
+            <Route path="/admin/business" element={<Protected><BusinessPage /></Protected>} />
             <Route path="/admin/lab/:templateId?" element={<Protected bare adminOnly><TemplateLabPage /></Protected>} />
             {/* Rutas anteriores */}
             <Route path="/dashboard" element={<Navigate to="/admin" replace />} />

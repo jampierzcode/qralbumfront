@@ -6,6 +6,7 @@ import { money } from "../lib/gifts.js";
 import { formatDate } from "../lib/format.js";
 import { PageHeader } from "../components/ui.jsx";
 import { PageSkeleton } from "../components/Skeletons.jsx";
+import { OwnerPaymentMethods } from "../components/PaymentMethods.jsx";
 
 /** Lo que ve un referido: cuánto debe pagar y qué está esperando aprobación. */
 export default function AccountPage() {
@@ -51,9 +52,11 @@ export default function AccountPage() {
           showIcon
           style={{ marginTop: 16 }}
           message={`Tienes ${money(s.owed, s.currency)} por pagar`}
-          description="Yapea el monto y avisa por WhatsApp para que se marque como pagado."
+          description="Paga con cualquiera de los datos de abajo y avisa por WhatsApp o adjunta el comprobante."
         />
       )}
+
+      {s.owed > 0 && <OwnerPaymentMethods amount={money(s.owed, s.currency)} />}
 
       <Section title="Esperando aprobación" items={data?.pendingGifts} empty="No tienes regalos esperando aprobación." />
       <Section title="Aprobados sin pagar" items={data?.unpaidGifts} empty="No debes nada. ¡Gracias!" showPrice />

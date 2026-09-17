@@ -1760,3 +1760,7 @@ button.adm-row:hover {
   font-weight: 600;
   white-space: nowrap;
 }
+
+.adm-section + .adm-section {
+  margin-top: 28px;
+}

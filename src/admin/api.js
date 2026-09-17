@@ -87,6 +87,14 @@ export const adminApi = {
   reviewGift: (giftId, body) => data(api.post(`/admin/gifts/${giftId}/review`, body)),
   setGiftPaid: (giftId, paid) => data(api.post(`/admin/gifts/${giftId}/paid`, { paid })),
 
+  paymentMethods: () => data(api.get("/admin/payment-methods")),
+  createPaymentMethod: (body) => data(api.post("/admin/payment-methods", body)),
+  updatePaymentMethod: (id, body) => data(api.patch(`/admin/payment-methods/${id}`, body)),
+  deletePaymentMethod: (id) => api.delete(`/admin/payment-methods/${id}`),
+  ownerPaymentMethods: () => data(api.get("/admin/owner-payment-methods")),
+  myCatalog: () => data(api.get("/admin/my-catalog")),
+  setCatalogPrice: (templateId, salePrice) => data(api.put(`/admin/my-catalog/${templateId}`, { salePrice })),
+
   referrals: () => data(api.get("/admin/referrals")),
   createReferral: (body) => data(api.post("/admin/referrals", body)),
   updateReferral: (id, body) => data(api.patch(`/admin/referrals/${id}`, body)),

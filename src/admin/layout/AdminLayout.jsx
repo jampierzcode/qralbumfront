@@ -5,6 +5,7 @@ import {
   AppstoreOutlined,
   WalletOutlined,
   SolutionOutlined,
+  ShopOutlined,
   FolderOutlined,
   GiftOutlined,
   HomeOutlined,
@@ -22,14 +23,17 @@ const BASE_NAV = [
   { to: "/admin/customers", label: "Clientes", icon: <TeamOutlined /> },
 ];
 
+const BUSINESS_NAV = { to: "/admin/business", label: "Mi negocio", icon: <ShopOutlined /> };
+
 const ADMIN_NAV = [
   { to: "/admin/templates", label: "Plantillas", icon: <AppstoreOutlined /> },
   { to: "/admin/collections", label: "Colecciones", icon: <FolderOutlined /> },
   { to: "/admin/referrals", label: "Referidos", icon: <SolutionOutlined /> },
+  BUSINESS_NAV,
 ];
 
 // El referido ve su cuenta por pagar en vez del catálogo.
-const REFERRAL_NAV = [{ to: "/admin/account", label: "Mi cuenta", icon: <WalletOutlined /> }];
+const REFERRAL_NAV = [{ to: "/admin/account", label: "Mi cuenta", icon: <WalletOutlined /> }, BUSINESS_NAV];
 
 export function Brand() {
   return (
