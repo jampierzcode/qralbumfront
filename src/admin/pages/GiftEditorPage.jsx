@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button, Dropdown, Segmented, Select } from "antd";
+import { Button, Dropdown, InputNumber, Segmented, Select } from "antd";
 import { ArrowLeftOutlined, EyeOutlined, MoreOutlined, QrcodeOutlined, SendOutlined, SolutionOutlined, TeamOutlined } from "@ant-design/icons";
 import SchemaForm from "../../editor/SchemaForm.jsx";
 import { useGiftEditor } from "../hooks/useGiftEditor.js";
@@ -162,6 +162,26 @@ export default function GiftEditorPage() {
                 onChange={(v) => editor.setDetail("occasion", v ?? null)}
                 options={template.manifest.occasions.map((o) => ({ value: o, label: occasionLabel(o) }))}
               />
+            </div>
+            <div className="adm-field" style={{ marginBottom: 0 }}>
+              <span className="adm-field__label">A cuánto lo vendiste (opcional)</span>
+              <InputNumber
+                size="large"
+                style={{ width: "100%" }}
+                min={0}
+                step={1}
+                prefix="S/"
+                value={editor.details.salePrice ?? null}
+                onChange={(v) => editor.setDetail("salePrice", v ?? null)}
+                placeholder="Ej. 25"
+              />
+              <span className="adm-muted adm-small">
+                {gift.price !== null
+                  ? `Te cuesta ${money(gift.price, gift.currency)}${
+                      editor.details.salePrice ? ` · ganas ${money(editor.details.salePrice - gift.price, gift.currency)}` : ""
+                    }`
+                  : "Sólo para tus cuentas."}
+              </span>
             </div>
             <p className="adm-muted adm-small" style={{ margin: 0 }}>
               Plantilla: {templateName(gift.templateId)}

@@ -13,6 +13,7 @@ import { ReviewBadge } from "./ui.jsx";
 export function SubmitDialog({ gift, open, onClose, onDone }) {
   const { message } = App.useApp();
   const [note, setNote] = useState("");
+  const [salePrice, setSalePrice] = useState(null);
   const [file, setFile] = useState(null);
   const [sending, setSending] = useState(false);
   const inputRef = useRef(null);
@@ -21,13 +22,14 @@ export function SubmitDialog({ gift, open, onClose, onDone }) {
     if (open) {
       setNote("");
       setFile(null);
+      setSalePrice(gift?.salePrice ?? null);
     }
-  }, [open]);
+  }, [open, gift]);
 
   const submit = async () => {
     setSending(true);
     try {
-      await adminApi.submitGift(gift.id, { note: note.trim() || undefined });
+      await adminApi.submitGift(gift.id, { note: note.trim() || undefined, salePrice: salePrice ?? "" });
       if (file) await adminApi.uploadPaymentProof(gift.id, file);
       message.success("Enviado. Te avisamos cuando esté aprobado.");
       onDone?.();
@@ -61,6 +63,20 @@ export function SubmitDialog({ gift, open, onClose, onDone }) {
           <>Envíalo a revisión. Cuando se apruebe verás el link y el QR para tu cliente.</>
         )}
       </p>
+      <label className="adm-field">
+        <span className="adm-field__label">¿A cuánto se lo vendiste? (opcional)</span>
+        <InputNumber
+          size="large"
+          style={{ width: "100%" }}
+          min={0}
+          step={1}
+          prefix="S/"
+          value={salePrice}
+          onChange={setSalePrice}
+          placeholder="Ej. 25"
+        />
+        <span className="adm-muted adm-small">Sólo para tus cuentas: así ves cuánto ganaste.</span>
+      </label>
       <label className="adm-field">
         <span className="adm-field__label">Mensaje (opcional)</span>
         <Input.TextArea

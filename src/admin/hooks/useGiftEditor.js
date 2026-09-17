@@ -17,7 +17,7 @@ export function useGiftEditor(giftId) {
   const [gift, setGift] = useState(null);
   const [loadError, setLoadError] = useState(null);
   const [values, setValues] = useState(null);
-  const [details, setDetails] = useState({ customerId: null, occasion: null });
+  const [details, setDetails] = useState({ customerId: null, occasion: null, salePrice: null });
   const [assets, setAssets] = useState({});
   const [serverErrors, setServerErrors] = useState([]);
   const [save, setSave] = useState({ status: "idle", error: null, savedAt: null });
@@ -34,7 +34,7 @@ export function useGiftEditor(giftId) {
       const data = await adminApi.gift(giftId);
       setGift(data);
       setValues(mergeBoundValues(data.content, data));
-      setDetails({ customerId: data.customerId, occasion: data.occasion });
+      setDetails({ customerId: data.customerId, occasion: data.occasion, salePrice: data.salePrice });
       setAssets(assetsMap(data.media));
       setLoadError(null);
     } catch (err) {
@@ -59,7 +59,12 @@ export function useGiftEditor(giftId) {
     const { values: v, details: d } = latest.current;
     const run = (async () => {
       try {
-        const updated = await adminApi.updateGift(giftId, { content: v, customerId: d.customerId, occasion: d.occasion });
+        const updated = await adminApi.updateGift(giftId, {
+          content: v,
+          customerId: d.customerId,
+          occasion: d.occasion,
+          salePrice: d.salePrice ?? "",
+        });
         // No se pisan los valores locales (el usuario puede seguir escribiendo).
         setGift((g) => ({ ...g, ...updated, media: g.media }));
         setServerErrors([]);

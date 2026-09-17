@@ -16,9 +16,17 @@ export default function AccountPage() {
 
   return (
     <div className="adm-page">
-      <PageHeader title="Mi cuenta" subtitle="Tus regalos y lo que tienes que pagar" />
+      <PageHeader title="Mi cuenta" subtitle="Tus ventas, tu ganancia y lo que tienes que pagar" />
 
       <div className="adm-stats">
+        <div className="adm-stat">
+          <span className="adm-stat__label">Vendiste</span>
+          <span className="adm-stat__value">{money(s.sold, s.currency)}</span>
+        </div>
+        <div className="adm-stat">
+          <span className="adm-stat__label">Tu ganancia</span>
+          <span className="adm-stat__value">{money(s.earned, s.currency)}</span>
+        </div>
         <div className="adm-stat">
           <span className="adm-stat__label">Por pagar</span>
           <span className="adm-stat__value">{money(s.owed, s.currency)}</span>

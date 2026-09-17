@@ -20,6 +20,8 @@ export default function ReferralsPage() {
   const items = data?.items || [];
   const totalOwed = items.reduce((sum, r) => sum + r.owed, 0);
   const totalPending = items.reduce((sum, r) => sum + r.pending, 0);
+  const totalSold = items.reduce((sum, r) => sum + (r.sold || 0), 0);
+  const totalEarned = items.reduce((sum, r) => sum + (r.earned || 0), 0);
 
   const create = async (values) => {
     try {
@@ -41,7 +43,9 @@ export default function ReferralsPage() {
         title="Referidos"
         subtitle={
           items.length
-            ? `${plural(items.length, "referido", "referidos")} · te deben ${money(totalOwed)}${totalPending ? ` · ${totalPending} por aprobar` : ""}`
+            ? `${plural(items.length, "referido", "referidos")} · te deben ${money(totalOwed)}${totalPending ? ` · ${totalPending} por aprobar` : ""}${
+                totalSold ? ` · vendieron ${money(totalSold)} y ganaron ${money(totalEarned)}` : ""
+              }`
             : "Personas que venden tus regalos"
         }
         actions={
@@ -75,6 +79,11 @@ export default function ReferralsPage() {
                   {plural(r.gifts, "regalo", "regalos")} · {plural(r.approved, "aprobado", "aprobados")}
                   {r.pending ? ` · ${r.pending} por aprobar` : ""}
                 </span>
+                {r.sold > 0 && (
+                  <span className="adm-row__meta">
+                    Vendió {money(r.sold)} · ganó {money(r.earned)}
+                  </span>
+                )}
               </div>
               <div className="adm-row__side">
                 <span className={`adm-status adm-status--${r.owed > 0 ? "amber" : "green"}`}>
@@ -158,6 +167,10 @@ function ReferralDrawer({ referral, onClose, onChanged }) {
             <span className="adm-stat__value">{summary?.pending ?? referral.pending}</span>
           </div>
         </div>
+
+        <p className="adm-muted adm-small" style={{ margin: 0 }}>
+          Vendió {money(summary?.sold ?? referral.sold)} a sus clientes y ganó {money(summary?.earned ?? referral.earned)}.
+        </p>
 
         <label className="adm-field" style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <Switch checked={referral.isActive} onChange={(v) => update({ isActive: v }, v ? "Cuenta activada" : "Cuenta desactivada")} />

@@ -18,7 +18,7 @@ import ContentRequestDialog from "./ContentRequestDialog.jsx";
 import { SubmitDialog, ReviewDrawer } from "./ReviewFlow.jsx";
 import { useIsReferral } from "../auth.jsx";
 import { adminApi, errorMessage } from "../api.js";
-import { giftTitle, giftUrl, templateName } from "../lib/gifts.js";
+import { giftTitle, giftUrl, money, templateName } from "../lib/gifts.js";
 import { timeAgo } from "../lib/format.js";
 import { ReviewBadge, StatusBadge, TemplateThumb } from "./ui.jsx";
 import ShareDialog, { copyText } from "./ShareDialog.jsx";
@@ -124,6 +124,19 @@ export function useGiftActions({ onChanged } = {}) {
   return { menuFor, dialogs, openShare: setShare, openRequest: setRequest };
 }
 
+/** Cuánto cuesta el regalo, a cuánto se vendió y cuánto queda de ganancia. */
+export function GiftMoney({ gift }) {
+  if (gift.price === null && gift.salePrice === null) return null;
+  const profit = gift.salePrice !== null && gift.price !== null ? gift.salePrice - gift.price : null;
+  return (
+    <span className="adm-gift-card__money">
+      {gift.price !== null && <span>Te cuesta {money(gift.price, gift.currency)}</span>}
+      {gift.salePrice !== null && <span>Lo vendiste en {money(gift.salePrice, gift.currency)}</span>}
+      {profit !== null && <strong>Ganas {money(profit, gift.currency)}</strong>}
+    </span>
+  );
+}
+
 export default function GiftCard({ gift, actions, showCustomer = true }) {
   return (
     <article className="adm-gift-card">
@@ -145,6 +158,7 @@ export default function GiftCard({ gift, actions, showCustomer = true }) {
           <span className="adm-gift-card__meta">
             {gift.createdBy ? `${gift.createdBy.name} · ` : ""}Editado {timeAgo(gift.updatedAt)}
           </span>
+          <GiftMoney gift={gift} />
         </div>
         {actions && (
           <Dropdown trigger={["click"]} menu={{ items: actions.menuFor(gift) }} placement="bottomRight">

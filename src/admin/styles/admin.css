@@ -1735,3 +1735,17 @@ button.adm-row:hover {
   cursor: pointer;
   font-weight: 550;
 }
+
+.adm-gift-card__money {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-top: 2px;
+  color: var(--adm-muted);
+  font-size: 12px;
+}
+
+.adm-gift-card__money strong {
+  color: #16723b;
+  font-weight: 600;
+}
