@@ -36,6 +36,8 @@ export const PUBLIC_BASE = (import.meta.env.VITE_PUBLIC_URL || window.location.o
 
 export const giftUrl = (slug) => `${PUBLIC_BASE}/g/${slug}`;
 export const uploadUrl = (token) => `${PUBLIC_BASE}/upload/${token}`;
+// Link de sólo lectura para que el comprador vea cómo va su lista de invitados.
+export const guestListUrl = (token) => `${PUBLIC_BASE}/lista/${token}`;
 export const demoUrl = (templateId) => `${PUBLIC_BASE}/demo/${templateId}`;
 
 export function whatsappUrl(text, phone) {

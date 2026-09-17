@@ -6,6 +6,7 @@ const DemoPage = lazy(() => import("./public/DemoPage.jsx"));
 const FramePage = lazy(() => import("./public/FramePage.jsx"));
 const LegacyRedirect = lazy(() => import("./public/LegacyRedirect.jsx"));
 const UploadPortalPage = lazy(() => import("./portal/UploadPortalPage.jsx"));
+const GuestListPage = lazy(() => import("./public/GuestListPage.jsx"));
 const AdminApp = lazy(() => import("./admin/AdminApp.jsx"));
 // Herramientas para crear plantillas: sólo en desarrollo.
 const SchemaPlayground = import.meta.env.DEV ? lazy(() => import("./dev/SchemaPlayground.jsx")) : null;
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/frame" element={<FramePage />} />
           <Route path="/c/:uuid" element={<LegacyRedirect />} />
           <Route path="/upload/:token" element={<UploadPortalPage />} />
+          <Route path="/lista/:token" element={<GuestListPage />} />
           {SchemaPlayground && <Route path="/dev/schema/:templateId?" element={<SchemaPlayground />} />}
           <Route path="/*" element={<RootSwitch />} />
         </Routes>

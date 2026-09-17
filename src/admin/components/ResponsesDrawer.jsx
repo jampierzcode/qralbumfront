@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { App, Button, Drawer, Empty, Popconfirm, Skeleton } from "antd";
-import { CopyOutlined, DeleteOutlined, ReloadOutlined } from "@ant-design/icons";
+import { CopyOutlined, DeleteOutlined, ReloadOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import api, { errorMessage } from "../api.js";
 import { timeAgo } from "../lib/format.js";
+import { guestListUrl, whatsappUrl } from "../lib/gifts.js";
 import { copyText } from "./ShareDialog.jsx";
 
 const ANSWERS = {
@@ -61,6 +62,38 @@ export default function ResponsesDrawer({ gift, open, onClose }) {
       width={440}
       extra={<Button icon={<ReloadOutlined />} onClick={load} aria-label="Actualizar" />}
     >
+      {gift.guestListToken && (
+        <div className="adm-note" style={{ marginBottom: 16 }}>
+          <span className="adm-field__label">Link para {gift.recipientName || "tu cliente"}</span>
+          <p className="adm-muted adm-small" style={{ margin: "0 0 8px" }}>
+            Con este link ve su lista y cuántos van, sin entrar al panel. No puede editar el regalo.
+          </p>
+          <code className="adm-link-box">{guestListUrl(gift.guestListToken)}</code>
+          <div className="adm-actions" style={{ marginTop: 8 }}>
+            <Button
+              size="small"
+              icon={<CopyOutlined />}
+              onClick={async () =>
+                (await copyText(guestListUrl(gift.guestListToken))) ? message.success("Link copiado") : message.error("No se pudo copiar")
+              }
+            >
+              Copiar link
+            </Button>
+            <Button
+              size="small"
+              icon={<WhatsAppOutlined />}
+              href={whatsappUrl(
+                `Aquí puedes ver quiénes confirmaron 🎉\n${guestListUrl(gift.guestListToken)}`,
+                gift.customer?.phone
+              )}
+              target="_blank"
+            >
+              Enviar por WhatsApp
+            </Button>
+          </div>
+        </div>
+      )}
+
       {state.loading && !state.data ? (
         <Skeleton active />
       ) : !summary ? null : (

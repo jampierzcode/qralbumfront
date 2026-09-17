@@ -1,0 +1,129 @@
+/* Lista de confirmaciones del comprador. Prefijo gl-. Usa la base cálida del portal. */
+.gl__inner {
+  padding: 28px 18px 48px;
+  display: grid;
+  gap: 18px;
+}
+
+.gl__head {
+  text-align: center;
+}
+
+.gl__eyebrow {
+  margin: 0 0 4px;
+  color: var(--pt-accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.gl__title {
+  margin: 0 0 6px;
+  font-size: clamp(22px, 6vw, 28px);
+  line-height: 1.15;
+}
+
+.gl__muted {
+  margin: 0;
+  color: var(--pt-muted);
+  font-size: 14px;
+}
+
+.gl__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.gl__stat {
+  padding: 14px 10px;
+  border: 1px solid var(--pt-border);
+  border-radius: 16px;
+  background: var(--pt-surface);
+  text-align: center;
+}
+
+.gl__stat--yes {
+  border-color: #bde3c6;
+  background: #eefaf0;
+}
+
+.gl__stat-value {
+  display: block;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.gl__stat-label {
+  color: var(--pt-muted);
+  font-size: 12px;
+}
+
+.gl__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.gl__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--pt-border);
+  border-radius: 14px;
+  background: var(--pt-surface);
+}
+
+.gl__name {
+  display: block;
+  font-weight: 600;
+}
+
+.gl__message {
+  display: block;
+  margin-top: 2px;
+  color: var(--pt-muted);
+  font-size: 13px;
+}
+
+.gl__answer {
+  display: grid;
+  gap: 2px;
+  justify-items: end;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.gl__badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #f1ece6;
+  color: #6b5d53;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.gl__badge--yes { background: #e0f3e6; color: #16723b; }
+.gl__badge--maybe { background: #fdf1d8; color: #a15c07; }
+
+.gl__guests {
+  color: var(--pt-muted);
+  font-size: 12px;
+}
+
+.gl__empty,
+.gl__foot {
+  text-align: center;
+}
+
+.gl__foot {
+  margin: 4px 0 0;
+  color: var(--pt-muted);
+  font-size: 12px;
+}

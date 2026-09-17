@@ -1764,3 +1764,13 @@ button.adm-row:hover {
 .adm-section + .adm-section {
   margin-top: 28px;
 }
+
+.adm-link-box {
+  display: block;
+  padding: 8px 10px;
+  border: 1px solid var(--adm-border-soft);
+  border-radius: 10px;
+  background: #fff;
+  font-size: 12px;
+  word-break: break-all;
+}
