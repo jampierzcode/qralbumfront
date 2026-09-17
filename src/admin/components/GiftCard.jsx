@@ -12,6 +12,7 @@ import {
   RollbackOutlined,
   SendOutlined,
   SolutionOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
 import ContentRequestDialog from "./ContentRequestDialog.jsx";
 import { SubmitDialog, ReviewDrawer } from "./ReviewFlow.jsx";
@@ -62,6 +63,15 @@ export function useGiftActions({ onChanged } = {}) {
         : []),
       ...(!isReferral && pending
         ? [{ key: "review", icon: <SolutionOutlined />, label: "Revisar y aprobar", onClick: () => setReview(gift) }]
+        : []),
+      // Registrar el pago del referido sin salir del regalo.
+      ...(!isReferral && gift.reviewStatus === "approved"
+        ? [{
+            key: "paid",
+            icon: <DollarOutlined />,
+            label: gift.paidAt ? "Quitar el pagado" : "Marcar como pagado",
+            onClick: () => run(() => adminApi.setGiftPaid(gift.id, !gift.paidAt), gift.paidAt ? "Marcado como no pagado" : "Pago registrado"),
+          }]
         : []),
       { key: "edit", icon: <EditOutlined />, label: "Editar", onClick: () => navigate(`/admin/gifts/${gift.id}`) },
       { key: "preview", icon: <EyeOutlined />, label: "Preview", onClick: () => navigate(`/admin/gifts/${gift.id}/preview`) },

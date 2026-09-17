@@ -1716,3 +1716,11 @@ button.adm-row:hover {
   border-radius: 12px;
   background: #faf9f7;
 }
+
+.adm-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}

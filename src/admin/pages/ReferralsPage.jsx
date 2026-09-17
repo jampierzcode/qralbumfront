@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { App, Button, Drawer, Form, Input, Modal, Switch, Tag } from "antd";
-import { PlusOutlined, UserOutlined } from "@ant-design/icons";
+import { CheckOutlined, PlusOutlined, UserOutlined } from "@ant-design/icons";
 import { adminApi, errorMessage } from "../api.js";
 import { useRequest } from "../hooks/useRequest.js";
 import { money } from "../lib/gifts.js";
@@ -126,6 +127,19 @@ function ReferralDrawer({ referral, onClose, onChanged }) {
   };
 
   const summary = account.data?.summary;
+  const unpaid = account.data?.unpaidGifts || [];
+
+  // Registrar el pago = marcar los regalos que ya te yapeó.
+  const markPaid = async (ids, success) => {
+    try {
+      await Promise.all(ids.map((id) => adminApi.setGiftPaid(id, true)));
+      message.success(success);
+      account.reload();
+      onChanged?.();
+    } catch (err) {
+      message.error(errorMessage(err));
+    }
+  };
 
   return (
     <Drawer open={Boolean(referral)} onClose={onClose} title={referral.name} width={440}>
@@ -163,7 +177,40 @@ function ReferralDrawer({ referral, onClose, onChanged }) {
         </div>
 
         <GiftList title="Pendientes de tu aprobación" items={account.data?.pendingGifts} empty="Nada por aprobar." />
-        <GiftList title="Aprobados sin pagar" items={account.data?.unpaidGifts} empty="No te debe nada." showPrice />
+
+        <div>
+          <div className="adm-list-head">
+            <span className="adm-field__label" style={{ margin: 0 }}>Aprobados sin pagar</span>
+            {unpaid.length > 1 && (
+              <Button size="small" icon={<CheckOutlined />} onClick={() => markPaid(unpaid.map((g) => g.id), "Todo marcado como pagado")}>
+                Ya me pagó todo
+              </Button>
+            )}
+          </div>
+          {unpaid.length === 0 ? (
+            <p className="adm-muted adm-small" style={{ margin: 0 }}>No te debe nada.</p>
+          ) : (
+            <div className="adm-rows">
+              {unpaid.map((g) => (
+                <div key={g.id} className="adm-row">
+                  <div className="adm-row__main">
+                    <Link to={`/admin/gifts/${g.id}`} className="adm-row__title">
+                      {g.recipientName || "Sin destinatario"}
+                    </Link>
+                    <span className="adm-row__meta">
+                      {money(g.price, g.currency)} · aprobado {formatDate(g.reviewedAt || g.submittedAt)}
+                    </span>
+                  </div>
+                  <div className="adm-row__side">
+                    <Button size="small" icon={<CheckOutlined />} onClick={() => markPaid([g.id], "Pago registrado")}>
+                      Ya me pagó
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </Drawer>
   );
