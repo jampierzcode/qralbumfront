@@ -51,12 +51,3 @@ export function Branch({ className = "" }) {
     </svg>
   );
 }
-
-/** Monograma J|J dentro de un filete fino. */
-export function Monogram({ text, className = "" }) {
-  return (
-    <span className={`wgr-monogram ${className}`} aria-hidden="true">
-      {text}
-    </span>
-  );
-}
