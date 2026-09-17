@@ -1749,3 +1749,14 @@ button.adm-row:hover {
   color: #16723b;
   font-weight: 600;
 }
+
+.adm-choice__price {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f0eee9;
+  color: #57534e;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}

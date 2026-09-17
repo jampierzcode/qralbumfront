@@ -6,7 +6,7 @@ import { getSteps, BOUND_KEYS } from "../../../gift-core/index.js";
 import { getTemplate } from "../../engine/registry.js";
 import { adminApi, errorMessage } from "../api.js";
 import { useRequest } from "../hooks/useRequest.js";
-import { occasionLabel } from "../lib/gifts.js";
+import { money, occasionLabel } from "../lib/gifts.js";
 import { CollectionCover, EmptyState, PageHeader } from "../components/ui.jsx";
 import { Skel } from "../components/Skeletons.jsx";
 import { CustomerPicker } from "../components/customers.jsx";
@@ -69,6 +69,11 @@ export default function GiftWizardPage() {
   };
 
   const collection = collections.find((c) => String(c.id) === collectionId);
+  // Precio más bajo de cada colección, para orientar antes de entrar.
+  const priceFrom = (c) => {
+    const prices = c.templateIds.map((id) => listingById[id]?.referralPrice).filter((p) => p !== null && p !== undefined);
+    return prices.length ? Math.min(...prices) : null;
+  };
   const templatesInStep = collection
     ? collection.templateIds.map((id) => listingById[id]).filter((l) => l?.isActive && l.available)
     : activeTemplates;
@@ -122,7 +127,10 @@ export default function GiftWizardPage() {
                       <span className="adm-choice__count">{c.templateIds.filter((id) => listingById[id]?.isActive).length}</span>
                     </div>
                     <div>
-                      <h3 className="adm-choice__title">{c.name}</h3>
+                      <h3 className="adm-choice__title">
+                        {c.name}
+                        {priceFrom(c) !== null && <span className="adm-choice__price">desde {money(priceFrom(c))}</span>}
+                      </h3>
                       {c.description && <p className="adm-choice__text">{c.description}</p>}
                     </div>
                   </button>
@@ -149,6 +157,7 @@ export default function GiftWizardPage() {
                   templateId={l.templateId}
                   name={l.name}
                   description={l.description}
+                  price={l.referralPrice}
                   selected={templateId === l.templateId}
                   onChoose={() => go("details", { templateId: l.templateId })}
                   onDemo={() => setDemo(l.templateId)}

@@ -3,7 +3,7 @@ import { Button, Modal } from "antd";
 import { ExportOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import { TemplateThumb } from "./ui.jsx";
 import DevicePreview from "./DevicePreview.jsx";
-import { demoUrl, occasionLabel } from "../lib/gifts.js";
+import { demoUrl, money, occasionLabel } from "../lib/gifts.js";
 import { getTemplate } from "../../engine/registry.js";
 
 const canHover = () => typeof window !== "undefined" && window.matchMedia?.("(hover: hover) and (pointer: fine)").matches;
@@ -73,7 +73,7 @@ export function TemplateDemoModal({ templateId, open, onClose, onChoose }) {
   );
 }
 
-export function TemplateChoiceCard({ templateId, name, description, selected, onChoose, onDemo }) {
+export function TemplateChoiceCard({ templateId, name, description, price, selected, onChoose, onDemo }) {
   const template = getTemplate(templateId);
   const occasions = template?.manifest.occasions || [];
   return (
@@ -83,7 +83,11 @@ export function TemplateChoiceCard({ templateId, name, description, selected, on
           <LiveTemplateThumb templateId={templateId} />
         </div>
         <div>
-          <h3 className="adm-choice__title">{name || template?.manifest.name}</h3>
+          <h3 className="adm-choice__title">
+            {name || template?.manifest.name}
+            {/* Cuánto cuesta este regalo (lo que se le paga al dueño). */}
+            {price !== null && price !== undefined && <span className="adm-choice__price">{money(price)}</span>}
+          </h3>
           <p className="adm-choice__text">{description ?? template?.manifest.description}</p>
         </div>
       </button>
