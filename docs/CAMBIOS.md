@@ -243,3 +243,22 @@ Plantilla nueva (`car-bouquet`) para los ramos de carritos de colección: **los 
 Las fotos de demostración son carritos reales recortados sin fondo (webp con transparencia) y viven en `src/templates/car-bouquet/media/`, no en `_demo-media`, porque sólo las usa esta plantilla.
 
 Verificación: `npm test` 74/74 · `npm run smoke` 5/5 tamaños · editor generado y miniatura del render real · backend carga el schema sin cambios.
+
+## Baby shower
+
+Plantilla nueva (`baby-shower`): invitación mágica para darle la bienvenida al bebé, con **la paleta atada al género**.
+
+- **Azul, rosado o los dos**: el campo `gender` (`boy` · `girl` · `surprise`) cambia el cielo, los adornos, los botones, el confeti y los textos ("un principito" / "una princesita" / "un bebé viene en camino"). `surprise` es para cuando todavía no se sabe: mezcla los dos colores.
+- **Cielo de cuento** en SVG (`Scenery.jsx`): luna con halo, estrellas, globos que suben y un mar de nubes. Todo queda en la franja central del lienzo, que es lo que se ve en pantalla vertical (el `slice` recorta los lados).
+- **Adornos de bebé flotando** detrás de la invitación: biberón, sonajero, osito, chupón, patucos, corona, mameluco y carriola. Cantidad fija (8) y sólo `transform`; se apagan con `prefers-reduced-motion`, en tier bajo y en apaisado.
+- **Corona de rey/reina** sobre el medallón redondo de la foto (ecografía o pancita), con anillo punteado que gira lento.
+- **Iconos propios** (`Icons.jsx`, 18 glifos SVG): biberón, chupón, sonajero, osito, patucos, carriola, mameluco, pañal, mantita, toallitas, corona, luna, estrella, nube, globo, corazón, regalo y los de fecha/hora/lugar.
+- **Secciones**: portada · anuncio (con la fecha probable de nacimiento) · detalles con **código de vestimenta** · mapa (Google Maps y Waze) · cuenta regresiva · **mesa de regalos** (ideas + link) · confirmación de asistencia · álbum de la dulce espera · agradecimiento firmado por los papás.
+- **Ideas de regalo con su icono**: si la idea dice "pañales", "biberones", "mantita" o "toallitas" se le pone el icono que le toca; si no, rota por la lista.
+- **Confirmación (`respond("rsvp", …)`)**: nombre, cuántos vienen, un deseo para el bebé y Sí / Tal vez / No podré ir. Recuerda la respuesta en ese celular y ofrece WhatsApp para dudas.
+- Tipografías ya instaladas: Fraunces (títulos), Nunito (texto) y Caveat (los detalles escritos a mano).
+
+### Catálogo
+Colección nueva **Baby shower**; el backend la crea al arrancar (idempotente), igual que Boda y Save the date.
+
+Verificación: `npm test` 80/80 · `npm run smoke` 5/5 tamaños (sin errores de consola, sin audio antes del gesto, sin scroll horizontal) · miniatura generada del render real · backend 88/88 con el schema nuevo.
