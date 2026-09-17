@@ -227,3 +227,19 @@ Carpeta privada (empieza con `_`, los registros la ignoran). Un diseño nuevo de
 Colecciones nuevas **Boda** y **Save the date**; el backend las crea al arrancar (idempotente) para que una plantilla nueva caiga sola en su colección sin correr el seed a mano.
 
 Verificación: `npm test` 68/68 (24 contratos nuevos automáticos) · `npm run smoke` 40/40 (8 plantillas × 5 tamaños) · miniaturas generadas del render real · backend 88/88 con los 4 schemas nuevos cargados desde el repositorio del frontend.
+
+## Ramo de carritos
+
+Plantilla nueva (`car-bouquet`) para los ramos de carritos de colección: **los carritos son las flores**.
+
+- **Portada** oscura de garaje con "toca para abrir", botón de play y el ramo en penumbra (es la pantalla de apertura: desbloquea la música en el gesto).
+- **El ramo se arma solo**: cada carrito crece desde el papel con un retardo distinto (`transform-origin` en el papel + `scaleY`), como florecen los girasoles de la otra plantilla.
+- **Cada carrito guarda un mensaje**: se toca y abre su ficha (foto, nombre y mensaje) con ‹ ›, Esc y contador "3/6"; al descubrirlos todos, confeti.
+- Después: **la carta** palabra por palabra, el **álbum** en polaroids con visor, los **videos** (bajan la música al reproducirse) y la meta con bandera a cuadros.
+- Cuatro colores de ramo: azul neón, rojo fuego, verde nitro y morado. El papel, el moño, las hojas y las florecitas son SVG que leen esos colores.
+- Toda la geometría del ramo (ancho de tarjeta, largo del tallo, radio del abanico) sale de una sola variable `--cb-w`, así se adapta de 375 px a escritorio sin deformarse; en apaisado el ramo se mide contra el alto disponible.
+- El schema pide de 3 a 9 carritos (`foto + nombre + mensaje`), la carta, el álbum, la canción y los videos.
+
+Las fotos de demostración son carritos reales recortados sin fondo (webp con transparencia) y viven en `src/templates/car-bouquet/media/`, no en `_demo-media`, porque sólo las usa esta plantilla.
+
+Verificación: `npm test` 74/74 · `npm run smoke` 5/5 tamaños · editor generado y miniatura del render real · backend carga el schema sin cambios.
