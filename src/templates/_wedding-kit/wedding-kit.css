@@ -1,0 +1,462 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   Kit de bodas · prefijo wk-
+   Los bloques no traen colores propios: leen variables que define CADA diseño
+   en su elemento raíz. Así el mismo formulario se ve dorado, azul o verde.
+
+     --wk-ink        texto principal
+     --wk-soft       texto secundario
+     --wk-accent     color de acento (botones, iconos, filetes)
+     --wk-on-accent  texto sobre el acento
+     --wk-surface    fondo de tarjetas
+     --wk-line       líneas y bordes
+     --wk-radius     redondeo de tarjetas
+     --wk-display    tipografía de títulos
+     --wk-body       tipografía de texto
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.wk-icon {
+  width: 1.5em;
+  height: 1.5em;
+  flex: none;
+}
+
+/* ── Botones y links ─────────────────────────────────────────────────────── */
+.wk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 46px;
+  padding: 0.7em 1.4em;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: var(--wk-body, inherit);
+  font-size: 0.94rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s ease, opacity 0.18s ease, background-color 0.18s ease;
+}
+
+.wk-btn .wk-icon {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.wk-btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.wk-btn--primary {
+  background: var(--wk-accent, #b08d57);
+  color: var(--wk-on-accent, #fff);
+}
+
+.wk-btn--ghost {
+  background: transparent;
+  border-color: var(--wk-accent, #b08d57);
+  color: var(--wk-accent, #b08d57);
+}
+
+.wk-btn--plain {
+  background: transparent;
+  color: var(--wk-soft, #6b6b6b);
+  min-height: 40px;
+  padding: 0.5em 0.9em;
+  font-weight: 500;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wk-btn:not(:disabled):hover {
+    transform: translateY(-1px);
+  }
+}
+
+.wk-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.wk-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  background: none;
+  border: 0;
+  padding: 0.4em 0;
+  color: var(--wk-accent, #b08d57);
+  font-family: var(--wk-body, inherit);
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.wk-link .wk-icon {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+/* ── Ceremonia / recepción ───────────────────────────────────────────────── */
+.wk-event {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1.6rem 1.3rem;
+  border-radius: var(--wk-radius, 18px);
+  background: var(--wk-surface, rgba(255, 255, 255, 0.9));
+  color: var(--wk-ink, #2a2a2a);
+  text-align: center;
+}
+
+.wk-event__icon {
+  width: 2.3rem;
+  height: 2.3rem;
+  color: var(--wk-accent, #b08d57);
+}
+
+.wk-event__eyebrow {
+  margin: 0.2rem 0 0;
+  font-family: var(--wk-display, inherit);
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: var(--wk-accent, #b08d57);
+}
+
+.wk-event__time {
+  margin: 0.1rem 0 0.2rem;
+  font-family: var(--wk-body, inherit);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.wk-event__venue {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 600;
+}
+
+.wk-event__address,
+.wk-event__reference {
+  margin: 0;
+  max-width: 30ch;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--wk-soft, #6f6f6f);
+}
+
+.wk-event__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+/* ── Itinerario ──────────────────────────────────────────────────────────── */
+.wk-timeline {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: min(420px, 100%);
+}
+
+.wk-timeline__row {
+  display: grid;
+  grid-template-columns: 5.2rem 1.4rem 1fr;
+  align-items: start;
+  min-height: 3.2rem;
+  color: var(--wk-ink, #2a2a2a);
+  text-align: left;
+}
+
+.wk-timeline__time {
+  padding-top: 0.1rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wk-accent, #b08d57);
+}
+
+.wk-timeline__dot {
+  position: relative;
+  justify-self: center;
+  width: 9px;
+  height: 9px;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background: var(--wk-accent, #b08d57);
+}
+
+.wk-timeline__row:not(:last-child) .wk-timeline__dot::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: 2.6rem;
+  background: var(--wk-line, rgba(0, 0, 0, 0.15));
+  transform: translateX(-50%);
+}
+
+.wk-timeline__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.94rem;
+  line-height: 1.35;
+}
+
+.wk-timeline__body span {
+  font-size: 0.82rem;
+  color: var(--wk-soft, #6f6f6f);
+}
+
+/* ── Confirmación de asistencia ──────────────────────────────────────────── */
+.wk-rsvp {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.85rem;
+  width: min(420px, 100%);
+  margin-inline: auto;
+  padding: 1.5rem 1.3rem;
+  border-radius: var(--wk-radius, 18px);
+  background: var(--wk-surface, rgba(255, 255, 255, 0.92));
+  color: var(--wk-ink, #2a2a2a);
+  text-align: left;
+}
+
+.wk-rsvp__intro {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--wk-soft, #6f6f6f);
+  text-align: center;
+}
+
+.wk-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wk-soft, #6f6f6f);
+}
+
+.wk-field input,
+.wk-field textarea {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--wk-line, rgba(0, 0, 0, 0.18));
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--wk-ink, #2a2a2a);
+  font-family: var(--wk-body, inherit);
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  resize: vertical;
+}
+
+.wk-field input:focus-visible,
+.wk-field textarea:focus-visible {
+  outline: 2px solid var(--wk-accent, #b08d57);
+  outline-offset: 1px;
+}
+
+.wk-field__hint {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.wk-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  align-self: flex-start;
+  padding: 0.25rem;
+  border: 1px solid var(--wk-line, rgba(0, 0, 0, 0.18));
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.wk-stepper button {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--wk-accent, #b08d57);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.wk-stepper output {
+  min-width: 2.2rem;
+  text-align: center;
+  color: var(--wk-ink, #2a2a2a);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: normal;
+}
+
+.wk-rsvp__actions {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: 1fr;
+}
+
+.wk-rsvp__error {
+  margin: 0;
+  color: #b3261e;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.wk-rsvp__deadline,
+.wk-rsvp__done {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--wk-soft, #6f6f6f);
+  text-align: center;
+}
+
+.wk-rsvp--done {
+  align-items: center;
+  text-align: center;
+}
+
+.wk-rsvp__done {
+  font-size: 1rem;
+  color: var(--wk-ink, #2a2a2a);
+}
+
+.wk-rsvp__done-icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  color: var(--wk-accent, #b08d57);
+}
+
+.wk-link--wa {
+  align-self: center;
+}
+
+/* ── Comparte tus fotos ──────────────────────────────────────────────────── */
+.wk-share {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: min(360px, 100%);
+  margin-inline: auto;
+  padding: 1.6rem 1.3rem;
+  border-radius: var(--wk-radius, 18px);
+  background: var(--wk-surface, rgba(255, 255, 255, 0.92));
+  color: var(--wk-ink, #2a2a2a);
+  text-align: center;
+}
+
+.wk-share__icon {
+  width: 2rem;
+  height: 2rem;
+  color: var(--wk-accent, #b08d57);
+}
+
+.wk-share__title {
+  margin: 0;
+  font-family: var(--wk-display, inherit);
+  font-size: 1.6rem;
+  line-height: 1.1;
+}
+
+.wk-share__text {
+  margin: 0;
+  max-width: 28ch;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--wk-soft, #6f6f6f);
+}
+
+.wk-share__qr {
+  display: block;
+  padding: 0.7rem;
+  border-radius: 14px;
+  background: #fff;
+  line-height: 0;
+}
+
+.wk-share__hashtag {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--wk-accent, #b08d57);
+}
+
+/* ── Cuenta regresiva (fichas del experience-kit) ────────────────────────── */
+.wk-countdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  width: min(400px, 100%);
+  margin-inline: auto;
+}
+
+.wk-countdown .xk-countdown__unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 0.3rem;
+  border: 1px solid var(--wk-line, rgba(0, 0, 0, 0.14));
+  border-radius: var(--wk-radius, 14px);
+  background: var(--wk-surface, rgba(255, 255, 255, 0.85));
+}
+
+.wk-countdown .xk-countdown__value {
+  font-family: var(--wk-display, inherit);
+  font-size: clamp(1.7rem, 7vw, 2.3rem);
+  line-height: 1;
+  color: var(--wk-ink, #2a2a2a);
+  font-variant-numeric: tabular-nums;
+}
+
+.wk-countdown .xk-countdown__label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--wk-soft, #6f6f6f);
+}
+
+.wk-countdown.xk-countdown--done {
+  display: block;
+  font-family: var(--wk-display, inherit);
+  font-size: 1.6rem;
+  color: var(--wk-accent, #b08d57);
+  text-align: center;
+}
+
+@media (min-width: 700px) {
+  .wk-rsvp__actions {
+    grid-template-columns: 1fr 1fr;
+  }
+}

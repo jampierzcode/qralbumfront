@@ -63,5 +63,40 @@
     "width": 1200,
     "height": 1500,
     "placeholder": "data:image/webp;base64,UklGRioBAABXRUJQVlA4IB4BAAAQBwCdASoYAB4APu1iqE2ppaOiMAgBMB2JbACdMoRwN7pw6j0n0AB6MTsi+xuBhWA+1ha8u5WkQ+fxncESlCqeAAD+WsBOnkQHzSipbHoa1VGtNGa//0qJmTp0KriBX4V2aijmb6sV0SmRSEC5AIiNeqWEj9AjfZilUG3AvozI2b8JSs+N/04xNR+CoAaednb1smKddJQclMTVHPctxJXLwYT1hzIoLRNW2LmATPdGfEck5lnwKEPNJCidVTaS4K+oxzeoveaPJO5dCQDb99myqNAXK4Ff02SKCeO4+dp2RYw3kbn+g/YBCe7mQeC6QW5mojgcZXPdpe+RtrYCwi6Vm/kLq1dZQ1OVRgs4/8RuOz/xgHlFuebtOfWdwAAA"
+  },
+  "couple": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAACwBQCdASoYAB4APu1opk2ppiMiMBgMATAdiWYAnTLohPheyE/x9+ENgeWDSe2R/je8XpaaswAA/rUfKLYl04mVs2LMvukJmk2B8fV/jna+WsJwPgn/hj4shy8X/XE30atnin1jrUgYML8F5pqPdIVypH5bXjM+MhtE5S0if3HFa83vLKzFZd8nYnNJn9PyW4kmdtSaEakF+gWWHW/XwykonFsoUWikafmGUu8WNAdf+Y8AAAA="
+  },
+  "rings": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAABwBACdASoYAB4APu1mq04ppaQiMAgBMB2JZwDKtYs232uG4yHfWt+cI2GUAAD+8cLLkr6PKkEDFI8P1j24rXjVAvMbo33SiHGxVbVQ5kIHA3+Qs4jB26tMZHjzXHCIIbseImvLBcgNfXOkAAA="
+  },
+  "greenery": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAwBACdASoYAB4APu1qrVCppiQiqAqpMB2JZwDAKBEczVP/X6Jwg3R1xAAA/vHD2Ts1vsgYyXQOzAeUsr/cAUhg2NQtqqPQEKpkJkLbib7qVFpLpUavQAAA"
+  },
+  "bouquet": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAwCdASoYAB4APtlapE2oJSOiN/qoAQAbCWcAwNwh37sUvlc41kkAAP7xwjGpfQUsizXrdIfuOsQhx9VE/FubvUQE6r9RUqooNhqfzdQOVu9saUa7wK4AAAA="
+  },
+  "navy-blooms": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAABQBQCdASoYAB4APu1krE4ppaSiKA1RMB2JYwDE2A0SefbV2zSLXreDk77T+a8XusnNKQAA/tqKUEOnWUIpEBjLrfSWl7WwB7w43zUtHeExI/eDXek+KtIhBjeIHHOgW7SInJMkuOjnKIuNWbjGpdryQEBnUXyJ3vordpDzbO+9urR+J314Y8DSf9tHqqlsaXKKda7/2ep5mHNIkxr0AREQ1adUKm5ffKxAAA=="
+  },
+  "altar": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAABQBQCdASoYAB4APu1irE2ppaSiKA1RMB2JQBWGcdjZ1fInIM/kGEl9mlrpeF85VXQLKXAA/tLpmROr6ZkKtlAoKNSgjc2ctni5z7oCCiTmSBXwOgDOl+SDntVUWJ/d9yZldly5KnzsZHMCS+a7W8TWa98Cka2RB5haJkCkO4DUgCC97iElty3jlJ30BtHSbT1uiArAAAA="
+  },
+  "dance": {
+    "width": 1200,
+    "height": 1500,
+    "placeholder": "data:image/webp;base64,UklGRtIAAABXRUJQVlA4IMYAAABQBQCdASoYAB4APu1srVEppaQiqAqpMB2JZwC45Yv+cCo715y5/gz/0nauYXpAv7HmMkAA/vDI9dftSUUX43s2vEpaRaf8Pv6FhjpQul8JbX38v8WCBMbxRpoZSULbdI87MiEYIaH4TTtP7LxzxSowYxaonwRD3mFsgfIHnotfAj9n6ChyKZrhozY0WoegthBHQzM/ESpYVH18gxlfhHwAnCaIP1swQ/Jn4RBIJOYeWvGKrC1Q5U50eA9I7toowjOngBIAAAA="
   }
 }

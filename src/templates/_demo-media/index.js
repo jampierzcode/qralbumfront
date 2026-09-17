@@ -16,6 +16,13 @@ const urls = {
   party: new URL("./party.webp", import.meta.url).href,
   gift: new URL("./gift.webp", import.meta.url).href,
   kid: new URL("./kid.webp", import.meta.url).href,
+  couple: new URL("./couple.webp", import.meta.url).href,
+  rings: new URL("./rings.webp", import.meta.url).href,
+  greenery: new URL("./greenery.webp", import.meta.url).href,
+  bouquet: new URL("./bouquet.webp", import.meta.url).href,
+  "navy-blooms": new URL("./navy-blooms.webp", import.meta.url).href,
+  altar: new URL("./altar.webp", import.meta.url).href,
+  dance: new URL("./dance.webp", import.meta.url).href,
 };
 
 const songUrl = new URL("./music-box.mp3", import.meta.url).href;
