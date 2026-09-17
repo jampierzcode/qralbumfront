@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { App, Button, Input, Switch } from "antd";
-import { CopyOutlined, WhatsAppOutlined } from "@ant-design/icons";
+import { App, Button, Input, Popconfirm, QRCode, Switch } from "antd";
+import { CopyOutlined, ReloadOutlined, WhatsAppOutlined } from "@ant-design/icons";
 import { adminApi, errorMessage } from "../api.js";
 import { useRequest } from "../hooks/useRequest.js";
 import { storeUrl, whatsappUrl } from "../lib/gifts.js";
@@ -10,13 +10,11 @@ import { copyText } from "./ShareDialog.jsx";
 export default function StoreSettings() {
   const { message } = App.useApp();
   const { data, loading, setData } = useRequest(() => adminApi.store(), []);
-  const [handle, setHandle] = useState("");
   const [publicName, setPublicName] = useState("");
   const [publicMessage, setPublicMessage] = useState("");
 
   useEffect(() => {
     if (!data) return;
-    setHandle(data.handle || "");
     setPublicName(data.publicName || "");
     setPublicMessage(data.publicMessage || "");
   }, [data]);
@@ -50,20 +48,38 @@ export default function StoreSettings() {
       </div>
 
       {data.ordersEnabled ? (
-        <>
-          <code className="adm-link-box">{url}</code>
-          <div className="adm-actions" style={{ marginTop: 8 }}>
-            <Button icon={<CopyOutlined />} onClick={async () => ((await copyText(url)) ? message.success("Link copiado") : message.error("No se pudo copiar"))}>
-              Copiar link
-            </Button>
-            <Button icon={<WhatsAppOutlined />} href={whatsappUrl(`Pide tu regalo digital aquí 💛\n${url}`)} target="_blank">
-              Compartir
-            </Button>
-            <Button href={url} target="_blank">
-              Ver cómo se ve
-            </Button>
+        <div className="adm-store-link">
+          <div className="adm-store-link__qr">
+            <QRCode value={url} size={104} bordered={false} errorLevel="M" />
           </div>
-        </>
+          <div className="adm-store-link__main">
+            <code className="adm-link-box">{url}</code>
+            <div className="adm-actions" style={{ marginTop: 8 }}>
+              <Button
+                type="primary"
+                icon={<CopyOutlined />}
+                onClick={async () => ((await copyText(url)) ? message.success("Link copiado") : message.error("No se pudo copiar"))}
+              >
+                Copiar link
+              </Button>
+              <Button icon={<WhatsAppOutlined />} href={whatsappUrl(`Pide tu regalo digital aquí 💛\n${url}`)} target="_blank">
+                Compartir
+              </Button>
+              <Button href={url} target="_blank">
+                Ver cómo se ve
+              </Button>
+              <Popconfirm
+                title="¿Generar un link nuevo?"
+                description="El link anterior dejará de abrir. Úsalo si se te filtró o quieres empezar de cero."
+                okText="Generar"
+                cancelText="Cancelar"
+                onConfirm={() => save({ regenerate: true }, "Link nuevo generado")}
+              >
+                <Button icon={<ReloadOutlined />} aria-label="Generar un link nuevo" />
+              </Popconfirm>
+            </div>
+          </div>
+        </div>
       ) : (
         <p className="adm-muted adm-small">Actívalo cuando tengas tus precios y tus datos de pago listos.</p>
       )}
@@ -89,18 +105,6 @@ export default function StoreSettings() {
           onChange={(e) => setPublicMessage(e.target.value)}
           onBlur={() => publicMessage !== (data.publicMessage || "") && save({ publicMessage })}
         />
-      </div>
-      <div className="adm-field">
-        <span className="adm-field__label">Final del link</span>
-        <Input
-          size="large"
-          value={handle}
-          maxLength={40}
-          addonBefore="/pedir/"
-          onChange={(e) => setHandle(e.target.value)}
-          onBlur={() => handle && handle !== data.handle && save({ handle }, "Link actualizado")}
-        />
-        <span className="adm-muted adm-small">Si lo cambias, el link anterior deja de funcionar.</span>
       </div>
     </section>
   );
