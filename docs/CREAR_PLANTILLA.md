@@ -184,6 +184,15 @@ para que `npm run smoke` no busque el botón de abrir. Referencias: `politico-ca
 Ojo: la lista `history` (campañas adicionales) es `customerEditable: false`; sólo el superadmin
 la edita, el cliente llena una sola campaña (`campaign`).
 
+## 7 quater. Cambiaste el schema de una plantilla que ya existe
+
+**Reinicia el backend.** Carga los schemas al arrancar y no ve los cambios de otro repo. Mientras tanto el editor
+(que sí ve los campos nuevos por el frontend) muestra todo bien, pero el servidor **descarta en silencio** los campos
+que no conoce: el borrador parece guardado y el link público no los trae.
+
+- Con `nodemon` (como corre el backend en desarrollo) basta `touch qralbumback/app.js`.
+- Después, mueve cualquier campo del regalo en el editor para que se vuelva a guardar completo.
+
 ## 8. Publicarla
 
 Reinicia el backend: la plantilla aparece sola en **Plantillas** (activa) y en sus `defaultCollections`. Desde el admin puedes ocultarla, cambiar su nombre comercial, ordenarla y asignarla a otras colecciones. Queda disponible en el wizard, el editor y el portal del comprador sin más cambios.
