@@ -171,6 +171,15 @@ En `Experience.jsx` usa `EventBlock`, `Timeline`, `RsvpForm` y `PhotoShare`, imp
 Diseños ya hechos como referencia: `wedding-gold`, `wedding-navy`, `wedding-classic`
 y `wedding-greenery`.
 
+## 7 ter. Si es una tarjeta de político
+
+Igual que las bodas: **`src/templates/_politician-kit/`** trae el schema completo
+(`politicianSchema()`), el manifest base, la validación de links por red, las campañas y un demo.
+Un diseño sólo agrega sus colores y su composición. Ver su `README.md`.
+
+Ojo: la lista `history` (campañas adicionales) es `customerEditable: false`; sólo el superadmin
+la edita, el cliente llena una sola campaña (`campaign`).
+
 ## 8. Publicarla
 
 Reinicia el backend: la plantilla aparece sola en **Plantillas** (activa) y en sus `defaultCollections`. Desde el admin puedes ocultarla, cambiar su nombre comercial, ordenarla y asignarla a otras colecciones. Queda disponible en el wizard, el editor y el portal del comprador sin más cambios.
