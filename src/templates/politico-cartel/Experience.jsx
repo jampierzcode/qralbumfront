@@ -42,10 +42,10 @@ export default function PoliticoCartelExperience({ content, mode, onEvent, env, 
   const calm = env.reducedMotion || mode === "thumbnail" || env.tier === "low";
   const days = daysUntil(voteDate);
   const { upcoming, past } = useMemo(() => campaignList(content), [content]);
-  const photoKind = useCutout(photo?.src);
+  const photoKind = useCutout(photo);
   // El texto de la portada se elige según el fondo que RESULTA de mezclar la foto (multiplicar puede oscurecerlo mucho).
   const bgFilter = `saturate(${bgSaturation ?? 100}%) contrast(${bgContrast ?? 100}%) brightness(${bgBrightness ?? 100}%)`;
-  const bgMean = usePhotoMean(bgPhoto?.src, bgFilter);
+  const bgMean = usePhotoMean(bgPhoto, bgFilter);
   const heroBackdrop = bgPhoto?.src && bgMean ? blendedBackdrop(colorPrimary, bgMean, bgBlend, (bgOpacity ?? 60) / 100) : colorPrimary;
   const hasLinks = links.some((l) => l?.url);
 

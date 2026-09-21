@@ -1,50 +1,42 @@
 import { useEffect, useState } from "react";
+import { pixelSource, readPixels } from "./pixels.js";
+
+/** Color medio { r, g, b } de píxeles RGBA (0-255), o null si no hay. */
+export function meanOfPixels(data) {
+  if (!data || !data.length) return null;
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  const count = data.length / 4;
+  for (let i = 0; i < data.length; i += 4) {
+    r += data[i];
+    g += data[i + 1];
+    b += data[i + 2];
+  }
+  return { r: r / count, g: g / count, b: b / count };
+}
 
 /**
- * Color medio ({ r, g, b }) de una foto, con los mismos filtros CSS que se le aplican (saturación, contraste, brillo).
- * Devuelve null mientras carga o si no se puede leer (CORS, error). Sólo lee píxeles del mismo origen (/media).
- * `filter` es una cadena CSS como "saturate(100%) contrast(110%)"; si el navegador no soporta filtros en canvas, se ignora.
+ * Color medio de una foto con los mismos filtros CSS que se le aplican (saturación, contraste, brillo).
+ * Acepta la imagen preparada ({ src, placeholder… }) o una URL. Devuelve null mientras carga o si no se puede leer.
+ * Usa la miniatura embebida: sirve para calcular un promedio y no depende de CORS (bucket S3 en producción).
+ * Si el navegador no soporta filtros en canvas, el filtro se ignora (la estimación es aproximada).
  */
-export function usePhotoMean(src, filter = "") {
+export function usePhotoMean(image, filter = "") {
+  const source = pixelSource(image);
   const [mean, setMean] = useState(null);
   useEffect(() => {
-    if (!src || typeof Image === "undefined") {
+    if (!source) {
       setMean(null);
       return undefined;
     }
     let cancelled = false;
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      if (cancelled) return;
-      try {
-        const size = 16;
-        const canvas = document.createElement("canvas");
-        canvas.width = size;
-        canvas.height = size;
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        if (filter && "filter" in ctx) ctx.filter = filter;
-        ctx.drawImage(img, 0, 0, size, size);
-        const { data } = ctx.getImageData(0, 0, size, size);
-        let r = 0;
-        let g = 0;
-        let b = 0;
-        const pixels = data.length / 4;
-        for (let i = 0; i < data.length; i += 4) {
-          r += data[i];
-          g += data[i + 1];
-          b += data[i + 2];
-        }
-        setMean({ r: r / pixels, g: g / pixels, b: b / pixels });
-      } catch {
-        setMean(null);
-      }
-    };
-    img.onerror = () => !cancelled && setMean(null);
-    img.src = src;
+    readPixels(source, { size: 16, filter }).then((data) => {
+      if (!cancelled) setMean(meanOfPixels(data));
+    });
     return () => {
       cancelled = true;
     };
-  }, [src, filter]);
+  }, [source, filter]);
   return mean;
 }

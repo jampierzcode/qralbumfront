@@ -4,7 +4,9 @@ import { getCustomerEditableKeys, getSteps, prepareContent, validateContent } fr
 import { EXTRA_FIELD_KEYS, politicianManifest, politicianSchema } from "./fields.js";
 import { politicianDemo } from "./demo.js";
 import { blendedBackdrop, campaignList, contrastColor, contrastRatio, daysUntil, formatCampaignDate, formatVoteDate, mixHex, readableOnLight, visibleOn, votingCountdownText } from "./format.js";
-import { isBoxedPhoto } from "./useCutout.js";
+import { classifyPixels, isBoxedPhoto } from "./useCutout.js";
+import { meanOfPixels } from "./usePhotoMean.js";
+import { pixelSource } from "./pixels.js";
 import { NETWORKS, checkLink, linkHref, linkLabel } from "./networks.js";
 import cartel from "../politico-cartel/index.js";
 import cedula from "../politico-cedula/index.js";
@@ -344,5 +346,34 @@ describe("el texto de la portada se adapta al fondo que resulta de la mezcla", (
   test("sin promedio de la foto (aún carga o no se pudo leer) usa el color del partido", () => {
     expect(blendedBackdrop(green, null, "multiply", 1)).toBe(green);
     expect(blendedBackdrop("basura", { r: 0, g: 0, b: 0 }, "multiply", 1)).toBe("basura");
+  });
+});
+
+describe("leer la foto sin depender de CORS (bucket S3 en producción)", () => {
+  const size = 32;
+  const image = (alphaAt) => {
+    const data = new Uint8ClampedArray(size * size * 4).fill(255);
+    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) data[(y * size + x) * 4 + 3] = alphaAt(x, y);
+    return data;
+  };
+
+  test("usa la miniatura embebida (data-URI, mismo origen) antes que la URL del bucket", () => {
+    expect(pixelSource({ src: "/media/abc/md.webp", placeholder: "data:image/webp;base64,AAA" })).toBe("data:image/webp;base64,AAA");
+    expect(pixelSource({ src: "/media/abc/md.webp", placeholder: null })).toBe("/media/abc/md.webp");
+    expect(pixelSource("https://x/y.webp")).toBe("https://x/y.webp");
+    expect(pixelSource(null)).toBe("");
+  });
+
+  test("clasifica una foto opaca como 'boxed' y un recorte como 'cutout'", () => {
+    expect(classifyPixels(image(() => 255), size)).toBe("boxed");
+    expect(classifyPixels(image((x, y) => (y < 4 && (x < 4 || x > size - 5) ? 0 : 255)), size)).toBe("cutout");
+    expect(classifyPixels(null, size)).toBeNull();
+  });
+
+  test("el color medio se calcula de los píxeles", () => {
+    const px = Uint8ClampedArray.from([0, 0, 0, 255, 200, 100, 50, 255]);
+    expect(meanOfPixels(px)).toEqual({ r: 100, g: 50, b: 25 });
+    expect(meanOfPixels(null)).toBeNull();
+    expect(meanOfPixels(new Uint8ClampedArray(0))).toBeNull();
   });
 });

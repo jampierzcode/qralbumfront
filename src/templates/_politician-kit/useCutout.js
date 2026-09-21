@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { pixelSource, readPixels } from "./pixels.js";
 
 /**
  * true si la foto es rectangular (esquinas superiores opacas) y false si es un recorte con
@@ -8,43 +9,35 @@ export function isBoxedPhoto(alphas) {
   return alphas.length > 0 && alphas.every((a) => a > 240);
 }
 
+/** "cutout" | "boxed" a partir de los píxeles RGBA de la foto reducida a `size`×`size`; null si no hay píxeles. */
+export function classifyPixels(data, size = 32) {
+  if (!data) return null;
+  const alpha = (x, y) => data[(y * size + x) * 4 + 3];
+  return isBoxedPhoto([alpha(0, 0), alpha(size - 1, 0), alpha(0, 3), alpha(size - 1, 3)]) ? "boxed" : "cutout";
+}
+
 /**
  * Detecta si la foto del candidato es un recorte (fondo transparente) o una foto normal.
- * Devuelve "pending" mientras analiza y luego "cutout" | "boxed". Si no se puede leer la
- * imagen (CORS, error) cae en "cutout". Sólo lee píxeles del mismo origen (/media).
+ * Acepta la imagen preparada ({ src, placeholder… }) o una URL. Devuelve "pending" mientras analiza y luego
+ * "cutout" | "boxed"; si no se puede leer, cae en "cutout". Usa la miniatura embebida, así funciona igual con
+ * almacenamiento local que con un bucket S3 sin CORS.
  */
-export function useCutout(src) {
-  const [kind, setKind] = useState(src ? "pending" : "cutout");
+export function useCutout(image) {
+  const source = pixelSource(image);
+  const [kind, setKind] = useState(source ? "pending" : "cutout");
   useEffect(() => {
-    if (!src || typeof Image === "undefined") {
+    if (!source) {
       setKind("cutout");
-      return;
+      return undefined;
     }
     let cancelled = false;
     setKind("pending");
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      if (cancelled) return;
-      try {
-        const size = 32;
-        const canvas = document.createElement("canvas");
-        canvas.width = size;
-        canvas.height = size;
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        ctx.drawImage(img, 0, 0, size, size);
-        const { data } = ctx.getImageData(0, 0, size, size);
-        const alpha = (x, y) => data[(y * size + x) * 4 + 3];
-        setKind(isBoxedPhoto([alpha(0, 0), alpha(size - 1, 0), alpha(0, 3), alpha(size - 1, 3)]) ? "boxed" : "cutout");
-      } catch {
-        setKind("cutout");
-      }
-    };
-    img.onerror = () => !cancelled && setKind("cutout");
-    img.src = src;
+    readPixels(source, { size: 32 }).then((data) => {
+      if (!cancelled) setKind(classifyPixels(data, 32) || "cutout");
+    });
     return () => {
       cancelled = true;
     };
-  }, [src]);
+  }, [source]);
   return kind;
 }
