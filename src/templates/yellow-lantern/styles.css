@@ -1,0 +1,848 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   Lámpara de flores amarillas · prefijo yl-
+   Noche de verano: una cúpula de cristal a oscuras que se enciende al tocarla,
+   un hilo de luces, un girasol que brilla y luciérnagas. Una sola composición
+   para todos los tamaños (en escritorio y en horizontal corto, dos columnas).
+   Sólo se anima transform/opacity.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.yl {
+  --yl-glow: #ffc83d;
+  --yl-glow-soft: #fff0b0;
+  --yl-glow-deep: #ff9f1c;
+  --yl-ink: #fff3d6;
+  --yl-muted: rgb(255 243 214 / 0.7);
+  --yl-serif: "Fraunces Variable", "Fraunces", Georgia, "Times New Roman", serif;
+  --yl-sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --yl-hand: "Caveat", "Segoe Script", cursive;
+
+  position: relative;
+  min-height: 100dvh;
+  overflow-x: clip;
+  background: linear-gradient(180deg, #0a0711 0%, #120c1d 36%, #1b1009 100%);
+  color: var(--yl-ink);
+  font-family: var(--yl-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Cielo ───────────────────────────────────────────────────────────────── */
+.yl-sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(1.4px 1.4px at 8% 12%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 22% 30%, #ffe9b8 50%, transparent 52%),
+    radial-gradient(1.6px 1.6px at 36% 8%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 47% 22%, #fff 50%, transparent 52%),
+    radial-gradient(1.3px 1.3px at 61% 14%, #ffe9b8 50%, transparent 52%),
+    radial-gradient(1px 1px at 74% 34%, #fff 50%, transparent 52%),
+    radial-gradient(1.5px 1.5px at 88% 10%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 93% 26%, #ffe9b8 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 14% 52%, #fff 50%, transparent 52%),
+    radial-gradient(1px 1px at 82% 58%, #fff 50%, transparent 52%),
+    radial-gradient(1.3px 1.3px at 30% 70%, #ffe9b8 50%, transparent 52%),
+    radial-gradient(1px 1px at 68% 78%, #fff 50%, transparent 52%),
+    radial-gradient(80% 50% at 50% 100%, rgb(255 170 40 / 0.12), transparent 70%);
+  opacity: 0.85;
+}
+
+.yl:not([data-calm]) .yl-sky {
+  animation: yl-stars 7s ease-in-out infinite alternate;
+}
+
+@keyframes yl-stars {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 0.95;
+  }
+}
+
+/* ── Luciérnagas ─────────────────────────────────────────────────────────── */
+.yl-fireflies {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 2s ease 0.6s;
+}
+
+.yl-fireflies[data-active] {
+  opacity: 1;
+}
+
+.yl-firefly {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--s);
+  height: var(--s);
+  margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffbd0 0 16%, rgb(255 224 90 / 0.95) 34%, rgb(255 190 40 / 0) 70%);
+  will-change: transform, opacity;
+  animation:
+    yl-drift var(--drift) ease-in-out var(--delay) infinite alternate,
+    yl-blink var(--blink) ease-in-out var(--delay) infinite;
+}
+
+.yl-fireflies[data-calm] .yl-firefly {
+  animation: none;
+  opacity: 0.7;
+}
+
+@keyframes yl-drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(calc(var(--dx) * 0.55), calc(var(--dy) * -0.45), 0);
+  }
+  100% {
+    transform: translate3d(var(--dx), var(--dy), 0);
+  }
+}
+
+@keyframes yl-blink {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+  38% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0.8;
+  }
+  82% {
+    opacity: 0.3;
+  }
+}
+
+/* ── Portada ─────────────────────────────────────────────────────────────── */
+.yl-hero {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: calc(2.2rem + var(--safe-top, 0px)) 1.2rem calc(1.6rem + var(--safe-bottom, 0px));
+  text-align: center;
+}
+
+.yl-hero__text {
+  max-width: 34rem;
+}
+
+.yl-eyebrow {
+  margin: 0 0 0.7rem;
+  color: var(--yl-glow);
+  font: 700 0.78rem/1 var(--yl-sans);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.yl-title {
+  margin: 0;
+  font: 600 clamp(2.1rem, 8.6vw, 3.6rem) / 1.06 var(--yl-serif);
+  text-wrap: balance;
+  text-shadow: 0 0 34px rgb(255 200 61 / 0.35);
+}
+
+.yl-from {
+  margin: 0.8rem 0 0;
+  color: var(--yl-muted);
+  font: italic 400 1.1rem/1.3 var(--yl-serif);
+}
+
+/* el título aparece cuando se enciende la lámpara */
+.yl-title,
+.yl-from {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 1.3s ease 1s,
+    transform 1.3s ease 1s;
+}
+
+.yl[data-lit] .yl-title,
+.yl[data-lit] .yl-from {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Escenario: halo, suelo, lámpara ─────────────────────────────────────── */
+.yl-stage {
+  --lamp-w: min(74vw, 34svh, 320px);
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-self: center;
+  width: 100%;
+  margin: 0.8rem 0;
+}
+
+.yl-halo {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 46%;
+  width: calc(var(--lamp-w) * 3.4);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--yl-glow) 52%, transparent), color-mix(in srgb, var(--yl-glow-deep) 16%, transparent) 48%, transparent 72%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  transition:
+    opacity 1.8s ease 0.1s,
+    transform 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s;
+  pointer-events: none;
+}
+
+.yl[data-lit] .yl-halo {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.yl[data-lit]:not([data-calm]):not([data-tier="low"]) .yl-stage .yl-halo {
+  animation: yl-flicker 5.5s ease-in-out 2.4s infinite;
+}
+
+@keyframes yl-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  22% {
+    opacity: 0.86;
+  }
+  37% {
+    opacity: 0.98;
+  }
+  61% {
+    opacity: 0.88;
+  }
+  80% {
+    opacity: 1;
+  }
+}
+
+.yl-floor {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: -2%;
+  width: calc(var(--lamp-w) * 2);
+  height: calc(var(--lamp-w) * 0.34);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--yl-glow) 46%, transparent), transparent);
+  opacity: 0;
+  transform: translateX(-50%);
+  transition: opacity 1.8s ease 0.3s;
+  pointer-events: none;
+}
+
+.yl[data-lit] .yl-floor {
+  opacity: 1;
+}
+
+.yl-lamp-btn {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: var(--lamp-w);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.yl-lamp-btn:disabled {
+  cursor: default;
+}
+
+.yl-lamp-btn:focus-visible {
+  outline: 3px solid var(--yl-glow);
+  outline-offset: 8px;
+  border-radius: 24px;
+}
+
+.yl-lamp {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* etiqueta de papel colgando de la base, como en las lámparas de verdad */
+.yl-tag {
+  position: absolute;
+  z-index: 3;
+  left: 2%;
+  bottom: 3%;
+  padding: 0.38rem 0.75rem 0.3rem;
+  border-radius: 3px;
+  background: #f7ecd0;
+  color: #5b3f1a;
+  font: 700 1.1rem/1 var(--yl-hand);
+  box-shadow: 0 6px 14px rgb(0 0 0 / 0.45);
+  transform: rotate(-7deg);
+  transition: opacity 1s ease;
+}
+
+.yl-tag::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 1px;
+  height: 12px;
+  background: #d8bd8a;
+}
+
+.yl[data-lit] .yl-tag {
+  opacity: 0.92;
+}
+
+/* invitación a tocar */
+.yl-pulse {
+  position: absolute;
+  inset: 8% 4% 10%;
+  border: 2px solid color-mix(in srgb, var(--yl-glow) 60%, transparent);
+  border-radius: 46% 46% 22% 22%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.yl:not([data-calm]) .yl-pulse {
+  animation: yl-ring 2.6s ease-out 0.8s infinite;
+}
+
+@keyframes yl-ring {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.16);
+  }
+}
+
+.yl-hint {
+  margin: 0;
+  color: var(--yl-glow);
+  font: 600 0.82rem/1.2 var(--yl-sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.yl:not([data-calm]) .yl-hint {
+  animation: yl-hint 2.6s ease-in-out infinite;
+}
+
+@keyframes yl-hint {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* ── La lámpara: apagada → encendida ─────────────────────────────────────── */
+.yl-lamp__scene {
+  filter: brightness(0.3) saturate(0.5);
+  transition: filter 1.7s ease;
+}
+
+.yl-lamp[data-lit] .yl-lamp__scene {
+  filter: none;
+}
+
+.yl-lamp__lit {
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 1.5s ease 0.1s;
+}
+
+.yl-lamp[data-lit] .yl-lamp__lit {
+  opacity: 1;
+}
+
+/* brillo por delante de la flor: sólo un toque */
+.yl-lamp__bloom {
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  transition: opacity 1.5s ease 0.3s;
+  pointer-events: none;
+}
+
+.yl-lamp[data-lit] .yl-lamp__bloom {
+  opacity: 0.55;
+}
+
+.yl-lamp__shine {
+  opacity: 0.85;
+}
+
+.yl-bulb {
+  opacity: 0.06;
+  transition: opacity 0.9s ease 0.4s;
+}
+
+.yl-lamp[data-lit] .yl-bulb {
+  opacity: 1;
+}
+
+.yl:not([data-calm]) .yl-lamp[data-lit] .yl-bulb {
+  animation: yl-twinkle 2.9s ease-in-out 1.4s infinite;
+  animation-delay: calc(1.4s + var(--i) * -0.41s);
+}
+
+@keyframes yl-twinkle {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  35% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0.72;
+  }
+  82% {
+    opacity: 0.96;
+  }
+}
+
+/* la flor se abre al encender y respira despacio */
+.yl-flower__head {
+  transform-box: view-box;
+  transform-origin: 160px 190px;
+  transform: scale(0.86);
+  transition: transform 1.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s;
+}
+
+.yl-lamp[data-lit] .yl-flower__head {
+  transform: scale(1);
+}
+
+.yl-flower__tulip {
+  transform-box: view-box;
+  transform-origin: 160px 404px;
+  transform: scale(0.94);
+  transition: transform 1.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.2s;
+}
+
+.yl-lamp[data-lit] .yl-flower__tulip {
+  transform: scale(1);
+}
+
+.yl:not([data-calm]) .yl-lamp[data-lit] .yl-flower--sunflower {
+  transform-box: view-box;
+  transform-origin: 160px 400px;
+  animation: yl-sway 8s ease-in-out 2s infinite alternate;
+}
+
+.yl:not([data-calm]) .yl-lamp[data-lit] .yl-flower--tulips .yl-flower__tulip {
+  animation: yl-sway 7s ease-in-out 2s infinite alternate;
+  animation-delay: calc(2s + var(--tone) * -1.3s);
+}
+
+@keyframes yl-sway {
+  from {
+    transform: rotate(-1.3deg);
+  }
+  to {
+    transform: rotate(1.3deg);
+  }
+}
+
+/* ── Desliza ─────────────────────────────────────────────────────────────── */
+.yl-scroll {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  color: var(--yl-muted);
+  font: 600 0.72rem/1 var(--yl-sans);
+  letter-spacing: 0.24em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.yl-scroll i {
+  width: 1px;
+  height: 2rem;
+  background: linear-gradient(var(--yl-glow), transparent);
+}
+
+.yl:not([data-calm]) .yl-scroll i {
+  animation: yl-scroll 2s ease-in-out infinite;
+}
+
+@keyframes yl-scroll {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scaleY(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
+
+/* ── Secciones ───────────────────────────────────────────────────────────── */
+.yl-kicker {
+  margin: 0 0 0.9rem;
+  color: var(--yl-glow);
+  font: 700 0.74rem/1 var(--yl-sans);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.yl-heading {
+  margin: 0;
+  font: 600 clamp(1.7rem, 6.4vw, 2.6rem) / 1.1 var(--yl-serif);
+  text-wrap: balance;
+}
+
+.yl-section-head {
+  text-align: center;
+}
+
+/* carta */
+.yl-letter {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 4.5rem 1.2rem;
+}
+
+.yl-letter__inner {
+  width: min(100%, 36rem);
+  padding: 2.2rem 1.6rem 2rem;
+  border: 1px solid rgb(255 200 61 / 0.22);
+  border-radius: 24px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgb(255 200 61 / 0.12), rgb(255 200 61 / 0.02) 62%),
+    rgb(22 15 32 / 0.62);
+  box-shadow:
+    0 0 70px rgb(255 190 50 / 0.09),
+    inset 0 1px 0 rgb(255 240 190 / 0.08);
+  text-align: center;
+}
+
+.yl-letter__text {
+  margin: 0;
+  font: italic 400 clamp(1.15rem, 4.6vw, 1.45rem) / 1.7 var(--yl-serif);
+  text-wrap: pretty;
+}
+
+.yl-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.7s ease var(--wd, 0ms),
+    transform 0.7s ease var(--wd, 0ms);
+}
+
+.yl-letter__inner[data-visible] .yl-word {
+  opacity: 1;
+  transform: none;
+}
+
+.yl[data-calm] .yl-word {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+.yl-letter__signature {
+  margin: 1.4rem 0 0;
+  color: var(--yl-glow);
+  font: 700 2rem/1 var(--yl-hand);
+}
+
+.yl-since {
+  display: inline-grid;
+  gap: 0.25rem;
+  margin-top: 1.6rem;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid rgb(255 200 61 / 0.28);
+  border-radius: 14px;
+  background: rgb(255 200 61 / 0.06);
+}
+
+.yl-since__label {
+  color: var(--yl-muted);
+  font: 500 0.82rem/1.2 var(--yl-sans);
+}
+
+.yl-since__value {
+  color: var(--yl-glow-soft);
+  font: 600 1.15rem/1.2 var(--yl-serif);
+}
+
+/* recuerdos colgados del hilo de luces */
+.yl-memories {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 1.2rem 4rem;
+}
+
+.yl-hangs {
+  display: grid;
+  gap: 3rem 1.4rem;
+  justify-items: center;
+  max-width: 72rem;
+  margin: 3rem auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.yl-swing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 21rem);
+  transform-origin: 50% 0;
+  transform: rotate(var(--tilt, 0deg));
+}
+
+.yl:not([data-calm]) .yl-swing {
+  animation: yl-swing var(--sway, 5s) ease-in-out infinite alternate;
+}
+
+@keyframes yl-swing {
+  from {
+    transform: rotate(calc(var(--tilt, 0deg) - 0.9deg));
+  }
+  to {
+    transform: rotate(calc(var(--tilt, 0deg) + 0.9deg));
+  }
+}
+
+.yl-hang__string {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 2.6rem;
+  background: linear-gradient(#e6c88a, #b98a52);
+}
+
+.yl-hang__string i {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffbe0 0 22%, rgb(255 214 90 / 0.95) 46%, rgb(255 190 40 / 0) 72%);
+}
+
+.yl:not([data-calm]) .yl-hang__string i {
+  animation: yl-twinkle 3s ease-in-out infinite;
+}
+
+.yl-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0.6rem;
+  border: 0;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #fff6de, #f1d48f);
+  box-shadow:
+    0 0 0 1px rgb(255 214 90 / 0.4),
+    0 18px 40px rgb(0 0 0 / 0.5),
+    0 0 64px rgb(255 190 50 / 0.2);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.yl-frame:focus-visible {
+  outline: 3px solid var(--yl-glow);
+  outline-offset: 4px;
+}
+
+.yl-frame .xk-photo {
+  border-radius: 4px;
+}
+
+/* videos */
+.yl-videos {
+  position: relative;
+  z-index: 1;
+  padding: 2rem 1.2rem 4rem;
+}
+
+.yl-videos__list {
+  display: grid;
+  gap: 1.4rem;
+  justify-items: center;
+  max-width: 44rem;
+  margin: 2rem auto 0;
+}
+
+.yl-video {
+  width: 100%;
+}
+
+.yl-video video {
+  display: block;
+  width: 100%;
+  border-radius: 18px;
+  background: #000;
+  box-shadow:
+    0 0 0 1px rgb(255 214 90 / 0.3),
+    0 20px 46px rgb(0 0 0 / 0.55),
+    0 0 60px rgb(255 190 50 / 0.16);
+}
+
+/* final */
+.yl-finale {
+  position: relative;
+  z-index: 1;
+  padding: 5rem 1.2rem calc(4rem + var(--safe-bottom, 0px));
+  text-align: center;
+}
+
+.yl-finale__line {
+  margin: 0;
+  font: 600 clamp(1.9rem, 7.4vw, 3rem) / 1.1 var(--yl-serif);
+  text-shadow: 0 0 34px rgb(255 200 61 / 0.35);
+  text-wrap: balance;
+}
+
+.yl-finale__signature {
+  margin: 1rem 0 0;
+  color: var(--yl-glow);
+  font: 700 2rem/1 var(--yl-hand);
+}
+
+.yl-replay {
+  margin-top: 1.8rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgb(255 200 61 / 0.5);
+  border-radius: 999px;
+  background: rgb(255 200 61 / 0.08);
+  color: var(--yl-ink);
+  font: 600 0.9rem/1 var(--yl-sans);
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.yl-replay:focus-visible {
+  outline: 3px solid var(--yl-glow);
+  outline-offset: 3px;
+}
+
+.yl-finale__lamp {
+  position: relative;
+  width: min(54vw, 230px);
+  margin: 2.6rem auto 0;
+}
+
+.yl-finale__lamp .yl-lamp {
+  position: relative;
+  z-index: 2;
+}
+
+.yl-halo--small {
+  width: 340%;
+  top: 46%;
+  opacity: 0.85;
+  transform: translate(-50%, -50%);
+  transition: none;
+}
+
+/* ── Escritorio y horizontal con poca altura: dos columnas ───────────────── */
+@media (min-width: 800px), (orientation: landscape) and (max-height: 560px) {
+  .yl-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 1fr auto;
+    align-items: center;
+    column-gap: 3rem;
+    width: 100%;
+    max-width: 74rem;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .yl-hero__text {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+  }
+
+  .yl-stage {
+    --lamp-w: min(30vw, 46svh, 340px);
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+  }
+
+  .yl-hint,
+  .yl-scroll {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .yl-title {
+    font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  }
+
+  .yl-hangs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .yl-hero {
+    min-height: 100svh;
+    padding-top: calc(1rem + var(--safe-top, 0px));
+    padding-bottom: calc(0.8rem + var(--safe-bottom, 0px));
+  }
+
+  .yl-stage {
+    --lamp-w: min(26vw, 52svh, 300px);
+  }
+
+  .yl-hint,
+  .yl-scroll {
+    display: none;
+  }
+
+  .yl-title {
+    font-size: clamp(1.8rem, 4.4vw, 2.8rem);
+  }
+}
+
+@media (min-width: 1100px) {
+  .yl-hangs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yl-word {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
