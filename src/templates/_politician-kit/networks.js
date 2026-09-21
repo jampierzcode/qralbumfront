@@ -80,3 +80,9 @@ export function linkHref(item) {
 export function iconOfNetwork(network) {
   return network === "whatsapp-group" ? "whatsapp" : network;
 }
+
+/** Devuelve el link sólo si es https válido; si no, "" (para portadas, transmisiones, etc.). */
+export function safeHttps(url) {
+  const value = String(url || "").trim();
+  return HTTPS.test(value) ? value : "";
+}

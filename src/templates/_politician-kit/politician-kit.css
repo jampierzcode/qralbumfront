@@ -1,0 +1,365 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   Kit de político · prefijo pk-
+   Estructura de los bloques compartidos (links, equipo, propuestas, campañas,
+   logo + número). SIN colores propios: cada diseño define en su elemento raíz
+     --pk-primary  --pk-accent  --pk-on-primary  --pk-on-accent
+     --pk-strong   (opcional: el color principal oscurecido para texto/íconos sobre blanco)
+     --pk-ink  --pk-muted  --pk-surface  --pk-line  --pk-radius
+     --pk-display  --pk-body
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.pk-icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex: none;
+}
+
+/* ── Logo y número ───────────────────────────────────────────────────────── */
+.pk-logo {
+  --pk-logo-size: 3.5rem;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--pk-logo-size);
+  height: var(--pk-logo-size);
+  padding: 0.3rem;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--pk-strong, var(--pk-primary));
+  font: 900 1.4rem/1 var(--pk-display);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.18);
+}
+
+.pk-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pk-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.pk-mark__number {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2em;
+  padding: 0.18em 0.6em 0.1em;
+  border-radius: 0.55em;
+  background: var(--pk-accent);
+  color: var(--pk-on-accent);
+  font: 1000 1.9rem/1 var(--pk-display);
+  font-variant-numeric: lining-nums;
+}
+
+.pk-mark__number small {
+  font-size: 0.42em;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+}
+
+/* ── Links ───────────────────────────────────────────────────────────────── */
+.pk-links {
+  display: grid;
+  gap: 0.65rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pk-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 3.5rem;
+  padding: 0.55rem 0.9rem 0.55rem 0.6rem;
+  border: 1px solid var(--pk-line);
+  border-radius: var(--pk-radius);
+  background: var(--pk-surface);
+  color: var(--pk-ink);
+  font: 700 1rem/1.2 var(--pk-body);
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.pk-link:active {
+  transform: scale(0.985);
+}
+
+.pk-link:focus-visible {
+  outline: 3px solid var(--pk-accent);
+  outline-offset: 2px;
+}
+
+.pk-link__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--pk-primary);
+  color: var(--pk-on-primary);
+}
+
+.pk-link--whatsapp .pk-link__icon,
+.pk-link--whatsapp-group .pk-link__icon {
+  background: #1fa855;
+  color: #fff;
+}
+
+.pk-link__label {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pk-link__go {
+  flex: none;
+  opacity: 0.4;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pk-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgb(0 0 0 / 0.12);
+  }
+}
+
+@media (min-width: 640px) {
+  .pk-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ── Equipo ──────────────────────────────────────────────────────────────── */
+.pk-team {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pk-member {
+  text-align: center;
+}
+
+.pk-member__photo {
+  display: block;
+  width: min(100%, 8.5rem);
+  aspect-ratio: 1;
+  margin: 0 auto 0.65rem;
+  overflow: hidden;
+  border: 3px solid var(--pk-accent);
+  border-radius: 50%;
+  background: var(--pk-primary);
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.14);
+}
+
+.pk-member__photo .xk-photo {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 !important;
+}
+
+.pk-member__initial {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--pk-on-primary);
+  font: 900 2rem/1 var(--pk-display);
+}
+
+.pk-member__name {
+  margin: 0;
+  color: var(--pk-ink);
+  font: 800 0.98rem/1.2 var(--pk-body);
+}
+
+.pk-member__role {
+  margin: 0.2rem 0 0;
+  color: var(--pk-muted);
+  font: 500 0.85rem/1.3 var(--pk-body);
+}
+
+@media (min-width: 560px) {
+  .pk-team {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .pk-team {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ── Propuestas ──────────────────────────────────────────────────────────── */
+.pk-proposals {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pk-proposal {
+  display: flex;
+  gap: 0.9rem;
+  padding: 1rem;
+  border: 1px solid var(--pk-line);
+  border-radius: var(--pk-radius);
+  background: var(--pk-surface);
+}
+
+.pk-proposal__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--pk-primary) 13%, #fff);
+  color: var(--pk-strong, var(--pk-primary));
+  font-size: 1.3rem;
+}
+
+.pk-proposal__title {
+  margin: 0 0 0.2rem;
+  color: var(--pk-ink);
+  font: 800 1.05rem/1.2 var(--pk-body);
+}
+
+.pk-proposal__text {
+  margin: 0;
+  color: var(--pk-muted);
+  font: 400 0.93rem/1.45 var(--pk-body);
+}
+
+@media (min-width: 760px) {
+  .pk-proposals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ── Campañas ────────────────────────────────────────────────────────────── */
+.pk-campaign {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--pk-line);
+  border-radius: var(--pk-radius);
+  background: var(--pk-surface);
+}
+
+.pk-campaign__cover {
+  position: relative;
+}
+
+.pk-campaign__cover .xk-photo {
+  width: 100%;
+  aspect-ratio: 16 / 9 !important;
+}
+
+.pk-campaign__badge {
+  position: absolute;
+  top: 0.7rem;
+  left: 0.7rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: var(--pk-accent);
+  color: var(--pk-on-accent);
+  font: 900 0.78rem/1 var(--pk-body);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.25);
+}
+
+.pk-campaign__badge--inline {
+  position: static;
+  align-self: flex-start;
+  box-shadow: none;
+}
+
+.pk-campaign__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem 1.1rem 1.2rem;
+}
+
+.pk-campaign__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  color: var(--pk-muted);
+  font: 600 0.86rem/1.3 var(--pk-body);
+}
+
+.pk-campaign__meta .pk-icon {
+  color: var(--pk-strong, var(--pk-primary));
+}
+
+.pk-campaign__title {
+  margin: 0;
+  color: var(--pk-ink);
+  font: 900 1.25rem/1.15 var(--pk-display);
+}
+
+.pk-campaign__text {
+  margin: 0;
+  color: var(--pk-muted);
+  font: 400 0.94rem/1.5 var(--pk-body);
+}
+
+.pk-btn {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  background: var(--pk-accent);
+  color: var(--pk-on-accent);
+  font: 800 0.92rem/1 var(--pk-body);
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.pk-btn:active {
+  transform: scale(0.97);
+}
+
+.pk-btn:focus-visible {
+  outline: 3px solid var(--pk-primary);
+  outline-offset: 2px;
+}
+
+/* Realizadas: más compactas, la portada va al costado. */
+.pk-campaign--past.has-cover {
+  flex-direction: row;
+}
+
+.pk-campaign--past .pk-campaign__cover {
+  flex: 0 0 38%;
+}
+
+.pk-campaign--past .pk-campaign__cover .xk-photo {
+  height: 100%;
+  aspect-ratio: auto !important;
+  min-height: 7.5rem;
+}
+
+.pk-campaign--past .pk-campaign__title {
+  font-size: 1.05rem;
+}

@@ -1,0 +1,688 @@
+/* ───────────────────────────────────────────────────────────────────────────
+   Político · Cartel · prefijo pc-
+   Portada de cartel: color del partido, foto grande y número gigante detrás.
+   Una sola composición para todos los tamaños: manda el móvil y, en escritorio
+   o en horizontal con poca altura, la portada pasa a dos columnas.
+   Los colores del partido llegan como --pc-primary / --pc-accent (inline).
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.pc {
+  --pc-primary: #0b57d0;
+  --pc-accent: #ffb300;
+  --pc-on-primary: #ffffff;
+  --pc-on-accent: #111827;
+  --pc-deep: color-mix(in srgb, var(--pc-primary) 56%, #000);
+  --pc-bright: color-mix(in srgb, var(--pc-primary) 76%, #fff);
+  --pc-page: color-mix(in srgb, var(--pc-primary) 7%, #f7f8fc);
+  --pc-strong: var(--pc-primary);
+  --pc-accent-lit: var(--pc-accent);
+  --pc-ink: #131a2e;
+  --pc-muted: #56607a;
+  --pc-display: "Nunito Variable", "Nunito", system-ui, sans-serif;
+  --pc-body: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* variables que lee el kit compartido (politician-kit.css) */
+  --pk-primary: var(--pc-primary);
+  --pk-accent: var(--pc-accent);
+  --pk-on-primary: var(--pc-on-primary);
+  --pk-on-accent: var(--pc-on-accent);
+  --pk-strong: var(--pc-strong);
+  --pk-ink: var(--pc-ink);
+  --pk-muted: var(--pc-muted);
+  --pk-surface: #ffffff;
+  --pk-line: color-mix(in srgb, var(--pc-primary) 14%, #e4e8f2);
+  --pk-radius: 18px;
+  --pk-display: var(--pc-display);
+  --pk-body: var(--pc-body);
+
+  position: relative;
+  min-height: 100dvh;
+  overflow-x: clip;
+  background: var(--pc-page);
+  color: var(--pc-ink);
+  font-family: var(--pc-body);
+  font-variant-numeric: lining-nums;
+}
+
+/* ── Portada ─────────────────────────────────────────────────────────────── */
+.pc-hero {
+  position: relative;
+  isolation: isolate;
+  padding: calc(1.1rem + var(--safe-top, 0px)) 1.1rem 0;
+  overflow: clip; /* la sombra de la foto no debe salirse por debajo de la curva */
+  background: linear-gradient(165deg, var(--pc-bright) 0%, var(--pc-primary) 40%, var(--pc-deep) 100%);
+  color: var(--pc-on-primary);
+}
+
+.pc-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* halo del color de acento y banda diagonal de luz, como los carteles de campaña */
+.pc-hero__bg::before {
+  content: "";
+  position: absolute;
+  right: -32%;
+  top: 22%;
+  width: 96vmin;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 255 255 / 0.2), transparent 66%);
+}
+
+.pc-hero__bg::after {
+  content: "";
+  position: absolute;
+  left: -18%;
+  top: -12%;
+  width: 78%;
+  height: 130%;
+  background: linear-gradient(120deg, rgb(255 255 255 / 0.13), transparent 62%);
+  transform: skewX(-18deg);
+}
+
+/* curva clara al pie: el candidato "sale" de ella y se oculta el corte de la foto */
+.pc-hero::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  left: -8%;
+  right: -8%;
+  bottom: -1px;
+  height: 3.6rem;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background: var(--pc-page);
+}
+
+.pc-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: 70rem;
+  margin: 0 auto;
+}
+
+.pc-party {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.pc-party--center {
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.pc-party .pk-logo {
+  --pk-logo-size: 3rem;
+}
+
+.pc-party__name {
+  max-width: 15rem;
+  font: 800 0.78rem/1.2 var(--pc-body);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  opacity: 0.94;
+}
+
+.pc-eyebrow {
+  margin: 1.5rem 0 0.35rem;
+  color: var(--pc-accent);
+  font: 1000 clamp(0.95rem, 4vw, 1.3rem) / 1 var(--pc-display);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.pc-name {
+  margin: 0;
+  font: 900 clamp(2.35rem, 12vw, 4.8rem) / 0.92 var(--pc-body);
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  text-shadow: 0 3px 0 rgb(0 0 0 / 0.14);
+}
+
+.pc-office {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+  margin: 1rem 0 0;
+}
+
+.pc-office__role {
+  padding: 0.45rem 0.95rem 0.4rem;
+  border-radius: 999px;
+  background: var(--pc-accent);
+  color: var(--pc-on-accent);
+  font: 1000 clamp(0.95rem, 4vw, 1.15rem) / 1 var(--pc-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 16px rgb(0 0 0 / 0.22);
+}
+
+.pc-office__place {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font: 700 0.95rem/1.2 var(--pc-body);
+}
+
+.pc-slogan {
+  max-width: 26rem;
+  margin: 1rem 0 0;
+  font: 700 clamp(1rem, 4.4vw, 1.25rem) / 1.28 var(--pc-body);
+  text-wrap: balance;
+}
+
+/* ── Escenario: número gigante detrás, foto delante ──────────────────────── */
+.pc-stage {
+  position: relative;
+  height: clamp(15rem, 40svh, 28rem);
+  margin-top: 0.4rem;
+}
+
+.pc-number {
+  position: absolute;
+  z-index: 0;
+  left: -0.02em;
+  top: 3%;
+  color: var(--pc-accent);
+  font: 1000 calc(clamp(9rem, 56vw, 20rem) * var(--pc-num-scale, 1)) / 0.8 var(--pc-display);
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+  text-shadow: 0 0.035em 0 rgb(0 0 0 / 0.16);
+  pointer-events: none;
+  user-select: none;
+}
+
+.pc-figure {
+  position: absolute;
+  z-index: 1;
+  right: -15%;
+  bottom: 0;
+  height: 100%;
+  max-width: 100%;
+}
+
+.pc-photo {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  object-position: bottom;
+  filter: drop-shadow(0 16px 26px rgb(0 0 0 / 0.34));
+  transition: opacity 0.5s ease;
+}
+
+.pc-hero[data-photo="pending"] .pc-photo {
+  opacity: 0;
+}
+
+/* foto normal (fondo opaco): se enmarca como retrato en vez de verse como un cuadro pegado */
+.pc-hero[data-photo="boxed"] .pc-figure {
+  right: 0;
+  height: 96%;
+  max-width: 58%;
+}
+
+.pc-hero[data-photo="boxed"] .pc-photo {
+  max-width: 100%;
+  object-fit: cover;
+  border: 4px solid var(--pc-accent);
+  border-bottom: 0;
+  border-radius: 28px 28px 0 0;
+  filter: drop-shadow(0 14px 24px rgb(0 0 0 / 0.3));
+}
+
+/* ── Día de la votación (tarjeta que "cuelga" de la portada) ─────────────── */
+.pc-vote {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  width: min(calc(100% - 2rem), 36rem);
+  margin: -2.7rem auto 0;
+  padding: 1rem 1.1rem;
+  border-radius: 26px;
+  background: #fff;
+  color: var(--pc-ink);
+  box-shadow: 0 20px 44px rgb(8 20 60 / 0.3);
+}
+
+.pc-vote .pk-mark {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pc-vote .pk-logo {
+  --pk-logo-size: 3.7rem;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pc-primary) 16%, #fff);
+}
+
+.pc-vote .pk-mark__number {
+  background: var(--pc-primary);
+  color: var(--pc-on-primary);
+  font-size: 1.6rem;
+}
+
+.pc-pill {
+  display: inline-block;
+  padding: 0.32rem 0.8rem 0.28rem;
+  border-radius: 999px;
+  background: var(--pc-accent);
+  color: var(--pc-on-accent);
+  font: 900 0.76rem/1 var(--pc-body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pc-days {
+  margin: 0.3rem 0 0;
+  color: var(--pc-strong);
+  font: 1000 clamp(1.6rem, 7vw, 2.1rem) / 0.95 var(--pc-display);
+  text-transform: uppercase;
+}
+
+.pc-days b {
+  font-size: 1.75em;
+  font-weight: 1000;
+  letter-spacing: -0.03em;
+}
+
+.pc-vote__date {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.45rem 0 0;
+  color: var(--pc-muted);
+  font: 600 0.84rem/1.3 var(--pc-body);
+}
+
+.pc-vote__date .pk-icon {
+  flex: none;
+  color: var(--pc-strong);
+}
+
+.pc-vote__cal {
+  display: grid;
+  place-items: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--pc-primary) 10%, #fff);
+  color: var(--pc-strong);
+  text-decoration: none;
+}
+
+.pc-vote__cal .pk-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.pc-vote__cal:focus-visible {
+  outline: 3px solid var(--pc-accent);
+  outline-offset: 2px;
+}
+
+/* ── Contenido ───────────────────────────────────────────────────────────── */
+.pc-main {
+  display: grid;
+  gap: 2.8rem;
+  width: min(calc(100% - 2rem), 68rem);
+  margin: 0 auto;
+  padding: 2.6rem 0 0.5rem;
+}
+
+.pc-h {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0 0 1.1rem;
+  color: var(--pc-strong);
+  font: 1000 clamp(1.5rem, 6vw, 2.1rem) / 1 var(--pc-display);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.pc-h::before {
+  content: "";
+  flex: none;
+  width: 0.5rem;
+  height: 1.45em;
+  border-radius: 4px;
+  background: var(--pc-accent);
+  transform: skewX(-14deg);
+}
+
+.pc-bio {
+  margin: 0;
+  padding: 1.1rem 1.25rem;
+  border-left: 6px solid var(--pc-accent);
+  border-radius: 0 20px 20px 0;
+  background: #fff;
+  box-shadow: 0 6px 20px rgb(8 20 60 / 0.07);
+  font: 500 1.05rem/1.65 var(--pc-body);
+}
+
+.pc-sub {
+  margin: 1.5rem 0 0.75rem;
+  color: var(--pc-muted);
+  font: 800 0.78rem/1 var(--pc-body);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.pc-sub:first-child {
+  margin-top: 0;
+}
+
+.pc-campaigns {
+  display: grid;
+  gap: 1rem;
+}
+
+/* ── Cierre ──────────────────────────────────────────────────────────────── */
+.pc-footer {
+  margin-top: 3rem;
+  padding: 2.8rem 1.2rem calc(6.6rem + var(--safe-bottom, 0px));
+  border-radius: 38px 38px 0 0;
+  background: linear-gradient(180deg, var(--pc-deep), color-mix(in srgb, var(--pc-deep) 62%, #000));
+  color: #fff;
+  text-align: center;
+}
+
+.pc-footer .pc-eyebrow {
+  margin-top: 1.4rem;
+  color: var(--pc-accent-lit);
+}
+
+.pc-footer__name {
+  margin: 0;
+  font: 900 clamp(1.7rem, 8vw, 2.8rem) / 1 var(--pc-body);
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.pc-footer__number {
+  margin: 0.35rem 0 0;
+  color: var(--pc-accent-lit);
+  font: 1000 clamp(6rem, 34vw, 11rem) / 0.86 var(--pc-display);
+  letter-spacing: -0.04em;
+  text-shadow: 0 0.035em 0 rgb(0 0 0 / 0.18);
+}
+
+.pc-footer__office {
+  margin: 0.8rem 0 0;
+  font: 800 0.95rem/1.3 var(--pc-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pc-footer__slogan {
+  max-width: 24rem;
+  margin: 0.7rem auto 0;
+  font: 500 1rem/1.4 var(--pc-body);
+  opacity: 0.9;
+  text-wrap: balance;
+}
+
+/* ── Barra fija "Vota N°" ────────────────────────────────────────────────── */
+.pc-bar {
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  bottom: calc(0.8rem + var(--safe-bottom, 0px));
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: min(calc(100% - 1.4rem), 30rem);
+  padding: 0.45rem 0.5rem 0.45rem 0.5rem;
+  border-radius: 999px;
+  background: var(--pc-deep);
+  color: #fff;
+  box-shadow: 0 12px 30px rgb(0 0 0 / 0.36);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 170%);
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.3s ease;
+}
+
+.pc-bar[data-show] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.pc-bar__logo {
+  --pk-logo-size: 2.6rem;
+}
+
+.pc-bar__text {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  line-height: 1.1;
+}
+
+.pc-bar__text small {
+  font: 700 0.62rem/1 var(--pc-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.pc-bar__text strong {
+  overflow: hidden;
+  font: 900 1rem/1.15 var(--pc-body);
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.pc-bar__num {
+  padding: 0.35rem 0.7rem 0.25rem;
+  border-radius: 999px;
+  background: var(--pc-accent);
+  color: var(--pc-on-accent);
+  font: 1000 1.15rem/1 var(--pc-display);
+  white-space: nowrap;
+}
+
+.pc-bar__go {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.6rem 0.85rem;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--pc-deep);
+  font: 800 0.85rem/1 var(--pc-body);
+  cursor: pointer;
+}
+
+.pc-bar__go:focus-visible {
+  outline: 3px solid var(--pc-accent);
+  outline-offset: 2px;
+}
+
+/* ── Entrada (sólo si el equipo lo aguanta y el usuario no pidió calma) ──── */
+@keyframes pc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+
+@keyframes pc-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.72) translateY(24px);
+  }
+}
+
+@keyframes pc-slide {
+  from {
+    opacity: 0;
+    transform: translateX(46px);
+  }
+}
+
+@keyframes pc-drop {
+  from {
+    opacity: 0;
+    transform: translateY(34px);
+  }
+}
+
+.pc:not([data-calm]) .pc-hero__copy > * {
+  animation: pc-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.pc:not([data-calm]) .pc-hero__copy > :nth-child(2) {
+  animation-delay: 80ms;
+}
+.pc:not([data-calm]) .pc-hero__copy > :nth-child(3) {
+  animation-delay: 150ms;
+}
+.pc:not([data-calm]) .pc-hero__copy > :nth-child(4) {
+  animation-delay: 240ms;
+}
+.pc:not([data-calm]) .pc-hero__copy > :nth-child(5) {
+  animation-delay: 320ms;
+}
+
+.pc:not([data-calm]) .pc-number {
+  animation: pc-pop 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+}
+
+.pc:not([data-calm]) .pc-figure {
+  animation: pc-slide 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
+}
+
+.pc:not([data-calm]) .pc-vote {
+  animation: pc-drop 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.55s both;
+}
+
+/* ── Escritorio y horizontal con poca altura: portada a dos columnas ─────── */
+@media (min-width: 760px), (orientation: landscape) and (max-height: 560px) {
+  .pc-hero {
+    padding-top: calc(1.6rem + var(--safe-top, 0px));
+  }
+
+  .pc-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    align-items: end;
+    gap: 1rem;
+  }
+
+  .pc-hero__copy {
+    align-self: center;
+    padding-bottom: 4.6rem;
+  }
+
+  .pc-eyebrow {
+    margin-top: 1.1rem;
+  }
+
+  .pc-name {
+    font-size: clamp(2rem, 5.6vw, 4.6rem);
+  }
+
+  .pc-stage {
+    height: min(80svh, 40rem);
+    margin-top: 0;
+  }
+
+  .pc-number {
+    left: -4%;
+    top: 10%;
+    font-size: calc(clamp(9rem, 30vw, 24rem) * var(--pc-num-scale, 1));
+  }
+
+  .pc-figure {
+    right: -8%;
+  }
+
+  .pc-hero[data-photo="boxed"] .pc-figure {
+    right: 0;
+  }
+
+  .pc-hero::after {
+    height: 4.4rem;
+  }
+
+  .pc-vote {
+    width: min(calc(100% - 3rem), 40rem);
+  }
+
+  .pc-campaigns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .pc-campaigns--past {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .pc-hero {
+    padding-top: calc(0.8rem + var(--safe-top, 0px));
+  }
+
+  .pc-stage {
+    height: min(66svh, 22rem);
+  }
+
+  .pc-number {
+    font-size: calc(min(24vw, 54svh, 20rem) * var(--pc-num-scale, 1));
+  }
+
+  .pc-hero__copy {
+    padding-bottom: 2.6rem;
+  }
+
+  .pc-eyebrow {
+    margin-top: 0.8rem;
+  }
+
+  .pc-slogan {
+    display: none;
+  }
+
+  .pc-hero::after {
+    height: 3rem;
+  }
+
+  .pc-vote {
+    margin-top: -2.2rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .pc-campaigns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .pc-campaigns--past {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-bar {
+    transition: opacity 0.2s ease;
+  }
+}

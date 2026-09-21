@@ -3,7 +3,8 @@ import { describe, expect, test } from "vitest";
 import { getCustomerEditableKeys, getSteps, prepareContent, validateContent } from "../../../gift-core/index.js";
 import { politicianManifest, politicianSchema } from "./fields.js";
 import { politicianDemo } from "./demo.js";
-import { campaignList, daysUntil, votingCountdownText } from "./format.js";
+import { campaignList, contrastColor, contrastRatio, daysUntil, formatCampaignDate, formatVoteDate, mixHex, readableOnLight, visibleOn, votingCountdownText } from "./format.js";
+import { isBoxedPhoto } from "./useCutout.js";
 import { NETWORKS, checkLink, linkHref, linkLabel } from "./networks.js";
 
 const schema = politicianSchema();
@@ -183,5 +184,52 @@ describe("manifest base", () => {
     expect(manifest.gate).toBe("template");
     expect(manifest.supportsMusic).toBe(false);
     expect(manifest.defaultCollections).toEqual(["politica"]);
+  });
+});
+
+describe("colores del partido: siempre legibles", () => {
+  test("contrastColor elige blanco sobre oscuros y oscuro sobre claros", () => {
+    expect(contrastColor("#0b57d0")).toBe("#ffffff");
+    expect(contrastColor("#f5c400")).toBe("#111827");
+    expect(contrastColor("#ffffff")).toBe("#111827");
+    expect(contrastColor("#000000")).toBe("#ffffff");
+    expect(contrastColor("no-es-color")).toBe("#ffffff");
+  });
+
+  test("readableOnLight oscurece un amarillo hasta poder leerse sobre blanco y no toca un azul oscuro", () => {
+    expect(contrastRatio("#f5c400", "#ffffff")).toBeLessThan(2);
+    expect(contrastRatio(readableOnLight("#f5c400"), "#ffffff")).toBeGreaterThanOrEqual(4.5);
+    expect(readableOnLight("#0b57d0")).toBe("#0b57d0");
+    expect(readableOnLight("basura")).toBe("basura");
+  });
+
+  test("visibleOn cae a blanco cuando el acento se pierde sobre el fondo", () => {
+    const deep = mixHex("#f5c400", "#000000", 0.5);
+    expect(visibleOn("#c8102e", deep)).toBe("#ffffff");
+    expect(visibleOn("#ffb300", mixHex("#0b57d0", "#000000", 0.5))).toBe("#ffb300");
+  });
+
+  test("mixHex mezcla los extremos", () => {
+    expect(mixHex("#ffffff", "#000000", 0)).toBe("#ffffff");
+    expect(mixHex("#ffffff", "#000000", 1)).toBe("#000000");
+    expect(mixHex("#ff0000", "#0000ff", 0.5)).toBe("#800080");
+  });
+});
+
+describe("foto del candidato y fechas cortas", () => {
+  test("una foto con esquinas opacas es rectangular; con esquinas transparentes es un recorte", () => {
+    expect(isBoxedPhoto([255, 255, 255, 255])).toBe(true);
+    expect(isBoxedPhoto([0, 0, 0, 0])).toBe(false);
+    expect(isBoxedPhoto([255, 255, 0, 255])).toBe(false);
+    expect(isBoxedPhoto([])).toBe(false);
+  });
+
+  test("formatos cortos con el año sólo si no es el actual", () => {
+    const now = new Date(2026, 8, 21);
+    expect(formatVoteDate("2026-10-21", now)).toBe("Miércoles 21 de octubre");
+    expect(formatVoteDate("2027-04-11", now)).toBe("Domingo 11 de abril de 2027");
+    expect(formatCampaignDate("2026-09-30", now)).toBe("Mié 30 Sep");
+    expect(formatCampaignDate("2025-09-01", now)).toBe("Lun 1 Sep 2025");
+    expect(formatVoteDate("", now)).toBe("");
   });
 });

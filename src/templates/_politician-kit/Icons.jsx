@@ -135,6 +135,19 @@ const PATHS = {
     </>
   ),
   check: <path d="m4 12.5 5 5L20 6.5" />,
+  arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
+  pin: (
+    <>
+      <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </>
+  ),
+  user: (
+    <>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21a8 8 0 0 1 16 0" />
+    </>
+  ),
 };
 
 export const hasIcon = (name) => Boolean(PATHS[name]);

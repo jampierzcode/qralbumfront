@@ -10,7 +10,7 @@
 //   · sin errores de consola ni excepciones
 //   · sin audio antes del gesto del usuario
 //   · sin scroll horizontal
-//   · la experiencia se abre con el gesto (botón del shell o de la plantilla)
+//   · la experiencia se abre con el gesto (botón del shell o de la plantilla), o es estática ([data-gift-static])
 // Capturas en artifacts/smoke/.
 import fs from "node:fs";
 import path from "node:path";
@@ -58,8 +58,9 @@ for (const target of targets) {
       const gate = page.locator(".gs-gate__button, [data-gift-open]").first();
       if (await gate.count()) {
         await gate.click();
-      } else {
-        problems.push("no se encontró el elemento para abrir la experiencia (.gs-gate__button o [data-gift-open])");
+      } else if (!(await page.locator("[data-gift-static]").count())) {
+        // Las plantillas sin "toca para abrir" (ej. tarjetas de político) se marcan con data-gift-static.
+        problems.push("no se encontró el elemento para abrir la experiencia (.gs-gate__button, [data-gift-open] o [data-gift-static])");
       }
       await page.waitForTimeout(3500);
 
