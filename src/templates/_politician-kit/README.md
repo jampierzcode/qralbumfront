@@ -24,6 +24,15 @@ con `_`, así que los registros de plantillas (frontend y backend) la ignoran: *
 
 En pantalla se muestran juntas: `campaignList(content)` devuelve `{ upcoming, past }`.
 
+## Diseños hechos
+
+| Diseño | Idea | Colores por defecto |
+|---|---|---|
+| `politico-cartel` | Cartel de campaña: color del partido, foto grande y número gigante detrás, cuenta regresiva. | azul y ámbar |
+| `politico-cedula` | Papel y tipografía de imprenta: cédula de votación de portada, X que se dibuja sola, boleto con talón. | carmesí y azul marino |
+
+Los dos usan `politicianSchema()`: piden exactamente los mismos campos (lo verifica `politician-kit.test.js`).
+
 ## Cómo agregar un diseño nuevo
 
 1. Crea `src/templates/<id>/` con los 6 archivos de siempre (ver `docs/CREAR_PLANTILLA.md`).
@@ -46,7 +55,7 @@ export default politicianDemo({ primary: "#0b57d0", accent: "#ffb300" });
 3. En `Experience.jsx` no hay "toca para abrir": marca el elemento raíz con `data-gift-static` (lo pide `npm run smoke`)
    y llama a `open()` al montar. Colores del partido: pasa por `contrastColor()` el texto sobre el color principal y por
    `readableOnLight()` el color usado como texto sobre blanco (un partido amarillo no debe dar texto amarillo sobre blanco).
-   Referencia: `politico-cartel`.
+   Referencias: `politico-cartel` (cartel, color del partido) y `politico-cedula` (papel, cédula con la X que se dibuja).
    Contenido: `content.links` → `linkHref(item)` / `linkLabel(item)` / `<Icon name={iconOfNetwork(item.network)} />`;
    campañas → `campaignList(content)`; cuenta regresiva → `daysUntil(content.voteDate)` + `votingCountdownText()`.
    Usa `--pk-*` (con `colorPrimary` y `colorAccent` del contenido) y clases con prefijo `pk-`.

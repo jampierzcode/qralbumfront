@@ -178,7 +178,7 @@ Igual que las bodas: **`src/templates/_politician-kit/`** trae el schema complet
 Un diseño sólo agrega sus colores y su composición. Ver su `README.md`.
 
 Una tarjeta sin "toca para abrir" (`gate: "template"` sin música) marca su elemento raíz con `data-gift-static`
-para que `npm run smoke` no busque el botón de abrir. Referencia: `politico-cartel`.
+para que `npm run smoke` no busque el botón de abrir. Referencias: `politico-cartel` y `politico-cedula`.
 
 Ojo: la lista `history` (campañas adicionales) es `customerEditable: false`; sólo el superadmin
 la edita, el cliente llena una sola campaña (`campaign`).
