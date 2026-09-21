@@ -6,6 +6,8 @@ import { politicianDemo } from "./demo.js";
 import { campaignList, contrastColor, contrastRatio, daysUntil, formatCampaignDate, formatVoteDate, mixHex, readableOnLight, visibleOn, votingCountdownText } from "./format.js";
 import { isBoxedPhoto } from "./useCutout.js";
 import { NETWORKS, checkLink, linkHref, linkLabel } from "./networks.js";
+import cartel from "../politico-cartel/index.js";
+import cedula from "../politico-cedula/index.js";
 
 const schema = politicianSchema();
 const demo = politicianDemo();
@@ -231,5 +233,23 @@ describe("foto del candidato y fechas cortas", () => {
     expect(formatCampaignDate("2026-09-30", now)).toBe("Mié 30 Sep");
     expect(formatCampaignDate("2025-09-01", now)).toBe("Lun 1 Sep 2025");
     expect(formatVoteDate("", now)).toBe("");
+  });
+});
+
+describe("los diseños de político comparten los mismos campos", () => {
+  test("cartel y cédula piden la misma información y sólo cambian sus colores por defecto", () => {
+    expect(Object.keys(cedula.schema.fields)).toEqual(Object.keys(cartel.schema.fields));
+    expect(cedula.schema.fields.colorPrimary.default).not.toBe(cartel.schema.fields.colorPrimary.default);
+    for (const template of [cartel, cedula]) {
+      expect(getCustomerEditableKeys(template.schema)).not.toContain("history");
+      expect(template.manifest.gate).toBe("template");
+      expect(template.manifest.defaultCollections).toEqual(["politica"]);
+    }
+  });
+
+  test("un regalo cargado con un diseño se ve igual de completo con el otro", () => {
+    const content = { ...cartel.demo.gift.content, recipientName: cartel.demo.gift.recipientName };
+    const media = Object.fromEntries(Object.entries(cartel.demo.media).map(([assetId, a]) => [assetId, { kind: a.kind }]));
+    expect(validateContent(cedula.schema, content, { mode: "publish", assets: media }).errors).toEqual([]);
   });
 });
