@@ -1,6 +1,8 @@
 // Preparación de archivos en el navegador antes de subirlos.
 // Las fotos de celular (4000px, 4-8 MB) se reducen a ~2560px JPEG: suben más
 // rápido por datos móviles. El servidor igual vuelve a procesarlas (variantes WebP).
+// Las imágenes con TRANSPARENCIA (recortes de candidatos, logos) nunca pasan por JPEG:
+// el JPEG no tiene canal alfa y lo transparente se volvería negro. Van a WebP (o PNG).
 
 const MAX_EDGE = 2560;
 const QUALITY = 0.86;
@@ -13,6 +15,32 @@ export const ACCEPT = {
 };
 
 export const LIMITS_MB = { image: 25, audio: 30, video: 150 };
+
+/** true si algún píxel (RGBA, `data` = Uint8ClampedArray) es transparente o semitransparente. */
+export function hasAlphaPixels(data) {
+  for (let i = 3; i < data.length; i += 4) if (data[i] < 250) return true;
+  return false;
+}
+
+/** Un JPEG nunca trae transparencia: ni se analiza. */
+const canHaveAlpha = (type) => !/jpe?g/.test(type);
+
+function detectAlpha(source) {
+  try {
+    const size = 96;
+    const probe = document.createElement("canvas");
+    probe.width = size;
+    probe.height = size;
+    const ctx = probe.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(source, 0, 0, size, size);
+    return hasAlphaPixels(ctx.getImageData(0, 0, size, size).data);
+  } catch {
+    // Si no se puede leer, mejor conservar la transparencia por si acaso.
+    return true;
+  }
+}
+
+const canvasToBlob = (canvas, type, quality) => new Promise((resolve) => canvas.toBlob(resolve, type, quality));
 
 function loadWithImageElement(file) {
   return new Promise((resolve, reject) => {
@@ -39,7 +67,10 @@ async function decode(file) {
   return loadWithImageElement(file);
 }
 
-/** Reduce y convierte a JPEG cuando conviene. Si el navegador no puede decodificar, devuelve el original. */
+/**
+ * Reduce y convierte cuando conviene: a JPEG las fotos opacas; a WebP/PNG las que tienen transparencia.
+ * Si el navegador no puede decodificar, o el resultado no pesa menos, devuelve el original.
+ */
 export async function compressImage(file) {
   if (!file.type.startsWith("image/") || file.type === "image/gif") return file;
   let decoded;
@@ -62,10 +93,19 @@ export async function compressImage(file) {
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingQuality = "high";
     ctx.drawImage(decoded.source, 0, 0, w, h);
-    const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", QUALITY));
+    const hasAlpha = canHaveAlpha(file.type) && detectAlpha(decoded.source);
+    let blob;
+    if (hasAlpha) {
+      // Safari no codifica WebP y devuelve PNG: ese también conserva la transparencia.
+      blob = await canvasToBlob(canvas, "image/webp", QUALITY);
+      if (!blob) blob = await canvasToBlob(canvas, "image/png");
+    } else {
+      blob = await canvasToBlob(canvas, "image/jpeg", QUALITY);
+    }
     if (!blob || blob.size >= file.size) return file;
-    const name = (file.name || "foto").replace(/\.[^.]+$/, "") + ".jpg";
-    return new File([blob], name, { type: "image/jpeg", lastModified: Date.now() });
+    const ext = blob.type === "image/webp" ? "webp" : blob.type === "image/png" ? "png" : "jpg";
+    const name = (file.name || "foto").replace(/\.[^.]+$/, "") + `.${ext}`;
+    return new File([blob], name, { type: blob.type, lastModified: Date.now() });
   } finally {
     decoded.release();
   }
