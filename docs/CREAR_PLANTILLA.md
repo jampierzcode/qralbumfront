@@ -80,6 +80,7 @@ export default defineSchema({
 ```
 
 **Tipos:** `text`, `textarea`, `date`, `number`, `select`, `toggle`, `color`, `image`, `images`, `video`, `audio`, `group`, `list`.
+**Número con deslizador:** `f.number({ min: 0, max: 100, step: 5, default: 60, slider: true, unit: "%" })` se dibuja como deslizador con su valor a la vista (opacidad, saturación…).
 **Opciones de cada campo:** `label`, `description`, `placeholder`, `required`, `min`, `max`, `default`, `validate(value, { values })`, `editorStep`, `customerEditable` (false = el comprador no lo ve en el portal), `portalLabel`, `portalDescription`.
 `recipientName` y `senderName` se guardan en columnas del regalo automáticamente.
 

@@ -9,7 +9,8 @@ import PartyMark, { PartyLogo } from "../_politician-kit/PartyMark.jsx";
 import Proposals from "../_politician-kit/Proposals.jsx";
 import Team from "../_politician-kit/Team.jsx";
 import { useCutout } from "../_politician-kit/useCutout.js";
-import { calendarLink, campaignList, contrastColor, daysUntil, eventDateTime, formatTime, formatVoteDate, mixHex, readableOnLight, visibleOn } from "../_politician-kit/format.js";
+import { usePhotoMean } from "../_politician-kit/usePhotoMean.js";
+import { blendedBackdrop, calendarLink, campaignList, contrastColor, daysUntil, eventDateTime, formatTime, formatVoteDate, mixHex, readableOnLight, visibleOn } from "../_politician-kit/format.js";
 import "../_politician-kit/politician-kit.css";
 import "./styles.css";
 
@@ -33,7 +34,8 @@ function Section({ id, title, children, className = "" }) {
 export default function PoliticoCartelExperience({ content, mode, onEvent, env, opened, open }) {
   const {
     recipientName, photo, office, place, slogan, bio,
-    partyName, partyLogo, ballotNumber, colorPrimary, colorAccent,
+    partyName, partyLogo, colorPrimary, colorAccent,
+    bgPhoto, bgBlend, bgOpacity, bgSaturation, bgContrast, bgBrightness, bgBlur, bgPosition,
     voteDate, voteTime, team = [], proposals = [], links = [],
   } = content;
 
@@ -41,6 +43,10 @@ export default function PoliticoCartelExperience({ content, mode, onEvent, env, 
   const days = daysUntil(voteDate);
   const { upcoming, past } = useMemo(() => campaignList(content), [content]);
   const photoKind = useCutout(photo?.src);
+  // El texto de la portada se elige según el fondo que RESULTA de mezclar la foto (multiplicar puede oscurecerlo mucho).
+  const bgFilter = `saturate(${bgSaturation ?? 100}%) contrast(${bgContrast ?? 100}%) brightness(${bgBrightness ?? 100}%)`;
+  const bgMean = usePhotoMean(bgPhoto?.src, bgFilter);
+  const heroBackdrop = bgPhoto?.src && bgMean ? blendedBackdrop(colorPrimary, bgMean, bgBlend, (bgOpacity ?? 60) / 100) : colorPrimary;
   const hasLinks = links.some((l) => l?.url);
 
   const heroRef = useRef(null);
@@ -70,29 +76,55 @@ export default function PoliticoCartelExperience({ content, mode, onEvent, env, 
     "--pc-primary": colorPrimary,
     "--pc-accent": colorAccent,
     "--pc-on-primary": contrastColor(colorPrimary),
+    "--pc-hero-ink": contrastColor(heroBackdrop),
+    // El acento (ej. "VOTA POR") se usa si se distingue del fondo; si no, cae al color del texto.
+    "--pc-eyebrow": visibleOn(colorAccent, heroBackdrop, { min: 3, fallback: contrastColor(heroBackdrop) }),
     "--pc-on-accent": contrastColor(colorAccent),
     // Variantes legibles para cualquier color de partido: texto sobre blanco y acento sobre el pie oscuro.
     "--pc-strong": readableOnLight(colorPrimary),
     "--pc-accent-lit": visibleOn(colorAccent, mixHex(colorPrimary, "#000000", 0.5)),
-    "--pc-num-scale": ballotNumber && ballotNumber.length > 3 ? 0.6 : ballotNumber && ballotNumber.length === 3 ? 0.78 : 1,
   };
 
   const voteAt = eventDateTime(voteDate, voteTime || "07:00");
   const agenda = calendarLink({
-    title: `Votación: ${[office, recipientName].filter(Boolean).join(" ")}${ballotNumber ? ` · N° ${ballotNumber}` : ""}`,
+    title: `Votación: ${[office, recipientName].filter(Boolean).join(" ")}${partyName ? ` · ${partyName}` : ""}`,
     start: voteAt,
     hours: 10,
     location: place,
     details: slogan,
   });
   const firstName = (recipientName || "").split(" ")[0];
+  // Ajustes editables de la foto de fondo: mezcla, opacidad y filtros.
+  const bgStyle = {
+    mixBlendMode: bgBlend || "multiply",
+    opacity: (bgOpacity ?? 60) / 100,
+    objectPosition: `50% ${bgPosition === "top" ? "0%" : bgPosition === "bottom" ? "100%" : "50%"}`,
+    filter: `saturate(${bgSaturation ?? 100}%) contrast(${bgContrast ?? 100}%) brightness(${bgBrightness ?? 100}%) blur(${bgBlur ?? 0}px)`,
+    transform: bgBlur > 0 ? "scale(1.08)" : undefined,
+  };
   const goToLinks = () => document.getElementById("pc-links")?.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
 
   return (
     <div className="pc" style={style} data-calm={calm ? "true" : undefined} data-gift-static>
       {/* 1 · Portada */}
       <header className="pc-hero" ref={heroRef} data-photo={photoKind} aria-label="Portada">
-        <div className="pc-hero__bg" aria-hidden="true" />
+        <div className="pc-hero__bg" aria-hidden="true">
+          {bgPhoto?.src ? (
+            <img
+              className="pc-bgphoto"
+              src={bgPhoto.src}
+              srcSet={bgPhoto.srcSet}
+              sizes="100vw"
+              alt=""
+              decoding="async"
+              draggable={false}
+              style={bgStyle}
+            />
+          ) : (
+            // Sin foto de fondo, el logo del partido hace de marca de agua detrás del candidato.
+            partyLogo?.src && <img className="pc-bgmark" src={partyLogo.src} alt="" decoding="async" draggable={false} />
+          )}
+        </div>
         <div className="pc-hero__inner">
           <div className="pc-hero__copy">
             {(partyLogo?.src || partyName) && (
@@ -116,11 +148,6 @@ export default function PoliticoCartelExperience({ content, mode, onEvent, env, 
           </div>
 
           <div className="pc-stage">
-            {ballotNumber && (
-              <span className="pc-number" aria-label={`Número ${ballotNumber}`}>
-                {ballotNumber}
-              </span>
-            )}
             {photo?.src && (
               <div className="pc-figure">
                 <img
@@ -141,10 +168,10 @@ export default function PoliticoCartelExperience({ content, mode, onEvent, env, 
         </div>
       </header>
 
-      {/* 2 · Día de la votación, con el logo y el número del partido */}
-      {(voteDate || ballotNumber || partyLogo?.src) && (
+      {/* 2 · Día de la votación, con el logo del partido */}
+      {(voteDate || partyLogo?.src || partyName) && (
         <div className="pc-vote" role="group" aria-label="Día de la votación">
-          <PartyMark logo={partyLogo} partyName={partyName} number={ballotNumber} />
+          <PartyMark logo={partyLogo} partyName={partyName} />
           <div className="pc-vote__when">
             {days !== null && days >= 0 ? (
               <>
@@ -160,11 +187,9 @@ export default function PoliticoCartelExperience({ content, mode, onEvent, env, 
             ) : (
               <>
                 <span className="pc-pill">Recuerda</span>
-                {ballotNumber && (
-                  <p className="pc-days">
-                    Marca <b>N° {ballotNumber}</b>
-                  </p>
-                )}
+                <p className="pc-days">
+                  Marca el <b>logo</b>
+                </p>
               </>
             )}
             {voteDate && (
@@ -245,21 +270,20 @@ export default function PoliticoCartelExperience({ content, mode, onEvent, env, 
           )}
           <p className="pc-eyebrow">Vota por</p>
           <p className="pc-footer__name">{recipientName}</p>
-          {ballotNumber && <p className="pc-footer__number">{ballotNumber}</p>}
+          {partyLogo?.src && <PartyLogo logo={partyLogo} partyName={partyName} className="pc-footer__logo" />}
           <p className="pc-footer__office">{[office, place].filter(Boolean).join(" · ")}</p>
           {slogan && <p className="pc-footer__slogan">{slogan}</p>}
         </div>
       </footer>
 
       {/* Barra fija: no se pierde el número mientras se lee */}
-      {mode !== "thumbnail" && ballotNumber && (
+      {mode !== "thumbnail" && (partyLogo?.src || hasLinks) && (
         <div className="pc-bar" data-show={pastHero ? "true" : undefined} aria-hidden={!pastHero}>
           <PartyLogo logo={partyLogo} partyName={partyName} className="pc-bar__logo" />
           <span className="pc-bar__text">
             <small>Vota por</small>
             <strong>{firstName}</strong>
           </span>
-          <span className="pc-bar__num">N° {ballotNumber}</span>
           {hasLinks && (
             <button type="button" className="pc-bar__go" onClick={goToLinks} tabIndex={pastHero ? 0 : -1}>
               Súmate

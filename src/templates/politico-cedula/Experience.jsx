@@ -6,10 +6,10 @@ import Reveal, { useInView } from "../../experience-kit/Reveal.jsx";
 import CampaignCard from "../_politician-kit/CampaignCard.jsx";
 import Icon from "../_politician-kit/Icons.jsx";
 import Links from "../_politician-kit/Links.jsx";
-import PartyMark, { PartyLogo } from "../_politician-kit/PartyMark.jsx";
+import PartyMark from "../_politician-kit/PartyMark.jsx";
 import Proposals from "../_politician-kit/Proposals.jsx";
 import Team from "../_politician-kit/Team.jsx";
-import { calendarLink, campaignList, contrastColor, dateParts, daysUntil, eventDateTime, formatTime, readableOnLight } from "../_politician-kit/format.js";
+import { calendarLink, campaignList, contrastColor, dateParts, daysUntil, eventDateTime, formatTime, initial, readableOnLight } from "../_politician-kit/format.js";
 import "../_politician-kit/politician-kit.css";
 import "./styles.css";
 
@@ -24,11 +24,15 @@ function Section({ title, children }) {
   );
 }
 
-/** Recuadro de la cédula: el número de fondo y la X que se dibuja sola cuando `marked` es true. */
-function BallotBox({ number, marked, className = "" }) {
+/** Recuadro del símbolo: el logo del partido y un aspa (X) que se dibuja sola encima cuando `marked` es true. */
+function MarkBox({ logo, partyName, marked, className = "" }) {
   return (
-    <span className={`pd-box ${marked ? "is-marked" : ""} ${className}`} role="img" aria-label={number ? `Casilla del número ${number}, marcada` : "Casilla marcada"}>
-      {number && <span className="pd-box__number">{number}</span>}
+    <span className={`pd-box ${marked ? "is-marked" : ""} ${className}`} role="img" aria-label={`Recuadro del símbolo${partyName ? ` de ${partyName}` : ""}, marcado`}>
+      {logo?.src ? (
+        <img className="pd-box__logo" src={logo.src} srcSet={logo.srcSet} sizes="220px" alt="" draggable={false} loading="eager" decoding="async" />
+      ) : (
+        <span className="pd-box__initial">{initial(partyName) || "★"}</span>
+      )}
       <svg className="pd-box__x" viewBox="0 0 100 100" aria-hidden="true">
         <path pathLength="1" d="M17 15C36 36 62 62 84 86" />
         <path pathLength="1" d="M85 13C64 36 38 62 15 88" />
@@ -39,12 +43,14 @@ function BallotBox({ number, marked, className = "" }) {
 
 /**
  * Político · Cédula. Abre directo (sin "toca para abrir"). La portada es una cédula de votación de
- * referencia —foto, logo del partido y la casilla con el número— y la X se dibuja sola al entrar.
+ * referencia: el nombre de la organización y el recuadro de su símbolo (el logo), donde una X se dibuja
+ * sola. La foto del candidato sólo aparece si se activa (`ballotShowPhoto`): las cédulas de las
+ * elecciones regionales y municipales 2026 no la llevan.
  */
 export default function PoliticoCedulaExperience({ content, mode, onEvent, env, opened, open }) {
   const {
     recipientName, photo, office, place, slogan, bio,
-    partyName, partyLogo, ballotNumber, colorPrimary, colorAccent,
+    partyName, partyLogo, ballotShowPhoto, colorPrimary, colorAccent,
     voteDate, voteTime, team = [], proposals = [], links = [],
   } = content;
 
@@ -84,17 +90,17 @@ export default function PoliticoCedulaExperience({ content, mode, onEvent, env, 
     "--pd-on-accent": contrastColor(colorAccent),
     // Variante del color principal que se lee sobre papel claro (un partido amarillo no debe dar una X amarilla).
     "--pd-strong": readableOnLight(colorPrimary),
-    "--pd-num-scale": ballotNumber && ballotNumber.length > 3 ? 0.62 : ballotNumber && ballotNumber.length === 3 ? 0.82 : 1,
   };
 
   const agenda = calendarLink({
-    title: `Votación: ${[office, recipientName].filter(Boolean).join(" ")}${ballotNumber ? ` · N° ${ballotNumber}` : ""}`,
+    title: `Votación: ${[office, recipientName].filter(Boolean).join(" ")}${partyName ? ` · ${partyName}` : ""}`,
     start: eventDateTime(voteDate, voteTime || "07:00"),
     hours: 10,
     location: place,
     details: slogan,
   });
   const upcomingVote = days !== null && days >= 0;
+  const showPhoto = Boolean(ballotShowPhoto && photo?.src);
 
   return (
     <div className="pd" style={style} data-calm={calm ? "true" : undefined} data-marked={marked ? "true" : undefined} data-gift-static>
@@ -122,35 +128,29 @@ export default function PoliticoCedulaExperience({ content, mode, onEvent, env, 
                 <span>Cédula de votación</span>
                 {office && <span>{office}</span>}
               </div>
-              <div className="pd-ballot__row">
-                <div className="pd-cell pd-cell--party">
-                  <PartyLogo logo={partyLogo} partyName={partyName} className="pd-ballot__logo" />
-                  {partyName && <span className="pd-cell__party">{partyName}</span>}
-                </div>
-                <div className="pd-cell pd-cell--photo">
-                  {photo?.src ? (
-                    <img
-                      src={photo.src}
-                      srcSet={photo.srcSet}
-                      sizes="(min-width: 760px) 20vw, 40vw"
-                      width={photo.width || undefined}
-                      height={photo.height || undefined}
-                      alt={recipientName}
-                      fetchPriority="high"
-                      decoding="async"
-                      draggable={false}
-                    />
-                  ) : (
-                    <Icon name="user" className="pd-cell__nophoto" />
+              <p className="pd-ballot__rule">Marca con una cruz (+) o un aspa (X) dentro del recuadro del símbolo{showPhoto ? " y/o la fotografía" : ""} de tu preferencia</p>
+              <div className="pd-ballot__body">
+                <p className="pd-ballot__party">{partyName || "Organización política"}</p>
+                <div className="pd-ballot__boxes" data-count={showPhoto ? 2 : 1}>
+                  <MarkBox logo={partyLogo} partyName={partyName} marked={marked} />
+                  {showPhoto && (
+                    <span className="pd-box pd-box--photo">
+                      <img
+                        src={photo.src}
+                        srcSet={photo.srcSet}
+                        sizes="(min-width: 760px) 18vw, 34vw"
+                        width={photo.width || undefined}
+                        height={photo.height || undefined}
+                        alt={recipientName}
+                        fetchPriority="high"
+                        decoding="async"
+                        draggable={false}
+                      />
+                    </span>
                   )}
                 </div>
-                <div className="pd-cell pd-cell--mark">
-                  <small>Marca aquí</small>
-                  <BallotBox number={ballotNumber} marked={marked} />
-                  {ballotNumber && <span className="pd-cell__chip">N° {ballotNumber}</span>}
-                </div>
               </div>
-              <figcaption className="pd-ballot__foot">Imagen referencial · marca una cruz o un aspa dentro del recuadro</figcaption>
+              <figcaption className="pd-ballot__foot">Imagen referencial</figcaption>
             </figure>
             <p className="pd-note" aria-hidden="true">
               ¡Marca así!
@@ -160,7 +160,7 @@ export default function PoliticoCedulaExperience({ content, mode, onEvent, env, 
             </p>
           </div>
 
-          {(voteDate || ballotNumber || partyLogo?.src) && (
+          {(voteDate || partyLogo?.src || partyName) && (
             <div className="pd-ticket" role="group" aria-label="Día de la votación">
               {date && (
                 <div className="pd-ticket__date" aria-hidden="true">
@@ -188,11 +188,9 @@ export default function PoliticoCedulaExperience({ content, mode, onEvent, env, 
                     <b>Gracias por tu apoyo</b>
                   </p>
                 ) : (
-                  ballotNumber && (
-                    <p className="pd-ticket__count">
-                      Marca el <b>N° {ballotNumber}</b>
-                    </p>
-                  )
+                  <p className="pd-ticket__count">
+                    Marca el <b>símbolo</b>
+                  </p>
                 )}
                 {date && (
                   <p className="pd-ticket__time">
@@ -208,7 +206,7 @@ export default function PoliticoCedulaExperience({ content, mode, onEvent, env, 
                 )}
               </div>
               <div className="pd-ticket__stub">
-                <PartyMark logo={partyLogo} partyName={partyName} number={ballotNumber} />
+                <PartyMark logo={partyLogo} partyName={partyName} showName={false} />
               </div>
             </div>
           )}
@@ -270,11 +268,8 @@ export default function PoliticoCedulaExperience({ content, mode, onEvent, env, 
       <footer className="pd-footer" ref={endRef}>
         <div className="pd-footer__inner">
           <p className="pd-footer__eyebrow">Ese día, marca así</p>
-          <BallotBox number={ballotNumber} marked={calm || endVisible} className="pd-box--footer" />
-          <div className="pd-footer__party">
-            <PartyLogo logo={partyLogo} partyName={partyName} />
-            {partyName && <span>{partyName}</span>}
-          </div>
+          <MarkBox logo={partyLogo} partyName={partyName} marked={calm || endVisible} className="pd-box--footer" />
+          {partyName && <p className="pd-footer__party">{partyName}</p>}
           <p className="pd-footer__name">{recipientName}</p>
           <p className="pd-footer__office">{[office, place].filter(Boolean).join(" · ")}</p>
           {slogan && <p className="pd-footer__slogan">{slogan}</p>}

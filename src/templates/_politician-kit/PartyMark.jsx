@@ -4,23 +4,18 @@ import { initial } from "./format.js";
 export function PartyLogo({ logo, partyName, className = "" }) {
   return (
     <span className={`pk-logo ${className}`} role="img" aria-label={partyName ? `Logo de ${partyName}` : "Logo del partido"}>
-      {logo?.src ? <img src={logo.src} srcSet={logo.srcSet} sizes="96px" alt="" draggable={false} loading="eager" decoding="async" /> : <span>{initial(partyName) || "★"}</span>}
+      {logo?.src ? <img src={logo.src} srcSet={logo.srcSet} sizes="128px" alt="" draggable={false} loading="eager" decoding="async" /> : <span>{initial(partyName) || "★"}</span>}
     </span>
   );
 }
 
-/** Logo + número: lo que el votante busca en la cédula. */
-export default function PartyMark({ logo, partyName, number, className = "" }) {
-  if (!logo?.src && !number && !partyName) return null;
+/** El logo del partido con su nombre debajo: lo que el votante busca en la cédula. */
+export default function PartyMark({ logo, partyName, showName = true, className = "" }) {
+  if (!logo?.src && !partyName) return null;
   return (
     <span className={`pk-mark ${className}`}>
       <PartyLogo logo={logo} partyName={partyName} />
-      {number && (
-        <span className="pk-mark__number" aria-label={`Número ${number}`}>
-          <small>N°</small>
-          {number}
-        </span>
-      )}
+      {showName && partyName && <span className="pk-mark__name">{partyName}</span>}
     </span>
   );
 }

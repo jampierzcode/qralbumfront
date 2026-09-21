@@ -111,3 +111,32 @@ export function readableOnLight(hex, min = 4.5) {
 export function visibleOn(hex, background, { min = 3, fallback = "#ffffff" } = {}) {
   return contrastRatio(hex, background) >= min ? hex : fallback;
 }
+
+/**
+ * Color medio aproximado de un fondo (`primaryHex`) al mezclarle encima una foto cuyo color medio es `mean`
+ * ({ r, g, b } de 0 a 255) con el modo `blend` y la opacidad `opacity` (0 a 1). Sirve para elegir si el texto de la
+ * portada va claro u oscuro aunque el cliente mueva la mezcla: es una estimación, no una copia exacta del navegador.
+ */
+export function blendedBackdrop(primaryHex, mean, blend = "multiply", opacity = 1) {
+  const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(primaryHex || "");
+  if (!m || !mean) return primaryHex;
+  const base = [1, 2, 3].map((i) => parseInt(m[i], 16) / 255);
+  const top = [mean.r, mean.g, mean.b].map((v) => Math.min(1, Math.max(0, v / 255)));
+  const o = Math.min(1, Math.max(0, Number.isFinite(opacity) ? opacity : 1));
+  const channel = (b, t) => {
+    switch (blend) {
+      case "screen":
+        return 1 - (1 - b) * (1 - t);
+      case "overlay":
+        return b < 0.5 ? 2 * b * t : 1 - 2 * (1 - b) * (1 - t);
+      case "soft-light":
+        return (1 - 2 * t) * b * b + 2 * t * b;
+      case "luminosity":
+        return t;
+      default:
+        return b * t; // multiply
+    }
+  };
+  const out = base.map((b, i) => Math.round((b * (1 - o) + channel(b, top[i]) * o) * 255));
+  return `#${out.map((v) => v.toString(16).padStart(2, "0")).join("")}`;
+}

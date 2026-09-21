@@ -27,7 +27,6 @@ export function politicianDemo({ primary = "#0b57d0", accent = "#ffb300" } = {})
         bio: "Vecino de San Isidro, ingeniero civil y padre de dos hijos. Lleva quince años trabajando con las juntas vecinales por parques más seguros y calles en buen estado.",
         partyName: "Movimiento Ciudadano Renovación",
         partyLogo: r["party-logo"],
-        ballotNumber: "08",
         colorPrimary: primary,
         colorAccent: accent,
         voteDate: inDays(30),

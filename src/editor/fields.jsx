@@ -58,7 +58,29 @@ function ScalarInput({ field, value, onChange, id, invalid, describedBy, disable
       );
     case "date":
       return <input {...common} type="date" value={value ?? ""} min={field.min} max={field.max} onChange={(e) => onChange(e.target.value || null)} />;
-    case "number":
+    case "number": {
+      if (field.slider) {
+        // Ajustes de "cuánto": un deslizador con su valor a la vista (opacidad, saturación…).
+        const current = value ?? field.default ?? field.min ?? 0;
+        return (
+          <div className="sf-slider">
+            <input
+              {...common}
+              className="sf-slider__range"
+              type="range"
+              value={current}
+              min={field.min}
+              max={field.max}
+              step={field.step}
+              onChange={(e) => onChange(Number(e.target.value))}
+            />
+            <output className="sf-slider__value" htmlFor={id}>
+              {current}
+              {field.unit || ""}
+            </output>
+          </div>
+        );
+      }
       return (
         <input
           {...common}
@@ -72,6 +94,7 @@ function ScalarInput({ field, value, onChange, id, invalid, describedBy, disable
           onChange={(e) => onChange(e.target.value === "" ? null : Number(e.target.value))}
         />
       );
+    }
     case "select":
       return (
         <select {...common} value={value ?? ""} onChange={(e) => onChange(e.target.value || null)}>

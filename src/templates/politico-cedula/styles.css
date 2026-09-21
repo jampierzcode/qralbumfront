@@ -161,7 +161,7 @@
   margin: 0;
   overflow: hidden;
   border: 2px solid var(--pd-ink);
-  border-radius: 6px;
+  border-radius: 4px;
   background: #fff;
   box-shadow:
     6px 8px 0 rgb(27 31 42 / 0.09),
@@ -173,7 +173,7 @@
   display: flex;
   justify-content: space-between;
   gap: 0.6rem;
-  padding: 0.5rem 0.8rem;
+  padding: 0.55rem 0.8rem;
   background: var(--pd-accent);
   color: var(--pd-on-accent);
   font: 800 0.64rem/1.2 var(--pd-sans);
@@ -181,75 +181,80 @@
   text-transform: uppercase;
 }
 
-.pd-ballot__row {
-  display: grid;
-  grid-template-columns: 0.92fr 1.08fr 0.9fr;
-}
-
-.pd-cell {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  min-width: 0;
-  padding: 0.6rem 0.4rem;
+/* franja de instrucción, como en la cédula: gris y con la indicación de cómo marcar */
+.pd-ballot__rule {
+  margin: 0;
+  padding: 0.5rem 0.9rem;
+  border-bottom: 2px solid var(--pd-ink);
+  background: #c9cbd0;
+  color: var(--pd-ink);
+  font: 600 0.62rem/1.4 var(--pd-sans);
   text-align: center;
 }
 
-.pd-cell + .pd-cell {
-  border-left: 2px solid var(--pd-ink);
+/* cuerpo gris con trama diagonal (papel de seguridad), sin ninguna sigla oficial */
+.pd-ballot__body {
+  padding: 0.85rem 0.8rem 1rem;
+  background-color: #e4e5e8;
+  background-image: repeating-linear-gradient(-32deg, rgb(255 255 255 / 0.6) 0 2px, transparent 2px 15px);
 }
 
-.pd-ballot__logo {
-  --pk-logo-size: clamp(3rem, 15vw, 4.4rem);
-  box-shadow: 0 0 0 2px var(--pd-rule);
-}
-
-.pd-cell__party {
+.pd-ballot__party {
+  margin: 0 0 0.7rem;
   color: var(--pd-ink);
-  font: 800 0.56rem/1.25 var(--pd-sans);
-  letter-spacing: 0.08em;
+  font: 800 0.82rem/1.2 var(--pd-sans);
+  letter-spacing: 0.06em;
+  text-align: center;
   text-transform: uppercase;
-  overflow-wrap: anywhere;
+  text-wrap: balance;
 }
 
-.pd-cell--photo {
+.pd-ballot__boxes {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+/* recuadro del símbolo (y de la foto, si se activa) */
+.pd-box {
   position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: min(34vw, 8.2rem);
+  aspect-ratio: 1;
+  padding: 0.55rem;
+  border: 2px solid var(--pd-ink);
+  background: #fff;
+}
+
+.pd-ballot__boxes[data-count="2"] .pd-box {
+  width: min(30vw, 7rem);
+}
+
+.pd-box__logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pd-box__initial {
+  color: var(--pd-strong);
+  font: 900 3.4rem/1 var(--pd-serif);
+}
+
+.pd-box--photo {
   padding: 0;
   overflow: hidden;
-  aspect-ratio: 4 / 5;
   background: color-mix(in srgb, var(--pd-primary) 10%, #fff);
 }
 
-.pd-cell--photo img {
+.pd-box--photo img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: 50% 14%;
-}
-
-.pd-cell__nophoto {
-  width: 42%;
-  height: 42%;
-  color: var(--pd-muted);
-}
-
-.pd-cell--mark small {
-  color: var(--pd-muted);
-  font: 800 0.54rem/1 var(--pd-sans);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.pd-cell__chip {
-  padding: 0.22rem 0.55rem 0.18rem;
-  border-radius: 3px;
-  background: var(--pd-ink);
-  color: var(--pd-paper);
-  font: 900 0.82rem/1 var(--pd-sans);
-  white-space: nowrap;
 }
 
 .pd-ballot__foot {
@@ -258,41 +263,25 @@
   border-top: 2px solid var(--pd-ink);
   background: #faf7f0;
   color: var(--pd-muted);
-  font: 500 0.56rem/1.3 var(--pd-sans);
+  font: 500 0.58rem/1.3 var(--pd-sans);
   text-align: center;
 }
 
-/* ── El recuadro y la X que se dibuja ────────────────────────────────────── */
-.pd-box {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: min(100%, 5.4rem);
-  aspect-ratio: 1;
-  border: 3px solid var(--pd-ink);
-  border-radius: 3px;
-  background: #fff;
-}
-
-.pd-box__number {
-  color: rgb(27 31 42 / 0.16);
-  font: 900 calc(2.7rem * var(--pd-num-scale, 1)) / 1 var(--pd-serif);
-  letter-spacing: -0.03em;
-}
-
+/* ── La X que se dibuja: tinta oscura con un halo blanco para leerse sobre cualquier logo ── */
 .pd-box__x {
   position: absolute;
-  inset: -7%;
-  width: 114%;
-  height: 114%;
+  inset: 9%;
+  width: 82%;
+  height: 82%;
   overflow: visible;
   pointer-events: none;
+  filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 3px #fff);
 }
 
 .pd-box__x path {
   fill: none;
-  stroke: var(--pd-strong);
-  stroke-width: 9;
+  stroke: var(--pd-ink);
+  stroke-width: 6;
   stroke-linecap: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -459,18 +448,9 @@
   border-left: 2px dashed var(--pd-ink);
 }
 
-.pd-ticket__stub .pk-mark {
-  flex-direction: column;
-  gap: 0.45rem;
-}
-
 .pd-ticket__stub .pk-logo {
-  --pk-logo-size: 3rem;
+  --pk-logo-size: 3.5rem;
   box-shadow: 0 0 0 2px var(--pd-rule);
-}
-
-.pd-ticket__stub .pk-mark__number {
-  font-size: 1.2rem;
 }
 
 /* muescas del talón */
@@ -584,27 +564,16 @@
 }
 
 .pd-box--footer {
-  width: 7.6rem;
-  border-color: var(--pd-ink);
+  width: min(52vw, 10rem);
+  padding: 0.8rem;
   box-shadow: 5px 6px 0 rgb(0 0 0 / 0.22);
 }
 
-.pd-box--footer .pd-box__number {
-  font-size: calc(4.2rem * var(--pd-num-scale, 1));
-}
-
 .pd-footer__party {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: 0.8rem;
-  font: 800 0.72rem/1.2 var(--pd-sans);
+  margin: 0.8rem 0 0;
+  font: 800 0.74rem/1.2 var(--pd-sans);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-}
-
-.pd-footer__party .pk-logo {
-  --pk-logo-size: 2.8rem;
 }
 
 .pd-footer__name {
@@ -762,11 +731,7 @@
   }
 
   .pd-ticket__stub .pk-logo {
-    --pk-logo-size: 2.5rem;
-  }
-
-  .pd-ticket__stub .pk-mark__number {
-    font-size: 1.05rem;
+    --pk-logo-size: 2.8rem;
   }
 }
 

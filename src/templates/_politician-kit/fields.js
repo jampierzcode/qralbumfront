@@ -36,7 +36,8 @@ const link = (label, extra = {}) =>
 
 export const POLITICIAN_STEPS = Object.freeze({
   candidate: { id: "candidate", title: "Candidato", portalTitle: "¿Quién es el candidato?" },
-  party: { id: "party", title: "Partido y número", portalTitle: "Partido y número de votación" },
+  party: { id: "party", title: "Partido", portalTitle: "Partido y logo" },
+  background: { id: "background", title: "Fondo de la portada", portalTitle: "Fondo de la portada (opcional)" },
   vote: { id: "vote", title: "Día de votación", portalTitle: "¿Cuándo se vota?" },
   team: { id: "team", title: "Equipo de trabajo", portalTitle: "Su equipo de trabajo" },
   proposals: { id: "proposals", title: "Propuestas", portalTitle: "Sus propuestas" },
@@ -69,6 +70,21 @@ export const PROPOSAL_ICONS = Object.freeze([
   { value: "transparency", label: "Transparencia" },
   { value: "transport", label: "Transporte" },
   { value: "family", label: "Familia y comunidad" },
+]);
+
+/** Modos de mezcla del fondo (mix-blend-mode). "Multiplicar" es el que mejor funciona sobre el color del partido. */
+export const BG_BLENDS = Object.freeze([
+  { value: "multiply", label: "Multiplicar (recomendado)" },
+  { value: "overlay", label: "Superponer" },
+  { value: "soft-light", label: "Luz suave" },
+  { value: "luminosity", label: "Luminosidad" },
+  { value: "screen", label: "Aclarar" },
+]);
+
+export const BG_POSITIONS = Object.freeze([
+  { value: "center", label: "Centro" },
+  { value: "top", label: "Arriba" },
+  { value: "bottom", label: "Abajo" },
 ]);
 
 export const CAMPAIGN_KINDS = Object.freeze([
@@ -130,24 +146,50 @@ export const p = {
     f.text({ label: "Partido o movimiento", portalLabel: "Nombre del partido o movimiento", placeholder: "Movimiento Ciudadano Renovación", max: 60, editorStep: "party", ...o }),
   /** clave: partyLogo */
   partyLogo: (o = {}) =>
-    f.image({ label: "Logo del partido", portalLabel: "Logo del partido", description: "Cuadrado y con fondo transparente se ve mejor.", editorStep: "party", ...o }),
-  /** clave: ballotNumber · texto para no perder ceros ("08") */
-  ballotNumber: (o = {}) =>
-    f.text({
-      label: "Número de votación",
-      portalLabel: "Número en la cédula",
-      description: "Sólo números. Ej. 08",
-      placeholder: "08",
-      required: true,
-      max: 4,
-      editorStep: "party",
-      validate: (v) => (v && !/^\d{1,4}$/.test(v) ? "Escribe sólo números, por ejemplo 08." : undefined),
-      ...o,
-    }),
+    f.image({ label: "Logo del partido", portalLabel: "Logo del partido", description: "El símbolo tal como aparece en la cédula. Cuadrado y con fondo transparente se ve mejor.", editorStep: "party", ...o }),
   /** clave: colorPrimary · el `default` lo pone cada diseño */
   colorPrimary: (o = {}) => f.color({ label: "Color principal del partido", editorStep: "party", ...o }),
   /** clave: colorAccent */
   colorAccent: (o = {}) => f.color({ label: "Color de acento", description: "Para resaltar números y botones.", editorStep: "party", ...o }),
+
+  /**
+   * clave: ballotShowPhoto · sólo diseños con cédula. Las cédulas de las elecciones regionales y
+   * municipales 2026 (Perú) NO llevan foto: se marca el símbolo del partido. Por eso nace apagado.
+   */
+  ballotShowPhoto: (o = {}) =>
+    f.toggle({
+      label: "Mostrar la foto del candidato en la cédula",
+      portalLabel: "¿La cédula de tu elección lleva foto del candidato?",
+      description: "Las cédulas de las elecciones regionales y municipales 2026 no llevan foto: déjalo apagado. Actívalo sólo si en tu elección la cédula sí trae la foto (por ejemplo, las presidenciales).",
+      default: false,
+      editorStep: "party",
+      ...o,
+    }),
+
+  // ── Fondo de la portada (diseños con foto de fondo) ─────────────────────
+  /** clave: bgPhoto */
+  bgPhoto: (o = {}) =>
+    f.image({
+      label: "Foto de fondo",
+      portalLabel: "Foto de fondo de la portada",
+      description: "Una foto de la ciudad, la plaza o una caminata. Se mezcla con el color del partido detrás del candidato.",
+      editorStep: "background",
+      ...o,
+    }),
+  /** clave: bgBlend */
+  bgBlend: (o = {}) => f.select({ label: "Modo de mezcla", options: BG_BLENDS, default: "multiply", editorStep: "background", ...o }),
+  /** clave: bgOpacity */
+  bgOpacity: (o = {}) => f.number({ label: "Opacidad", description: "Qué tanto se ve la foto.", min: 0, max: 100, step: 5, default: 60, slider: true, unit: "%", editorStep: "background", ...o }),
+  /** clave: bgSaturation · 0 = blanco y negro */
+  bgSaturation: (o = {}) => f.number({ label: "Saturación", description: "0 = blanco y negro.", min: 0, max: 300, step: 10, default: 100, slider: true, unit: "%", editorStep: "background", ...o }),
+  /** clave: bgContrast */
+  bgContrast: (o = {}) => f.number({ label: "Contraste", min: 50, max: 200, step: 10, default: 100, slider: true, unit: "%", editorStep: "background", ...o }),
+  /** clave: bgBrightness */
+  bgBrightness: (o = {}) => f.number({ label: "Brillo", min: 50, max: 200, step: 10, default: 100, slider: true, unit: "%", editorStep: "background", ...o }),
+  /** clave: bgBlur */
+  bgBlur: (o = {}) => f.number({ label: "Desenfoque", min: 0, max: 20, step: 1, default: 0, slider: true, unit: " px", editorStep: "background", ...o }),
+  /** clave: bgPosition */
+  bgPosition: (o = {}) => f.select({ label: "Encuadre", options: BG_POSITIONS, default: "center", editorStep: "background", ...o }),
 
   // ── Votación ──────────────────────────────────────────────────────────────
   /** clave: voteDate */
@@ -237,13 +279,42 @@ export const p = {
 };
 
 /**
- * Schema completo de una tarjeta de político.
- * @param {{ primary?: string, accent?: string }} [colors] colores por defecto del diseño
+ * Extras opcionales que un diseño puede pedir. El resto de campos es idéntico en todos los diseños.
+ *  · "background": foto de fondo con mezcla (multiplicar), opacidad, saturación, contraste, brillo, desenfoque y encuadre.
+ *  · "ballot": interruptor para mostrar o no la foto del candidato dentro de la cédula.
  */
-export function politicianSchema({ primary = "#0b57d0", accent = "#ffb300" } = {}) {
+const EXTRAS = {
+  background: {
+    steps: ["background"],
+    fields: () => ({
+      bgPhoto: p.bgPhoto(),
+      bgBlend: p.bgBlend(),
+      bgOpacity: p.bgOpacity(),
+      bgSaturation: p.bgSaturation(),
+      bgContrast: p.bgContrast(),
+      bgBrightness: p.bgBrightness(),
+      bgBlur: p.bgBlur(),
+      bgPosition: p.bgPosition(),
+    }),
+  },
+  ballot: { steps: [], fields: () => ({ ballotShowPhoto: p.ballotShowPhoto() }) },
+};
+
+/** Claves que sólo existen cuando un diseño pide ese extra. */
+export const EXTRA_FIELD_KEYS = Object.freeze(Object.fromEntries(Object.entries(EXTRAS).map(([name, extra]) => [name, Object.keys(extra.fields())])));
+
+/**
+ * Schema completo de una tarjeta de político.
+ * @param {{ primary?: string, accent?: string, extras?: Array<"background"|"ballot"> }} [options] colores por defecto del diseño y extras
+ */
+export function politicianSchema({ primary = "#0b57d0", accent = "#ffb300", extras = [] } = {}) {
+  for (const name of extras) if (!EXTRAS[name]) throw new Error(`Extra de político desconocido: "${name}".`);
+  const chosen = extras.map((name) => EXTRAS[name]);
+  const extraFields = Object.assign({}, ...chosen.map((extra) => extra.fields()));
+  const withBackground = extras.includes("background");
   return defineSchema({
     version: 1,
-    steps: steps("candidate", "party", "vote", "team", "proposals", "links", "campaign", "history"),
+    steps: steps("candidate", ...(withBackground ? ["background"] : []), "party", "vote", "team", "proposals", "links", "campaign", "history"),
     fields: {
       recipientName: p.name(),
       photo: p.photo(),
@@ -253,9 +324,9 @@ export function politicianSchema({ primary = "#0b57d0", accent = "#ffb300" } = {
       bio: p.bio(),
       partyName: p.partyName(),
       partyLogo: p.partyLogo(),
-      ballotNumber: p.ballotNumber(),
       colorPrimary: p.colorPrimary({ default: primary }),
       colorAccent: p.colorAccent({ default: accent }),
+      ...extraFields,
       voteDate: p.voteDate(),
       voteTime: p.voteTime(),
       team: p.team(),

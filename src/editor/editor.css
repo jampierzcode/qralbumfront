@@ -611,3 +611,25 @@ select.sf-input {
     transition: none !important;
   }
 }
+
+/* Números con `slider: true` (ej. opacidad y saturación del fondo). */
+.sf-slider {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.sf-slider__range {
+  flex: 1;
+  min-width: 0;
+  height: 2rem;
+  accent-color: #1b1b1f;
+  cursor: pointer;
+}
+
+.sf-slider__value {
+  min-width: 3.6rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}

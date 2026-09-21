@@ -17,7 +17,7 @@ con `_`, así que los registros de plantillas (frontend y backend) la ignoran: *
 
 ## Quién edita qué
 
-- El **cliente** (portal): candidato, partido y número, día de votación, equipo, propuestas,
+- El **cliente** (portal): candidato, partido y logo, día de votación, equipo, propuestas,
   links y **una** campaña (`campaign`).
 - Sólo el **superadmin**: `history`, la lista de campañas adicionales (hasta 30).
   Es `customerEditable: false`: no aparece en el portal y el backend rechaza que el cliente la envíe.
@@ -28,10 +28,15 @@ En pantalla se muestran juntas: `campaignList(content)` devuelve `{ upcoming, pa
 
 | Diseño | Idea | Colores por defecto |
 |---|---|---|
-| `politico-cartel` | Cartel de campaña: color del partido, foto grande y número gigante detrás, cuenta regresiva. | azul y ámbar |
+| `politico-cartel` | Cartel de campaña: color del partido, foto grande del candidato sobre una **foto de fondo** que se mezcla (multiplicar) con ajustes editables, cuenta regresiva. | azul y ámbar |
 | `politico-cedula` | Papel y tipografía de imprenta: cédula de votación de portada, X que se dibuja sola, boleto con talón. | carmesí y azul marino |
 
-Los dos usan `politicianSchema()`: piden exactamente los mismos campos (lo verifica `politician-kit.test.js`).
+Los dos usan `politicianSchema()` y piden los mismos campos base (lo verifica `politician-kit.test.js`); cada uno puede sumar un *extra*:
+
+- `extras: ["background"]` (Cartel): foto de fondo con modo de mezcla, opacidad, saturación, contraste, brillo, desenfoque y encuadre. El color del texto de la portada se recalcula según el fondo que resulta (`blendedBackdrop` + `usePhotoMean`), para que se lea aunque el cliente mueva los ajustes.
+- `extras: ["ballot"]` (Cédula): interruptor `ballotShowPhoto` para mostrar la foto del candidato en la cédula.
+
+**No hay número de votación.** En Perú se marca el **símbolo (logo) del partido**; las cédulas de las elecciones regionales y municipales 2026 ni siquiera llevan foto del candidato, por eso `ballotShowPhoto` nace apagado. La cédula de la portada es "Imagen referencial" y no usa siglas ni escudos oficiales.
 
 ## Cómo agregar un diseño nuevo
 

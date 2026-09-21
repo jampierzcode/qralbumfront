@@ -51,14 +51,44 @@
   padding: calc(1.1rem + var(--safe-top, 0px)) 1.1rem 0;
   overflow: clip; /* la sombra de la foto no debe salirse por debajo de la curva */
   background: linear-gradient(165deg, var(--pc-bright) 0%, var(--pc-primary) 40%, var(--pc-deep) 100%);
-  color: var(--pc-on-primary);
+  /* claro u oscuro según el fondo que resulta al mezclar la foto (ver Experience.jsx) */
+  color: var(--pc-hero-ink, var(--pc-on-primary));
+  transition: color 0.3s ease;
 }
 
+/* Sin z-index: no crea un contexto de apilado propio, así la foto de fondo (mix-blend-mode)
+   se mezcla con el degradado de la portada y no contra la nada. */
 .pc-hero__bg {
   position: absolute;
   inset: 0;
-  z-index: -1;
   overflow: hidden;
+}
+
+/* Foto de fondo: mezcla, opacidad y filtros llegan inline desde los campos editables. */
+.pc-bgphoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+  /* se desvanece hacia la curva del pie para no cortarse de golpe */
+  -webkit-mask-image: linear-gradient(#000 70%, transparent 100%);
+  mask-image: linear-gradient(#000 70%, transparent 100%);
+}
+
+/* Sin foto de fondo: el logo del partido, grande y muy tenue, detrás del candidato. */
+.pc-bgmark {
+  position: absolute;
+  right: -14%;
+  bottom: 4%;
+  width: min(92vw, 34rem);
+  aspect-ratio: 1;
+  object-fit: contain;
+  opacity: 0.16;
+  user-select: none;
+  pointer-events: none;
 }
 
 /* halo del color de acento y banda diagonal de luz, como los carteles de campaña */
@@ -130,7 +160,7 @@
 
 .pc-eyebrow {
   margin: 1.5rem 0 0.35rem;
-  color: var(--pc-accent);
+  color: var(--pc-eyebrow, var(--pc-accent));
   font: 1000 clamp(0.95rem, 4vw, 1.3rem) / 1 var(--pc-display);
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -179,32 +209,19 @@
   text-wrap: balance;
 }
 
-/* ── Escenario: número gigante detrás, foto delante ──────────────────────── */
+/* ── Escenario: la foto del candidato, centrada ──────────────────────── */
 .pc-stage {
   position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   height: clamp(15rem, 40svh, 28rem);
   margin-top: 0.4rem;
 }
 
-.pc-number {
-  position: absolute;
-  z-index: 0;
-  left: -0.02em;
-  top: 3%;
-  color: var(--pc-accent);
-  font: 1000 calc(clamp(9rem, 56vw, 20rem) * var(--pc-num-scale, 1)) / 0.8 var(--pc-display);
-  letter-spacing: -0.04em;
-  white-space: nowrap;
-  text-shadow: 0 0.035em 0 rgb(0 0 0 / 0.16);
-  pointer-events: none;
-  user-select: none;
-}
-
 .pc-figure {
-  position: absolute;
+  position: relative;
   z-index: 1;
-  right: -15%;
-  bottom: 0;
   height: 100%;
   max-width: 100%;
 }
@@ -226,9 +243,8 @@
 
 /* foto normal (fondo opaco): se enmarca como retrato en vez de verse como un cuadro pegado */
 .pc-hero[data-photo="boxed"] .pc-figure {
-  right: 0;
   height: 96%;
-  max-width: 58%;
+  max-width: 72%;
 }
 
 .pc-hero[data-photo="boxed"] .pc-photo {
@@ -258,19 +274,18 @@
 }
 
 .pc-vote .pk-mark {
-  flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .pc-vote .pk-logo {
-  --pk-logo-size: 3.7rem;
+  --pk-logo-size: 4rem;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--pc-primary) 16%, #fff);
 }
 
-.pc-vote .pk-mark__number {
-  background: var(--pc-primary);
-  color: var(--pc-on-primary);
-  font-size: 1.6rem;
+.pc-vote .pk-mark__name {
+  max-width: 5.6rem;
+  color: var(--pc-muted);
+  font-size: 0.54rem;
 }
 
 .pc-pill {
@@ -412,12 +427,13 @@
   text-wrap: balance;
 }
 
-.pc-footer__number {
-  margin: 0.35rem 0 0;
-  color: var(--pc-accent-lit);
-  font: 1000 clamp(6rem, 34vw, 11rem) / 0.86 var(--pc-display);
-  letter-spacing: -0.04em;
-  text-shadow: 0 0.035em 0 rgb(0 0 0 / 0.18);
+.pc-footer .pc-footer__logo {
+  --pk-logo-size: clamp(8rem, 42vw, 11rem);
+  margin: 0.6rem 0 0.2rem;
+  padding: 0.7rem;
+  box-shadow:
+    0 0 0 6px color-mix(in srgb, var(--pc-accent-lit) 55%, transparent),
+    0 18px 34px rgb(0 0 0 / 0.28);
 }
 
 .pc-footer__office {
@@ -490,15 +506,6 @@
   white-space: nowrap;
 }
 
-.pc-bar__num {
-  padding: 0.35rem 0.7rem 0.25rem;
-  border-radius: 999px;
-  background: var(--pc-accent);
-  color: var(--pc-on-accent);
-  font: 1000 1.15rem/1 var(--pc-display);
-  white-space: nowrap;
-}
-
 .pc-bar__go {
   display: inline-flex;
   align-items: center;
@@ -522,20 +529,6 @@
   from {
     opacity: 0;
     transform: translateY(22px);
-  }
-}
-
-@keyframes pc-pop {
-  from {
-    opacity: 0;
-    transform: scale(0.72) translateY(24px);
-  }
-}
-
-@keyframes pc-slide {
-  from {
-    opacity: 0;
-    transform: translateX(46px);
   }
 }
 
@@ -563,12 +556,8 @@
   animation-delay: 320ms;
 }
 
-.pc:not([data-calm]) .pc-number {
-  animation: pc-pop 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
-}
-
 .pc:not([data-calm]) .pc-figure {
-  animation: pc-slide 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
+  animation: pc-drop 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.25s both;
 }
 
 .pc:not([data-calm]) .pc-vote {
@@ -606,20 +595,6 @@
     margin-top: 0;
   }
 
-  .pc-number {
-    left: -4%;
-    top: 10%;
-    font-size: calc(clamp(9rem, 30vw, 24rem) * var(--pc-num-scale, 1));
-  }
-
-  .pc-figure {
-    right: -8%;
-  }
-
-  .pc-hero[data-photo="boxed"] .pc-figure {
-    right: 0;
-  }
-
   .pc-hero::after {
     height: 4.4rem;
   }
@@ -644,10 +619,6 @@
 
   .pc-stage {
     height: min(66svh, 22rem);
-  }
-
-  .pc-number {
-    font-size: calc(min(24vw, 54svh, 20rem) * var(--pc-num-scale, 1));
   }
 
   .pc-hero__copy {

@@ -14,7 +14,7 @@
   flex: none;
 }
 
-/* ── Logo y número ───────────────────────────────────────────────────────── */
+/* ── Logo del partido ───────────────────────────────────────────────────────── */
 .pk-logo {
   --pk-logo-size: 3.5rem;
   display: inline-grid;
@@ -39,26 +39,19 @@
 
 .pk-mark {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.45rem;
+  text-align: center;
 }
 
-.pk-mark__number {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.2em;
-  padding: 0.18em 0.6em 0.1em;
-  border-radius: 0.55em;
-  background: var(--pk-accent);
-  color: var(--pk-on-accent);
-  font: 1000 1.9rem/1 var(--pk-display);
-  font-variant-numeric: lining-nums;
-}
-
-.pk-mark__number small {
-  font-size: 0.42em;
-  font-weight: 900;
-  letter-spacing: 0.04em;
+.pk-mark__name {
+  max-width: 7.5rem;
+  color: inherit;
+  font: 800 0.6rem/1.25 var(--pk-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
 }
 
 /* ── Links ───────────────────────────────────────────────────────────────── */
