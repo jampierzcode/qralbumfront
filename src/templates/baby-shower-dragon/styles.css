@@ -1223,24 +1223,28 @@
 }
 
 .bsd-aura__flame {
-  transform-origin: 0 0;
-  animation: bsd-flame 0.9s ease-in-out infinite alternate;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: bsd-ki var(--t, 1.4s) ease-out infinite;
   animation-delay: var(--d, 0s);
 }
 
 .bsd-aura__glow {
-  transform-origin: 0 0;
+  transform-box: fill-box;
+  transform-origin: 50% 60%;
   animation: bsd-glow 2.4s ease-in-out infinite;
 }
 
-@keyframes bsd-flame {
-  0% { transform: scale(0.9, 0.86); opacity: 0.85; }
-  100% { transform: scale(1.04, calc(1.12 * var(--s, 1))); opacity: 1; }
+/* Cada llama nace abajo, se estira hacia arriba y se apaga al subir */
+@keyframes bsd-ki {
+  0% { transform: translateY(6px) scale(0.75, 0.55); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translateY(-14px) scale(1.05, 1.18); opacity: 0; }
 }
 
 @keyframes bsd-glow {
-  0%, 100% { transform: scale(0.94); opacity: 0.8; }
-  50% { transform: scale(1.06); opacity: 1; }
+  0%, 100% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
 }
 
 .bsd[data-calm] .bsd-aura__flame,

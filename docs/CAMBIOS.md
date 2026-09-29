@@ -284,4 +284,4 @@ Verificación: `npm test` 80/80 · `npm run smoke` 5/5 tamaños (sin errores de 
 
 - El dragón sube y baja con un poco de zoom (9 s, suave) una vez que aparece; sigue apareciendo con desvanecido a los ~2 s de invocar.
 - Adornos que flotan: nubes voladoras (Nimbus), scouters y 7 esferas (`Dragon.jsx`, todo SVG propio), en lugar de biberón/osito.
-- Aura de Super Saiyayin (`Aura`) detrás de la foto de la portada y de la de "Gracias": llamas doradas que parpadean y resplandor que late. Sólo transform/opacity; quieta con `data-calm` o movimiento reducido.
+- Aura de ki (`Aura`) detrás de la foto de la portada y de la de "Gracias": llamas verticales que suben de abajo hacia arriba (más altas por los lados), cada una nace, crece y se apaga a su ritmo, con un resplandor que late. Sólo transform/opacity; quieta con `data-calm` o movimiento reducido.

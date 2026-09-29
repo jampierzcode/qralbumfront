@@ -86,48 +86,65 @@ export function Scouter({ className = "" }) {
   );
 }
 
-// Llama de aura: se dibuja apuntando hacia arriba desde el radio 50 hasta ~100.
-const FLAMES = [
-  "M-6 -46C-9 -64 -3 -82 1 -106C6 -84 10 -64 6 -46Z",
-  "M-6 -46C-9 -60 -11 -74 -6 -92C2 -80 8 -62 6 -46Z",
-  "M-5 -46C-6 -66 2 -78 7 -98C9 -78 10 -62 5 -46Z",
-  "M-6 -46C-8 -58 -4 -68 -2 -80C4 -70 8 -58 6 -46Z",
-];
+// Ki (aura de Super Saiyayin): llamas verticales que suben de abajo hacia arriba.
+// Más altas y anchas por los lados de la foto (como en el arte original), cortas al centro/abajo.
+// [x, y de la base, alto, medio ancho, inclinación de la punta]
+const KI = (() => {
+  const out = [];
+  const jitter = (i) => ((i * 37) % 11) / 11; // 0..1 fijo: el render es estable
+  for (let i = 0; i < 17; i++) {
+    const x = -96 + i * 12;
+    const side = Math.abs(x) / 96;
+    const base = 66 - 38 * Math.pow(side, 1.3);
+    const h = 58 + 62 * Math.pow(side, 1.1) + jitter(i) * 26;
+    out.push([x, base, h, 11 + jitter(i + 3) * 6, Math.sign(x || 1) * (6 + jitter(i) * 8)]);
+  }
+  // corona de llamas sobre la cabeza
+  for (let i = 0; i < 5; i++) {
+    const x = -34 + i * 17;
+    out.push([x, -42, 46 + jitter(i + 7) * 30, 10 + jitter(i) * 4, (i - 2) * 5]);
+  }
+  return out;
+})();
+
+function tongue(w, h, lean) {
+  // llama con curva en S: ancha abajo, se estrecha y la punta se dobla hacia `lean`
+  return `M${-w} 0C${-w * 1.5} ${-h * 0.3} ${-w * 0.5} ${-h * 0.5} ${lean * 0.3} ${-h * 0.72}C${lean * 0.9} ${-h * 0.84} ${lean * 1.1} ${-h * 0.93} ${lean} ${-h}C${lean * 0.6 + w * 0.6} ${-h * 0.7} ${w * 1.6} ${-h * 0.36} ${w} 0Z`;
+}
 
 /**
- * Aura dorada de Super Saiyayin: llamas alrededor de la foto que parpadean y un resplandor que late.
- * Sólo transform/opacity; con `data-calm` se queda quieta.
+ * Aura de ki: llamas doradas que se elevan (suben, crecen y se apagan, cada una a su ritmo)
+ * y un resplandor que late detrás. Sólo transform/opacity; quieta con `data-calm`.
  */
-export function Aura({ className = "", tongues = 24 }) {
-  const id = `bsd-aura-${tongues}`;
-  const ring = (offset, scale, tone) =>
-    Array.from({ length: tongues }, (_, i) => (
-      <g key={`${tone}${i}`} transform={`rotate(${(360 / tongues) * i + offset})`}>
-        <path className="bsd-aura__flame" d={FLAMES[(i * 3 + offset) % 4]} fill={`url(#${id}-${tone})`} style={{ "--d": `${((i * 7) % tongues) * 0.11}s`, "--s": scale }} />
-      </g>
-    ));
+export function Aura({ className = "" }) {
   return (
-    <svg className={`bsd-aura ${className}`} viewBox="-110 -110 220 220" aria-hidden="true">
+    <svg className={`bsd-aura ${className}`} viewBox="-120 -120 240 240" aria-hidden="true">
       <defs>
-        <radialGradient id={`${id}-glow`} cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="scale(105)">
-          <stop offset=".45" stopColor="#fff6a8" stopOpacity=".9" />
-          <stop offset=".75" stopColor="#ffc928" stopOpacity=".5" />
+        <radialGradient id="bsd-ki-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="scale(112)">
+          <stop offset=".4" stopColor="#fff6a8" stopOpacity=".75" />
+          <stop offset=".78" stopColor="#ffc928" stopOpacity=".35" />
           <stop offset="1" stopColor="#ff9a00" stopOpacity="0" />
         </radialGradient>
-        <linearGradient id={`${id}-out`} x1="0" y1="-50" x2="0" y2="-100" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#fff6a8" />
-          <stop offset=".55" stopColor="#ffd21a" />
-          <stop offset="1" stopColor="#ff9a00" stopOpacity=".05" />
+        <linearGradient id="bsd-ki-out" x1="0" y1="0" x2="0" y2="-1">
+          <stop offset="0" stopColor="#ffb400" />
+          <stop offset=".45" stopColor="#ffd82a" />
+          <stop offset="1" stopColor="#fff7a0" stopOpacity=".15" />
         </linearGradient>
-        <linearGradient id={`${id}-in`} x1="0" y1="-50" x2="0" y2="-90" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#ffffff" />
-          <stop offset=".6" stopColor="#fff08a" />
-          <stop offset="1" stopColor="#ffd21a" stopOpacity=".05" />
+        <linearGradient id="bsd-ki-in" x1="0" y1="0" x2="0" y2="-1">
+          <stop offset="0" stopColor="#fff3a0" />
+          <stop offset=".6" stopColor="#ffffff" />
+          <stop offset="1" stopColor="#ffffff" stopOpacity=".1" />
         </linearGradient>
       </defs>
-      <circle className="bsd-aura__glow" r="105" fill={`url(#${id}-glow)`} />
-      {ring(0, 1, "out")}
-      {ring(360 / tongues / 2, 0.78, "in")}
+      <ellipse className="bsd-aura__glow" cx="0" cy="8" rx="104" ry="112" fill="url(#bsd-ki-glow)" />
+      {KI.map(([x, y, h, w, lean], i) => (
+        <g key={i} transform={`translate(${x} ${y})`}>
+          <g className="bsd-aura__flame" style={{ "--d": `${-((i * 0.37) % 1.7)}s`, "--t": `${1.25 + ((i * 13) % 7) * 0.09}s` }}>
+            <path d={tongue(w, h, lean)} fill="url(#bsd-ki-out)" />
+            <path d={tongue(w * 0.5, h * 0.62, lean * 0.6)} fill="url(#bsd-ki-in)" />
+          </g>
+        </g>
+      ))}
     </svg>
   );
 }
