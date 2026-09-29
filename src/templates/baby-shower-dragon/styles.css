@@ -1214,9 +1214,10 @@
   top: 50%;
   left: 50%;
   z-index: -1;
-  width: 200%;
-  height: 200%;
-  transform: translate(-50%, -50%);
+  width: 169%;
+  height: auto;
+  /* el centro de la foto queda en (0,0) del dibujo: 170/300 del alto */
+  transform: translate(-50%, -56.7%);
   overflow: visible;
   pointer-events: none;
 }
@@ -1228,15 +1229,20 @@
   animation-delay: var(--d, 0s);
 }
 
-.bsd-aura__glow {
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-  animation: bsd-glow 1.6s ease-in-out infinite;
+/* La silueta parpadea por cuadros (como el GIF): dos variantes se prenden y apagan por turnos */
+.bsd-aura__frame {
+  opacity: 0;
+  animation: bsd-frame 0.6s steps(1) infinite;
 }
 
-.bsd-aura__streak {
-  animation: bsd-streak 1.2s linear infinite;
-  animation-delay: var(--d, 0s);
+.bsd-aura__frame--b {
+  animation-delay: -0.2s;
+}
+
+@keyframes bsd-frame {
+  0% { opacity: 0; }
+  34% { opacity: 1; }
+  67% { opacity: 0; }
 }
 
 /* Parpadeo por cuadros (como el GIF): el rayo cambia de largo y de ancho en 5 pasos */
@@ -1248,20 +1254,8 @@
   80% { transform: scale(0.98, 0.93); opacity: 0.88; }
 }
 
-@keyframes bsd-glow {
-  0%, 100% { transform: scale(0.95); opacity: 0.85; }
-  50% { transform: scale(1.05); opacity: 1; }
-}
-
-@keyframes bsd-streak {
-  0% { transform: translateY(20px); opacity: 0; }
-  20% { opacity: 0.9; }
-  100% { transform: translateY(-70px); opacity: 0; }
-}
-
 .bsd[data-calm] .bsd-aura__flame,
-.bsd[data-calm] .bsd-aura__glow,
-.bsd[data-calm] .bsd-aura__streak {
+.bsd[data-calm] .bsd-aura__frame {
   animation: none;
 }
 
@@ -1281,8 +1275,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .bsd-aura__flame,
-  .bsd-aura__glow,
-  .bsd-aura__streak,
+  .bsd-aura__frame,
   .bsd-radar__sweep,
   .bsd-radar__blip,
   .bsd-pod,
@@ -1382,23 +1375,57 @@
 .bsd[data-lit] .bsd-stage .bsd-medallion {
   opacity: 1;
   transform: none;
-  transition: opacity 0.5s ease 3.15s, transform 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) 3.15s;
+  transition: opacity 0.5s ease 3.3s, transform 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) 3.3s;
 }
 
 .bsd[data-lit] .bsd-stage__pod {
-  animation: bsd-pod-fly 3.4s linear both;
+  animation: bsd-pod-fly 3.6s linear both;
 }
 
-/* La cápsula navega: sale por la izquierda, reaparece por la derecha subiendo y vuelve al centro */
+/* La cápsula despega en arco hacia la izquierda, reaparece por arriba a la derecha y aterriza en el centro.
+   La punta de la nave siempre apunta hacia donde va (generado por puntos de una curva). */
 @keyframes bsd-pod-fly {
-  0% { transform: translate(0, 0) rotate(0); opacity: 1; filter: none; animation-timing-function: cubic-bezier(0.5, 0, 0.9, 0.6); }
-  24% { transform: translate(-125vw, -4vh) rotate(-10deg); opacity: 1; }
-  24.2% { transform: translate(-125vw, -4vh) rotate(-10deg); opacity: 0; }
-  24.4% { transform: translate(125vw, 14vh) rotate(-4deg); opacity: 0; }
-  24.6% { transform: translate(125vw, 14vh) rotate(-4deg); opacity: 1; animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1); }
-  62% { transform: translate(52vw, -16vh) rotate(-14deg); opacity: 1; }
-  86% { transform: translate(0, 0) rotate(0); opacity: 1; filter: none; }
-  93% { transform: translate(0, 0) scale(1.3); opacity: 1; filter: brightness(2.2); }
+  0.00% { transform: translate(-0.0vw, -0.0vw) rotate(0.0deg); opacity: 1; filter: none; }
+  2.29% { transform: translate(-1.6vw, -0.0vw) rotate(-8.0deg); }
+  4.57% { transform: translate(-5.2vw, -0.0vw) rotate(-8.0deg); }
+  6.86% { transform: translate(-10.4vw, -0.2vw) rotate(-8.0deg); }
+  9.14% { transform: translate(-16.9vw, -0.5vw) rotate(-8.0deg); }
+  11.43% { transform: translate(-24.7vw, -1.1vw) rotate(-8.0deg); }
+  13.71% { transform: translate(-33.6vw, -2.3vw) rotate(-8.0deg); }
+  16.00% { transform: translate(-43.7vw, -4.3vw) rotate(-8.0deg); }
+  18.29% { transform: translate(-54.8vw, -7.2vw) rotate(-8.0deg); }
+  20.57% { transform: translate(-67.0vw, -11.4vw) rotate(-8.0deg); }
+  22.86% { transform: translate(-80.1vw, -17.2vw) rotate(-5.1deg); }
+  25.14% { transform: translate(-94.2vw, -24.9vw) rotate(-0.8deg); }
+  27.43% { transform: translate(-109.3vw, -35.0vw) rotate(3.5deg); }
+  29.71% { transform: translate(-125.2vw, -47.9vw) rotate(7.6deg); }
+  32.00% { transform: translate(-142.0vw, -64.0vw) rotate(40.0deg); }
+  32.1% { opacity: 0; }
+  35.9% { opacity: 0; }
+  36% { opacity: 1; }
+  36.00% { transform: translate(142.0vw, -64.0vw) rotate(-74.1deg); }
+  38.60% { transform: translate(128.2vw, -52.7vw) rotate(-71.5deg); }
+  41.20% { transform: translate(115.0vw, -42.9vw) rotate(-68.8deg); }
+  43.80% { transform: translate(102.6vw, -34.5vw) rotate(-66.0deg); }
+  46.40% { transform: translate(90.9vw, -27.4vw) rotate(-63.2deg); }
+  49.00% { transform: translate(79.9vw, -21.4vw) rotate(-60.5deg); }
+  51.60% { transform: translate(69.6vw, -16.5vw) rotate(-57.7deg); }
+  54.20% { transform: translate(60.0vw, -12.5vw) rotate(-55.0deg); }
+  56.80% { transform: translate(51.1vw, -9.2vw) rotate(-52.4deg); }
+  59.40% { transform: translate(43.0vw, -6.6vw) rotate(-49.9deg); }
+  62.00% { transform: translate(35.5vw, -4.6vw) rotate(-47.5deg); }
+  64.60% { transform: translate(28.8vw, -3.1vw) rotate(-45.2deg); }
+  67.20% { transform: translate(22.7vw, -2.0vw) rotate(-43.2deg); }
+  69.80% { transform: translate(17.4vw, -1.2vw) rotate(-41.3deg); }
+  72.40% { transform: translate(12.8vw, -0.7vw) rotate(-39.6deg); }
+  75.00% { transform: translate(8.9vw, -0.3vw) rotate(-35.4deg); }
+  77.60% { transform: translate(5.7vw, -0.1vw) rotate(-27.4deg); }
+  80.20% { transform: translate(3.2vw, -0.0vw) rotate(-18.0deg); }
+  82.80% { transform: translate(1.4vw, -0.0vw) rotate(-9.2deg); }
+  85.40% { transform: translate(0.4vw, -0.0vw) rotate(-2.6deg); }
+  88.00% { transform: translate(0.0vw, -0.0vw) rotate(-0.0deg); }
+  88% { transform: translate(0, 0) rotate(0); opacity: 1; filter: none; }
+  94% { transform: translate(0, 0) scale(1.3); opacity: 1; filter: brightness(2.2); }
   100% { transform: translate(0, 0) scale(1.6); opacity: 0; filter: brightness(3); }
 }
 
@@ -1416,5 +1443,70 @@
   .bsd[data-lit] .bsd-stage__pod {
     animation: none;
     opacity: 0;
+  }
+}
+
+/* El aura respira: zoom suave, grande y chico, creciendo desde su base (hacia arriba). */
+.bsd-medallion__aura {
+  transform-origin: 50% 83.3%;
+  animation: bsd-aura-breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes bsd-aura-breathe {
+  0%, 100% { transform: translate(-50%, -56.7%) scale(1); }
+  50% { transform: translate(-50%, -56.7%) scale(1.07); }
+}
+
+/* Portada: aparece cuando el dragón ya subió, en su sitio, creciendo de abajo hacia arriba; luego respira */
+.bsd-stage .bsd-medallion__aura {
+  opacity: 0;
+}
+
+.bsd[data-lit] .bsd-stage .bsd-medallion__aura {
+  opacity: 1;
+  animation: bsd-aura-in 0.9s cubic-bezier(0.2, 1.2, 0.4, 1) 5.2s backwards, bsd-aura-breathe 2.6s ease-in-out 6.1s infinite;
+}
+
+@keyframes bsd-aura-in {
+  0% { transform: translate(-50%, -56.7%) scale(0.85, 0.05); opacity: 0; }
+  100% { transform: translate(-50%, -56.7%) scale(1, 1); opacity: 1; }
+}
+
+.bsd[data-calm] .bsd-medallion__aura,
+.bsd[data-calm][data-lit] .bsd-stage .bsd-medallion__aura {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bsd-medallion__aura,
+  .bsd[data-lit] .bsd-stage .bsd-medallion__aura {
+    animation: none !important;
+  }
+}
+
+/* El aro con la foto respira igual que el aura (mismo ritmo, un poco menos de zoom) */
+.bsd-medallion__ring {
+  animation: bsd-ring-breathe 2.6s ease-in-out infinite;
+}
+
+/* En la portada arranca junto con el respirar del aura (después de que aparece) */
+.bsd[data-lit] .bsd-stage .bsd-medallion__ring {
+  animation: bsd-ring-breathe 2.6s ease-in-out 6.1s infinite;
+}
+
+@keyframes bsd-ring-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.045); }
+}
+
+.bsd[data-calm] .bsd-medallion__ring,
+.bsd[data-calm][data-lit] .bsd-stage .bsd-medallion__ring {
+  animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bsd-medallion__ring,
+  .bsd[data-lit] .bsd-stage .bsd-medallion__ring {
+    animation: none !important;
   }
 }

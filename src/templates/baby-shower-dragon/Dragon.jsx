@@ -86,69 +86,80 @@ export function Scouter({ className = "" }) {
   );
 }
 
-// Ki (aura de Super Saiyayin) como en el anime: rayos largos y afilados, abiertos en abanico hacia arriba
-// y hacia los lados, que parpadean en pasos rápidos (unos 5 cuadros) y con rayitas que suben.
-const jit = (i) => ((i * 37 + 11) % 13) / 13; // 0..1 fijo: el render es estable
+// Ki (aura de Super Saiyayin) como en el anime: una silueta alta, en forma de gota, cuyo contorno son
+// picos que apuntan hacia arriba (los de los lados se inclinan hacia arriba y hay uno largo en la cima).
+// Se dibujan 3 variantes de la silueta y se alternan por cuadros para que parpadee como el GIF.
+const AURA_BOTTOM = 80; // y del pie de la silueta
+const AURA_TOP = -148; // y de la cima
+const AURA_HALF = 74; // medio ancho máximo
 
-// Cada rayo: [x de la base, y de la base, ángulo (grados desde arriba), largo, medio ancho]
-const RAYS = (() => {
-  const out = [];
-  for (let i = 0; i < 17; i++) {
-    const theta = -152 + i * (304 / 16); // posición sobre el aro (0 = arriba)
-    const rad = (theta * Math.PI) / 180;
-    const bx = Math.sin(rad) * 44;
-    const by = -Math.cos(rad) * 44;
-    const side = Math.min(1, Math.abs(theta) / 110);
-    const dir = Math.max(-64, Math.min(64, theta * 0.55));
-    const len = 78 + side * 46 + (i % 3) * 16;
-    out.push([bx, by, dir, len, 7 + (i % 2) * 2]);
-  }
-  return out;
-})();
+const rnd = (seed) => {
+  let s = seed;
+  return () => ((s = (s * 16807) % 2147483647) / 2147483647);
+};
 
-// Rayitas finas que suben (velocidad)
-const STREAKS = Array.from({ length: 14 }, (_, i) => [-92 + i * 14.2 + (jit(i) - 0.5) * 8, 30 + jit(i + 3) * 30, 14 + jit(i + 6) * 22]);
+// Medio ancho de la silueta a la altura t (0 = pie, 1 = cima)
+const halfWidth = (t) => AURA_HALF * Math.pow(1 - t * t, 0.9);
+const edgeY = (t) => AURA_BOTTOM + (AURA_TOP - AURA_BOTTOM) * t;
 
-/** Rayo en forma de hoja: chico en la base, más ancho hacia el medio y termina en punta arriba. */
-export function leaf(w, len) {
-  return `M0 0C${-w * 1.7} ${-len * 0.14} ${-w * 1.5} ${-len * 0.6} 0 ${-len}C${w * 1.5} ${-len * 0.6} ${w * 1.7} ${-len * 0.14} 0 0Z`;
+/** Camino de la silueta con picos hacia arriba. `seed` cambia el tamaño de los picos entre variantes. */
+function auraPath(seed) {
+  const r = rnd(seed);
+  const N = 15;
+  const side = (dir) => {
+    const pts = [];
+    for (let k = 0; k < N; k++) {
+      const t0 = 0.03 + (k / N) * 0.93;
+      const t1 = Math.min(0.985, t0 + (1.7 / N) * 0.93);
+      const inset = 5 + r() * 6;
+      const out = 7 + r() * 14 + (1 - t0) * 4;
+      // valle sobre el borde (un poco hacia dentro) y punta más arriba y hacia fuera
+      pts.push([dir * (halfWidth(t0) - inset), edgeY(t0)]);
+      pts.push([dir * (halfWidth(t1) + out), edgeY(t1) - 3]);
+    }
+    return pts;
+  };
+  const left = side(-1);
+  const right = side(1);
+  // pie: picos que abren hacia afuera y abajo
+  const foot = [[0, 84], [-22, 104 + r() * 5], [-28, 86], [-52, 100 + r() * 5], [-54, 82], [-80, 88 + r() * 6], [-76, 76]];
+  const footR = [[76, 76], [80, 88 + r() * 6], [54, 82], [52, 100 + r() * 5], [28, 86], [22, 104 + r() * 5]];
+  const pts = [...foot, ...left, [-7, edgeY(0.93)], [0, AURA_TOP - 6 - r() * 6], [7, edgeY(0.93)], ...right.reverse(), ...footR];
+  return `M${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join("L")}Z`;
 }
 
+// Capas anidadas (comparten el pie y se acortan hacia arriba): exterior y media. 3 variantes por capa.
+const AURA_LAYERS = [
+  { scale: 1, fill: "url(#bsd-ki-fill)", shapes: [auraPath(3), auraPath(11), auraPath(29)] },
+  { scale: 0.85, fill: "url(#bsd-ki-mid)", shapes: [auraPath(41), auraPath(53), auraPath(67)] },
+];
+
+/** Rayo de punta afilada (lo usa la estela de la cápsula). */
 export function blade(w, len) {
   return `M${-w} 0Q${-w * 0.7} ${-len * 0.55} 0 ${-len}Q${w * 0.9} ${-len * 0.5} ${w} 0Z`;
 }
 
-/** Aura de ki dorada detrás de la foto. Sólo transform/opacity; quieta con `data-calm`. */
+/** Aura de ki dorada detrás de la foto. Sólo transform/opacity; quieta (una sola silueta por capa) con `data-calm`. */
 export function Aura({ className = "" }) {
   return (
-    <svg className={`bsd-aura ${className}`} viewBox="-130 -130 260 260" aria-hidden="true">
+    <svg className={`bsd-aura ${className}`} viewBox="-110 -170 220 300" aria-hidden="true">
       <defs>
-        <radialGradient id="bsd-ki-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="scale(108)">
-          <stop offset=".35" stopColor="#fffbb0" stopOpacity=".9" />
-          <stop offset=".7" stopColor="#ffd400" stopOpacity=".45" />
-          <stop offset="1" stopColor="#ffb000" stopOpacity="0" />
+        <radialGradient id="bsd-ki-fill" cx=".5" cy=".62" r=".62">
+          <stop offset="0" stopColor="#fffcc8" stopOpacity=".85" />
+          <stop offset=".5" stopColor="#fff56a" stopOpacity=".92" />
+          <stop offset="1" stopColor="#ffe600" />
         </radialGradient>
-        <linearGradient id="bsd-ki-ray" x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0" stopColor="#fff7a0" />
-          <stop offset=".5" stopColor="#ffe100" />
-          <stop offset="1" stopColor="#ffb800" />
-        </linearGradient>
-        <linearGradient id="bsd-ki-core" x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0" stopColor="#ffffff" />
+        <radialGradient id="bsd-ki-mid" cx=".5" cy=".7" r=".7">
+          <stop offset="0" stopColor="#fffde0" stopOpacity=".9" />
           <stop offset="1" stopColor="#fff36a" />
-        </linearGradient>
+        </radialGradient>
       </defs>
-      <ellipse className="bsd-aura__glow" cx="0" cy="0" rx="108" ry="112" fill="url(#bsd-ki-glow)" />
-      {RAYS.map(([x, y, dir, len, w], i) => (
-        <g key={i} transform={`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${dir.toFixed(1)})`}>
-          <g className="bsd-aura__flame" style={{ "--d": `${-((i * 0.13) % 0.55)}s` }}>
-            <path d={leaf(w, len)} fill="url(#bsd-ki-ray)" stroke="#f29a00" strokeWidth="1.3" strokeLinejoin="miter" />
-            <path d={leaf(w * 0.5, len * 0.66)} fill="url(#bsd-ki-core)" opacity=".8" />
-          </g>
+      {AURA_LAYERS.map(({ scale, fill, shapes }, i) => (
+        <g key={i} transform={`translate(0 ${AURA_BOTTOM}) scale(${scale}) translate(0 ${-AURA_BOTTOM})`} stroke="#e0b400" strokeWidth={0.9 / scale} strokeLinejoin="miter" fill={fill}>
+          <path d={shapes[0]} />
+          <path className="bsd-aura__frame bsd-aura__frame--a" d={shapes[1]} />
+          <path className="bsd-aura__frame bsd-aura__frame--b" d={shapes[2]} />
         </g>
-      ))}
-      {STREAKS.map(([x, y, h], i) => (
-        <rect key={`s${i}`} className="bsd-aura__streak" x={x} y={y} width="1.6" height={h} rx=".8" fill="#fff8a8" style={{ "--d": `${-((i * 0.29) % 1.2)}s` }} />
       ))}
     </svg>
   );
