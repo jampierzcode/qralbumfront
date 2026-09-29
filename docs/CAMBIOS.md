@@ -291,3 +291,8 @@ Verificación: `npm test` 80/80 · `npm run smoke` 5/5 tamaños (sin errores de 
 - El aura de ki ahora son rayos largos y afilados en abanico (arriba y a los lados) que parpadean por cuadros (~5) y con rayitas que suben, como el GIF de referencia. Degradado corregido (antes salía de un solo color).
 - "Cómo llegar": radar del dragón (`Art.jsx`, SVG propio) arriba del título, con barrido y esferas que parpadean.
 - Cuenta regresiva: cápsula redonda envuelta en energía azul con estela, arriba del título (`Art.jsx`).
+
+## Baby shower dragón: rayos en forma de hoja y cápsula en la portada
+
+- Aura: cada rayo tiene forma de hoja (chico en la base, más ancho hacia el medio, punta arriba).
+- Portada: antes de invocar, la cápsula (`Pod`) espera al centro con sus esferas apagadas. Al tocar "Invocar al dragón" da un giro completo, destella y en su lugar aparece la foto con el aura. Miniatura y movimiento reducido van directo a la foto.

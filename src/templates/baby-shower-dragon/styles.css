@@ -1354,3 +1354,62 @@
     width: min(32vw, 420px);
   }
 }
+
+/* Portada: la cápsula al centro; al invocar gira una vuelta completa, destella y aparece la foto en su lugar */
+.bsd-stage__pod {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 78%;
+  translate: -37.3% -44.8%;
+  transform-origin: 37.3% 44.8%;
+  pointer-events: none;
+}
+
+.bsd-stage__pod .bsd-art,
+.bsd-stage__pod svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.bsd-stage .bsd-medallion {
+  opacity: 0;
+  transform: scale(0.35);
+}
+
+.bsd[data-lit] .bsd-stage .bsd-medallion {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.5s ease 1.45s, transform 0.7s cubic-bezier(0.2, 1.4, 0.4, 1) 1.45s;
+}
+
+.bsd[data-lit] .bsd-stage__pod {
+  animation: bsd-pod-spin 1.7s cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+
+@keyframes bsd-pod-spin {
+  0% { transform: rotate(0) scale(1); opacity: 1; filter: none; }
+  65% { transform: rotate(360deg) scale(1.12); opacity: 1; filter: none; }
+  85% { transform: rotate(360deg) scale(1.3); opacity: 1; filter: brightness(2.2); }
+  100% { transform: rotate(360deg) scale(1.6); opacity: 0; filter: brightness(3); }
+}
+
+/* Sin animación (miniatura, movimiento reducido): directo a la foto */
+.bsd[data-calm][data-lit] .bsd-stage__pod {
+  animation: none;
+  opacity: 0;
+}
+
+.bsd[data-calm] .bsd-stage .bsd-medallion {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bsd[data-lit] .bsd-stage__pod {
+    animation: none;
+    opacity: 0;
+  }
+}

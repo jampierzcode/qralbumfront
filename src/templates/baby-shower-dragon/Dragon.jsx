@@ -101,13 +101,18 @@ const RAYS = (() => {
     const side = Math.min(1, Math.abs(theta) / 110);
     const dir = Math.max(-62, Math.min(62, theta * 0.52)) + (jit(i) - 0.5) * 12;
     const len = 62 + side * 58 + jit(i + 5) * 34;
-    out.push([bx, by, dir, len, 6 + jit(i + 2) * 5]);
+    out.push([bx, by, dir, len, 5.5 + jit(i + 2) * 4]);
   }
   return out;
 })();
 
 // Rayitas finas que suben (velocidad)
 const STREAKS = Array.from({ length: 14 }, (_, i) => [-92 + i * 14.2 + (jit(i) - 0.5) * 8, 30 + jit(i + 3) * 30, 14 + jit(i + 6) * 22]);
+
+/** Rayo en forma de hoja: chico en la base, más ancho hacia el medio y termina en punta arriba. */
+export function leaf(w, len) {
+  return `M0 0C${-w * 1.7} ${-len * 0.14} ${-w * 1.5} ${-len * 0.6} 0 ${-len}C${w * 1.5} ${-len * 0.6} ${w * 1.7} ${-len * 0.14} 0 0Z`;
+}
 
 export function blade(w, len) {
   return `M${-w} 0Q${-w * 0.7} ${-len * 0.55} 0 ${-len}Q${w * 0.9} ${-len * 0.5} ${w} 0Z`;
@@ -137,8 +142,8 @@ export function Aura({ className = "" }) {
       {RAYS.map(([x, y, dir, len, w], i) => (
         <g key={i} transform={`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${dir.toFixed(1)})`}>
           <g className="bsd-aura__flame" style={{ "--d": `${-((i * 0.13) % 0.55)}s` }}>
-            <path d={blade(w, len)} fill="url(#bsd-ki-ray)" />
-            <path d={blade(w * 0.45, len * 0.6)} fill="url(#bsd-ki-core)" opacity=".75" />
+            <path d={leaf(w, len)} fill="url(#bsd-ki-ray)" />
+            <path d={leaf(w * 0.5, len * 0.66)} fill="url(#bsd-ki-core)" opacity=".8" />
           </g>
         </g>
       ))}

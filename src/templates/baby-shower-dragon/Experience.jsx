@@ -318,6 +318,10 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
               </span>
             ))}
           </div>
+          {/* La cápsula espera al centro; al invocar da un giro completo y deja ver a la bebé */}
+          <div className="bsd-stage__pod" aria-hidden="true">
+            <Pod />
+          </div>
           <div className="bsd-medallion">
             <Aura className="bsd-medallion__aura" />
             <div className="bsd-medallion__ring">
