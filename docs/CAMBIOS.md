@@ -296,3 +296,8 @@ Verificación: `npm test` 80/80 · `npm run smoke` 5/5 tamaños (sin errores de 
 
 - Aura: cada rayo tiene forma de hoja (chico en la base, más ancho hacia el medio, punta arriba).
 - Portada: antes de invocar, la cápsula (`Pod`) espera al centro con sus esferas apagadas. Al tocar "Invocar al dragón" da un giro completo, destella y en su lugar aparece la foto con el aura. Miniatura y movimiento reducido van directo a la foto.
+
+## Baby shower dragón: rayos con punta y cápsula que navega
+
+- Aura: rayos más separados, opacos (sin desvanecer la punta) y con contorno, para que cada uno termine en punta clara.
+- Portada: al invocar, la cápsula sale por la izquierda, reaparece por la derecha subiendo y vuelve al centro (3,4 s); luego destella y aparece la foto. El dragón, el título y el velo esperan a que termine.

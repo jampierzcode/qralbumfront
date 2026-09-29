@@ -93,15 +93,15 @@ const jit = (i) => ((i * 37 + 11) % 13) / 13; // 0..1 fijo: el render es estable
 // Cada rayo: [x de la base, y de la base, ángulo (grados desde arriba), largo, medio ancho]
 const RAYS = (() => {
   const out = [];
-  for (let i = 0; i < 26; i++) {
-    const theta = -150 + i * (300 / 25); // posición sobre el aro (0 = arriba)
+  for (let i = 0; i < 17; i++) {
+    const theta = -152 + i * (304 / 16); // posición sobre el aro (0 = arriba)
     const rad = (theta * Math.PI) / 180;
-    const bx = Math.sin(rad) * 46;
-    const by = -Math.cos(rad) * 46;
+    const bx = Math.sin(rad) * 44;
+    const by = -Math.cos(rad) * 44;
     const side = Math.min(1, Math.abs(theta) / 110);
-    const dir = Math.max(-62, Math.min(62, theta * 0.52)) + (jit(i) - 0.5) * 12;
-    const len = 62 + side * 58 + jit(i + 5) * 34;
-    out.push([bx, by, dir, len, 5.5 + jit(i + 2) * 4]);
+    const dir = Math.max(-64, Math.min(64, theta * 0.55));
+    const len = 78 + side * 46 + (i % 3) * 16;
+    out.push([bx, by, dir, len, 7 + (i % 2) * 2]);
   }
   return out;
 })();
@@ -129,20 +129,20 @@ export function Aura({ className = "" }) {
           <stop offset="1" stopColor="#ffb000" stopOpacity="0" />
         </radialGradient>
         <linearGradient id="bsd-ki-ray" x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0" stopColor="#fff9a0" />
-          <stop offset=".4" stopColor="#ffea00" />
-          <stop offset="1" stopColor="#e8b800" stopOpacity=".15" />
+          <stop offset="0" stopColor="#fff7a0" />
+          <stop offset=".5" stopColor="#ffe100" />
+          <stop offset="1" stopColor="#ffb800" />
         </linearGradient>
         <linearGradient id="bsd-ki-core" x1="0" y1="1" x2="0" y2="0">
           <stop offset="0" stopColor="#ffffff" />
-          <stop offset="1" stopColor="#fff36a" stopOpacity=".1" />
+          <stop offset="1" stopColor="#fff36a" />
         </linearGradient>
       </defs>
       <ellipse className="bsd-aura__glow" cx="0" cy="0" rx="108" ry="112" fill="url(#bsd-ki-glow)" />
       {RAYS.map(([x, y, dir, len, w], i) => (
         <g key={i} transform={`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${dir.toFixed(1)})`}>
           <g className="bsd-aura__flame" style={{ "--d": `${-((i * 0.13) % 0.55)}s` }}>
-            <path d={leaf(w, len)} fill="url(#bsd-ki-ray)" />
+            <path d={leaf(w, len)} fill="url(#bsd-ki-ray)" stroke="#f29a00" strokeWidth="1.3" strokeLinejoin="miter" />
             <path d={leaf(w * 0.5, len * 0.66)} fill="url(#bsd-ki-core)" opacity=".8" />
           </g>
         </g>
