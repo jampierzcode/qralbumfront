@@ -8,6 +8,7 @@ import Particles from "../../experience-kit/Particles.jsx";
 import Photo from "../../experience-kit/Photo.jsx";
 import PhotoViewer from "../../experience-kit/PhotoViewer.jsx";
 import Reveal, { useInView } from "../../experience-kit/Reveal.jsx";
+import { Radar, Pod } from "./Art.jsx";
 import { Aura, DragonBall, Nimbus, Scouter } from "./Dragon.jsx";
 import Icon from "./Icons.jsx";
 import { babyIllustration } from "../baby-shower/media/index.js";
@@ -404,6 +405,9 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
           {/* 4. Mapa */}
           {address && (
             <section className="bsd-panel bsd-map" aria-label="Ubicación">
+              <Reveal className="bsd-art bsd-art--radar" variant="scale">
+                <Radar />
+              </Reveal>
               <Reveal as="h2" variant="scale" className="bsd-heading">
                 {copy.map}
               </Reveal>
@@ -432,6 +436,9 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
           {/* 5. Cuenta regresiva */}
           {eventAt && (
             <section className="bsd-panel bsd-count" aria-label="Cuenta regresiva">
+              <Reveal className="bsd-art bsd-art--pod" variant="scale">
+                <Pod />
+              </Reveal>
               <Reveal as="h2" variant="scale" className="bsd-heading">
                 {left?.done ? copy.today : copy.count}
               </Reveal>

@@ -1225,30 +1225,44 @@
 .bsd-aura__flame {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  animation: bsd-ki var(--t, 1.4s) ease-out infinite;
+  animation: bsd-ki 0.55s steps(1) infinite;
   animation-delay: var(--d, 0s);
 }
 
 .bsd-aura__glow {
   transform-box: fill-box;
-  transform-origin: 50% 60%;
-  animation: bsd-glow 2.4s ease-in-out infinite;
+  transform-origin: 50% 50%;
+  animation: bsd-glow 1.6s ease-in-out infinite;
 }
 
-/* Cada llama nace abajo, se estira hacia arriba y se apaga al subir */
+.bsd-aura__streak {
+  animation: bsd-streak 1.2s linear infinite;
+  animation-delay: var(--d, 0s);
+}
+
+/* Parpadeo por cuadros (como el GIF): el rayo cambia de largo y de ancho en 5 pasos */
 @keyframes bsd-ki {
-  0% { transform: translateY(6px) scale(0.75, 0.55); opacity: 0; }
-  25% { opacity: 1; }
-  100% { transform: translateY(-14px) scale(1.05, 1.18); opacity: 0; }
+  0% { transform: scale(1, 0.9); opacity: 0.9; }
+  20% { transform: scale(1.08, 1.08); opacity: 1; }
+  40% { transform: scale(0.94, 0.97); opacity: 0.92; }
+  60% { transform: scale(1.04, 1.16); opacity: 1; }
+  80% { transform: scale(0.98, 0.93); opacity: 0.88; }
 }
 
 @keyframes bsd-glow {
-  0%, 100% { transform: scale(0.95); opacity: 0.8; }
+  0%, 100% { transform: scale(0.95); opacity: 0.85; }
   50% { transform: scale(1.05); opacity: 1; }
 }
 
+@keyframes bsd-streak {
+  0% { transform: translateY(20px); opacity: 0; }
+  20% { opacity: 0.9; }
+  100% { transform: translateY(-70px); opacity: 0; }
+}
+
 .bsd[data-calm] .bsd-aura__flame,
-.bsd[data-calm] .bsd-aura__glow {
+.bsd[data-calm] .bsd-aura__glow,
+.bsd[data-calm] .bsd-aura__streak {
   animation: none;
 }
 
@@ -1269,7 +1283,74 @@
 @media (prefers-reduced-motion: reduce) {
   .bsd-aura__flame,
   .bsd-aura__glow,
+  .bsd-aura__streak,
+  .bsd-radar__sweep,
+  .bsd-radar__blip,
+  .bsd-pod,
   .bsd[data-lit] .bsd-cover__dragon {
     animation: none;
+  }
+}
+
+/* Ilustraciones: radar (Cómo llegar) y cápsula de energía (cuenta regresiva) */
+.bsd-art {
+  display: block;
+  width: min(46vw, 190px);
+  filter: drop-shadow(0 12px 18px rgb(60 20 40 / 0.3));
+}
+
+.bsd-art--pod {
+  width: min(78vw, 320px);
+}
+
+.bsd-art svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.bsd-radar__sweep {
+  transform-box: view-box;
+  transform-origin: 100px 140px;
+  animation: bsd-sweep 3.2s linear infinite;
+}
+
+.bsd-radar__blip {
+  animation: bsd-blip 1.6s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+.bsd-pod {
+  animation: bsd-pod 4s ease-in-out infinite;
+}
+
+@keyframes bsd-sweep {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bsd-blip {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+@keyframes bsd-pod {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-4px, -8px); }
+}
+
+.bsd[data-calm] .bsd-radar__sweep,
+.bsd[data-calm] .bsd-radar__blip,
+.bsd[data-calm] .bsd-pod {
+  animation: none;
+}
+
+@media (min-width: 1024px) {
+  .bsd-art {
+    width: min(20vw, 230px);
+  }
+
+  .bsd-art--pod {
+    width: min(32vw, 420px);
   }
 }

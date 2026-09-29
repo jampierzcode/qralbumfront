@@ -285,3 +285,9 @@ Verificación: `npm test` 80/80 · `npm run smoke` 5/5 tamaños (sin errores de 
 - El dragón sube y baja con un poco de zoom (9 s, suave) una vez que aparece; sigue apareciendo con desvanecido a los ~2 s de invocar.
 - Adornos que flotan: nubes voladoras (Nimbus), scouters y 7 esferas (`Dragon.jsx`, todo SVG propio), en lugar de biberón/osito.
 - Aura de ki (`Aura`) detrás de la foto de la portada y de la de "Gracias": llamas verticales que suben de abajo hacia arriba (más altas por los lados), cada una nace, crece y se apaga a su ritmo, con un resplandor que late. Sólo transform/opacity; quieta con `data-calm` o movimiento reducido.
+
+## Baby shower dragón: aura como el anime, radar y cápsula
+
+- El aura de ki ahora son rayos largos y afilados en abanico (arriba y a los lados) que parpadean por cuadros (~5) y con rayitas que suben, como el GIF de referencia. Degradado corregido (antes salía de un solo color).
+- "Cómo llegar": radar del dragón (`Art.jsx`, SVG propio) arriba del título, con barrido y esferas que parpadean.
+- Cuenta regresiva: cápsula redonda envuelta en energía azul con estela, arriba del título (`Art.jsx`).

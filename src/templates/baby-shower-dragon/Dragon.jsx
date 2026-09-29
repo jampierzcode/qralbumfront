@@ -86,64 +86,64 @@ export function Scouter({ className = "" }) {
   );
 }
 
-// Ki (aura de Super Saiyayin): llamas verticales que suben de abajo hacia arriba.
-// Más altas y anchas por los lados de la foto (como en el arte original), cortas al centro/abajo.
-// [x, y de la base, alto, medio ancho, inclinación de la punta]
-const KI = (() => {
+// Ki (aura de Super Saiyayin) como en el anime: rayos largos y afilados, abiertos en abanico hacia arriba
+// y hacia los lados, que parpadean en pasos rápidos (unos 5 cuadros) y con rayitas que suben.
+const jit = (i) => ((i * 37 + 11) % 13) / 13; // 0..1 fijo: el render es estable
+
+// Cada rayo: [x de la base, y de la base, ángulo (grados desde arriba), largo, medio ancho]
+const RAYS = (() => {
   const out = [];
-  const jitter = (i) => ((i * 37) % 11) / 11; // 0..1 fijo: el render es estable
-  for (let i = 0; i < 17; i++) {
-    const x = -96 + i * 12;
-    const side = Math.abs(x) / 96;
-    const base = 66 - 38 * Math.pow(side, 1.3);
-    const h = 58 + 62 * Math.pow(side, 1.1) + jitter(i) * 26;
-    out.push([x, base, h, 11 + jitter(i + 3) * 6, Math.sign(x || 1) * (6 + jitter(i) * 8)]);
-  }
-  // corona de llamas sobre la cabeza
-  for (let i = 0; i < 5; i++) {
-    const x = -34 + i * 17;
-    out.push([x, -42, 46 + jitter(i + 7) * 30, 10 + jitter(i) * 4, (i - 2) * 5]);
+  for (let i = 0; i < 26; i++) {
+    const theta = -150 + i * (300 / 25); // posición sobre el aro (0 = arriba)
+    const rad = (theta * Math.PI) / 180;
+    const bx = Math.sin(rad) * 46;
+    const by = -Math.cos(rad) * 46;
+    const side = Math.min(1, Math.abs(theta) / 110);
+    const dir = Math.max(-62, Math.min(62, theta * 0.52)) + (jit(i) - 0.5) * 12;
+    const len = 62 + side * 58 + jit(i + 5) * 34;
+    out.push([bx, by, dir, len, 6 + jit(i + 2) * 5]);
   }
   return out;
 })();
 
-function tongue(w, h, lean) {
-  // llama con curva en S: ancha abajo, se estrecha y la punta se dobla hacia `lean`
-  return `M${-w} 0C${-w * 1.5} ${-h * 0.3} ${-w * 0.5} ${-h * 0.5} ${lean * 0.3} ${-h * 0.72}C${lean * 0.9} ${-h * 0.84} ${lean * 1.1} ${-h * 0.93} ${lean} ${-h}C${lean * 0.6 + w * 0.6} ${-h * 0.7} ${w * 1.6} ${-h * 0.36} ${w} 0Z`;
+// Rayitas finas que suben (velocidad)
+const STREAKS = Array.from({ length: 14 }, (_, i) => [-92 + i * 14.2 + (jit(i) - 0.5) * 8, 30 + jit(i + 3) * 30, 14 + jit(i + 6) * 22]);
+
+export function blade(w, len) {
+  return `M${-w} 0Q${-w * 0.7} ${-len * 0.55} 0 ${-len}Q${w * 0.9} ${-len * 0.5} ${w} 0Z`;
 }
 
-/**
- * Aura de ki: llamas doradas que se elevan (suben, crecen y se apagan, cada una a su ritmo)
- * y un resplandor que late detrás. Sólo transform/opacity; quieta con `data-calm`.
- */
+/** Aura de ki dorada detrás de la foto. Sólo transform/opacity; quieta con `data-calm`. */
 export function Aura({ className = "" }) {
   return (
-    <svg className={`bsd-aura ${className}`} viewBox="-120 -120 240 240" aria-hidden="true">
+    <svg className={`bsd-aura ${className}`} viewBox="-130 -130 260 260" aria-hidden="true">
       <defs>
-        <radialGradient id="bsd-ki-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="scale(112)">
-          <stop offset=".4" stopColor="#fff6a8" stopOpacity=".75" />
-          <stop offset=".78" stopColor="#ffc928" stopOpacity=".35" />
-          <stop offset="1" stopColor="#ff9a00" stopOpacity="0" />
+        <radialGradient id="bsd-ki-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="scale(108)">
+          <stop offset=".35" stopColor="#fffbb0" stopOpacity=".9" />
+          <stop offset=".7" stopColor="#ffd400" stopOpacity=".45" />
+          <stop offset="1" stopColor="#ffb000" stopOpacity="0" />
         </radialGradient>
-        <linearGradient id="bsd-ki-out" x1="0" y1="0" x2="0" y2="-1">
-          <stop offset="0" stopColor="#ffb400" />
-          <stop offset=".45" stopColor="#ffd82a" />
-          <stop offset="1" stopColor="#fff7a0" stopOpacity=".15" />
+        <linearGradient id="bsd-ki-ray" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stopColor="#fff9a0" />
+          <stop offset=".4" stopColor="#ffea00" />
+          <stop offset="1" stopColor="#e8b800" stopOpacity=".15" />
         </linearGradient>
-        <linearGradient id="bsd-ki-in" x1="0" y1="0" x2="0" y2="-1">
-          <stop offset="0" stopColor="#fff3a0" />
-          <stop offset=".6" stopColor="#ffffff" />
-          <stop offset="1" stopColor="#ffffff" stopOpacity=".1" />
+        <linearGradient id="bsd-ki-core" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset="1" stopColor="#fff36a" stopOpacity=".1" />
         </linearGradient>
       </defs>
-      <ellipse className="bsd-aura__glow" cx="0" cy="8" rx="104" ry="112" fill="url(#bsd-ki-glow)" />
-      {KI.map(([x, y, h, w, lean], i) => (
-        <g key={i} transform={`translate(${x} ${y})`}>
-          <g className="bsd-aura__flame" style={{ "--d": `${-((i * 0.37) % 1.7)}s`, "--t": `${1.25 + ((i * 13) % 7) * 0.09}s` }}>
-            <path d={tongue(w, h, lean)} fill="url(#bsd-ki-out)" />
-            <path d={tongue(w * 0.5, h * 0.62, lean * 0.6)} fill="url(#bsd-ki-in)" />
+      <ellipse className="bsd-aura__glow" cx="0" cy="0" rx="108" ry="112" fill="url(#bsd-ki-glow)" />
+      {RAYS.map(([x, y, dir, len, w], i) => (
+        <g key={i} transform={`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${dir.toFixed(1)})`}>
+          <g className="bsd-aura__flame" style={{ "--d": `${-((i * 0.13) % 0.55)}s` }}>
+            <path d={blade(w, len)} fill="url(#bsd-ki-ray)" />
+            <path d={blade(w * 0.45, len * 0.6)} fill="url(#bsd-ki-core)" opacity=".75" />
           </g>
         </g>
+      ))}
+      {STREAKS.map(([x, y, h], i) => (
+        <rect key={`s${i}`} className="bsd-aura__streak" x={x} y={y} width="1.6" height={h} rx=".8" fill="#fff8a8" style={{ "--d": `${-((i * 0.29) % 1.2)}s` }} />
       ))}
     </svg>
   );
