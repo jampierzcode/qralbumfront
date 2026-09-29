@@ -57,8 +57,8 @@ export default defineSchema({
     }),
     greeting: f.text({
       label: "Saludo",
-      description: "Vacío = según el género (ej. “Una pequeña Sayayin viene en camino”).",
-      placeholder: "Una pequeña Sayayin viene en camino",
+      description: "Vacío = según el género (ej. “Una pequeña Saiyajin viene en camino”).",
+      placeholder: "Una pequeña Saiyajin viene en camino",
       max: 34,
       editorStep: "message",
       customerEditable: false,

@@ -19,8 +19,8 @@ import "./styles.css";
 
 const COPY = {
   boy: {
-    tag: "¡Es un pequeño Sayayin!",
-    greeting: "Un pequeño Sayayin viene en camino",
+    tag: "¡Es un pequeño Saiyajin!",
+    greeting: "Un pequeño Saiyajin viene en camino",
     crown: "¡Su nivel de ternura es mayor a 9000!",
     wish: "¡Tu deseo se cumplió!",
     details: "Detalles del gran día",
@@ -35,8 +35,8 @@ const COPY = {
     thanks: "¡Gracias!",
   },
   girl: {
-    tag: "¡Es una pequeña Sayayin!",
-    greeting: "Una pequeña Sayayin viene en camino",
+    tag: "¡Es una pequeña Saiyajin!",
+    greeting: "Una pequeña Saiyajin viene en camino",
     crown: "¡Su nivel de ternura es mayor a 9000!",
     wish: "¡Tu deseo se cumplió!",
     details: "Detalles del gran día",
@@ -51,8 +51,8 @@ const COPY = {
     thanks: "¡Gracias!",
   },
   surprise: {
-    tag: "¡Un nuevo Sayayin!",
-    greeting: "Un nuevo Sayayin viene en camino",
+    tag: "¡Un nuevo Saiyajin!",
+    greeting: "Un nuevo Saiyajin viene en camino",
     crown: "¡Su nivel de ternura es mayor a 9000!",
     wish: "¡Tu deseo se cumplió!",
     details: "Detalles del gran día",
