@@ -8,9 +8,10 @@ import Particles from "../../experience-kit/Particles.jsx";
 import Photo from "../../experience-kit/Photo.jsx";
 import PhotoViewer from "../../experience-kit/PhotoViewer.jsx";
 import Reveal, { useInView } from "../../experience-kit/Reveal.jsx";
-import { Dragon, DragonBall } from "./Dragon.jsx";
+import { DragonBall } from "./Dragon.jsx";
 import Icon from "./Icons.jsx";
 import { babyIllustration } from "../baby-shower/media/index.js";
+import dragonSrc from "./media/dragon.webp";
 import Scenery from "./Scenery.jsx";
 import "./styles.css";
 
@@ -292,7 +293,7 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
 
       {/* 1. Portada: las 7 esferas se encienden una a una y el dragón sube detrás del aro */}
       <section className="bsd-panel bsd-cover" aria-label="Portada">
-        <Dragon className="bsd-cover__dragon" />
+        <img className="bsd-cover__dragon" src={dragonSrc} width="720" height="1279" alt="" aria-hidden="true" decoding="async" />
         <div className="bsd-stage">
           <div className="bsd-orbit" aria-hidden="true">
             {ORBIT.map((n, i) => (

@@ -269,6 +269,6 @@ Verificación: `npm test` 80/80 · `npm run smoke` 5/5 tamaños (sin errores de 
 
 - Misma estructura que `baby-shower` (anuncio, detalles, mapa, cuenta regresiva, regalos, RSVP, álbum) con otra identidad: cielo de atardecer (niña) / cielo abierto (niño) / morado (sorpresa), rayos de energía, aro dorado.
 - Portada = pantalla de apertura: 7 esferas giran alrededor del aro; "Invocar al dragón" las enciende una a una, sube el dragón y aparece "¡Tu deseo se cumplió!".
-- Esferas y dragón dibujados en SVG propio (`Dragon.jsx`), sin logos ni imágenes de terceros. Entra sola a la colección `baby-shower`.
+- Esferas dibujadas en SVG propio (`Dragon.jsx`); el dragón es la imagen `media/dragon.webp` (PNG transparente que aportó el usuario, 720 px). Entra sola a la colección `baby-shower`.
 - La portada sin foto usa las ilustraciones de bebé de `baby-shower/media` (dependencia entre plantillas).
 - Verificación: `npm test` 151/151, `npm run smoke` 5 tamaños OK, miniatura generada.

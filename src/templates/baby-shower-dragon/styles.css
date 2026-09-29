@@ -978,11 +978,11 @@
   place-items: center;
   width: min(86vw, 430px);
   aspect-ratio: 1;
-  margin-top: 2%;
+  margin-top: 14%;
 }
 
 .bsd-stage .bsd-medallion {
-  width: 62%;
+  width: 54%;
   margin: 0;
 }
 
@@ -1018,19 +1018,16 @@
 
 .bsd-cover__dragon {
   position: absolute;
-  top: 3%;
-  right: -6vw;
+  inset: -7% 0 auto auto;
   z-index: -1;
-  width: min(62vw, 300px);
+  width: min(132vw, 640px);
+  max-width: none;
   height: auto;
-  aspect-ratio: 420 / 800;
   opacity: 0;
-  transform: translateY(40%) scale(0.85);
-  transform-origin: 50% 100%;
+  transform: translateY(14%) scale(0.9);
+  transform-origin: 70% 100%;
   pointer-events: none;
-  -webkit-mask-image: linear-gradient(#000 62%, transparent 96%);
-  mask-image: linear-gradient(#000 62%, transparent 96%);
-  filter: drop-shadow(0 18px 24px rgb(20 60 40 / 0.35));
+  filter: drop-shadow(0 16px 22px rgb(20 60 40 / 0.35));
 }
 
 .bsd[data-lit] .bsd-cover__dragon {
@@ -1087,4 +1084,24 @@
   .bsd-orbit__ball {
     animation: none;
   }
+}
+
+/* Con el dragón detrás, un velo suave oscurece el fondo del texto para que se lea */
+.bsd-cover__text {
+  position: relative;
+}
+
+.bsd-cover__text::before {
+  content: "";
+  position: absolute;
+  inset: -22% -14%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgb(110 20 60 / 0.55), transparent);
+  opacity: 0;
+  transition: opacity 1s ease 2.1s;
+  pointer-events: none;
+}
+
+.bsd[data-open] .bsd-cover__text::before {
+  opacity: 1;
 }
