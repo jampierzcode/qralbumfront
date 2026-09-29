@@ -1027,6 +1027,9 @@
   transform: translateY(14%) scale(0.9);
   transform-origin: 70% 100%;
   pointer-events: none;
+  /* Se ve nítido arriba y se difumina hacia abajo hasta desaparecer */
+  -webkit-mask-image: linear-gradient(to bottom, #000 38%, transparent 90%);
+  mask-image: linear-gradient(to bottom, #000 38%, transparent 90%);
   filter: drop-shadow(0 16px 22px rgb(20 60 40 / 0.35));
 }
 
