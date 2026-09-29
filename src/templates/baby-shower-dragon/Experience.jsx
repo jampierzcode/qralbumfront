@@ -8,7 +8,7 @@ import Particles from "../../experience-kit/Particles.jsx";
 import Photo from "../../experience-kit/Photo.jsx";
 import PhotoViewer from "../../experience-kit/PhotoViewer.jsx";
 import Reveal, { useInView } from "../../experience-kit/Reveal.jsx";
-import { DragonBall } from "./Dragon.jsx";
+import { Aura, DragonBall, Nimbus, Scouter } from "./Dragon.jsx";
 import Icon from "./Icons.jsx";
 import { babyIllustration } from "../baby-shower/media/index.js";
 import dragonSrc from "./media/dragon.webp";
@@ -77,13 +77,20 @@ const SPARKLE = { boy: "#fff8d0", girl: "#fff3c4", surprise: "#fff3c4" };
 
 // Adornos que flotan detrás de la invitación (cantidad fija: nada de nodos sin límite).
 const FLOATIES = [
-  { name: "bottle", top: "10%", left: "5%", size: 54, delay: 0 },
-  { name: "rattle", top: "24%", left: "86%", size: 48, delay: 1.4 },
-  { name: "bear", top: "46%", left: "4%", size: 62, delay: 2.6 },
-  { ball: 6, top: "60%", left: "88%", size: 34, delay: 0.8 },
-  { name: "booties", top: "78%", left: "8%", size: 50, delay: 3.2 },
-  { name: "onesie", top: "88%", left: "72%", size: 46, delay: 1.1 },
+  { art: "nimbus", top: "7%", left: "2%", size: 92, delay: 0 },
+  { ball: 3, top: "13%", left: "86%", size: 40, delay: 1.4 },
+  { art: "scouter", top: "31%", left: "84%", size: 54, delay: 2.2 },
+  { ball: 7, top: "40%", left: "3%", size: 36, delay: 2.6 },
+  { art: "nimbus", top: "54%", left: "76%", size: 100, delay: 0.8 },
+  { art: "scouter", top: "62%", left: "3%", size: 52, delay: 3.2 },
+  { ball: 1, top: "72%", left: "88%", size: 38, delay: 1.1 },
+  { ball: 5, top: "84%", left: "6%", size: 42, delay: 2 },
+  { art: "nimbus", top: "90%", left: "44%", size: 84, delay: 3.6 },
+  { ball: 2, top: "22%", left: "48%", size: 30, delay: 3.8 },
+  { ball: 4, top: "78%", left: "58%", size: 34, delay: 0.4 },
+  { ball: 6, top: "94%", left: "90%", size: 32, delay: 2.9 },
 ];
+
 
 
 // Las 7 esferas de la portada, en círculo alrededor del aro dorado.
@@ -283,11 +290,11 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
           <div className="bsd-floaties" aria-hidden="true">
             {FLOATIES.map((floaty) => (
               <span
-                key={floaty.ball || floaty.name}
-                className={`bsd-floaty${floaty.ball ? " bsd-floaty--ball" : ""}`}
+                key={`${floaty.art || "ball"}-${floaty.ball || ""}-${floaty.top}`}
+                className="bsd-floaty bsd-floaty--art"
                 style={{ top: floaty.top, left: floaty.left, "--size": `${floaty.size}px`, "--delay": `${floaty.delay}s` }}
               >
-                {floaty.ball ? <DragonBall stars={floaty.ball} /> : <Icon name={floaty.name} />}
+                {floaty.ball ? <DragonBall stars={floaty.ball} /> : floaty.art === "nimbus" ? <Nimbus /> : <Scouter />}
               </span>
             ))}
           </div>
@@ -311,6 +318,7 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
             ))}
           </div>
           <div className="bsd-medallion">
+            <Aura className="bsd-medallion__aura" />
             <div className="bsd-medallion__ring">
               <Photo image={cover} sizes="(min-width: 1024px) 32vw, 72vw" loading="eager" className="bsd-medallion__img" />
             </div>
@@ -532,6 +540,7 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
               {copy.thanks}
             </Reveal>
             <Reveal className="bsd-medallion bsd-medallion--small" delay={150}>
+              <Aura className="bsd-medallion__aura" />
               <div className="bsd-medallion__ring">
                 <Photo image={cover} sizes="(min-width: 1024px) 24vw, 52vw" className="bsd-medallion__img" />
               </div>

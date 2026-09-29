@@ -951,8 +951,8 @@
   filter: drop-shadow(0 6px 10px rgb(120 50 10 / 0.35));
 }
 
-.bsd-floaty--ball {
-  opacity: 0.9;
+.bsd-floaty--art {
+  opacity: 0.92;
 }
 
 .bsd-open__ball {
@@ -1198,4 +1198,74 @@
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--bsd-ink-soft);
+}
+
+.bsd-floaty .bsd-nimbus,
+.bsd-floaty .bsd-scouter,
+.bsd-floaty .bsd-ball {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Aura de Super Saiyayin detrás de la foto: llamas doradas que parpadean y un resplandor que late */
+.bsd-medallion__aura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  width: 200%;
+  height: 200%;
+  transform: translate(-50%, -50%);
+  overflow: visible;
+  pointer-events: none;
+  filter: drop-shadow(0 0 14px rgb(255 200 40 / 0.7));
+}
+
+.bsd-aura__flame {
+  transform-origin: 0 0;
+  animation: bsd-flame 0.9s ease-in-out infinite alternate;
+  animation-delay: var(--d, 0s);
+}
+
+.bsd-aura__glow {
+  transform-origin: 0 0;
+  animation: bsd-glow 2.4s ease-in-out infinite;
+}
+
+@keyframes bsd-flame {
+  0% { transform: scale(0.9, 0.86); opacity: 0.85; }
+  100% { transform: scale(1.04, calc(1.12 * var(--s, 1))); opacity: 1; }
+}
+
+@keyframes bsd-glow {
+  0%, 100% { transform: scale(0.94); opacity: 0.8; }
+  50% { transform: scale(1.06); opacity: 1; }
+}
+
+.bsd[data-calm] .bsd-aura__flame,
+.bsd[data-calm] .bsd-aura__glow {
+  animation: none;
+}
+
+/* El dragón se mueve con calma: sube y baja con un poco de zoom (después de aparecer) */
+.bsd[data-lit] .bsd-cover__dragon {
+  animation: bsd-drift 9s ease-in-out 4.6s infinite alternate;
+}
+
+.bsd[data-calm] .bsd-cover__dragon {
+  animation: none;
+}
+
+@keyframes bsd-drift {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-1.6%) scale(1.045); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bsd-aura__flame,
+  .bsd-aura__glow,
+  .bsd[data-lit] .bsd-cover__dragon {
+    animation: none;
+  }
 }

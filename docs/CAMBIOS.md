@@ -279,3 +279,9 @@ Verificación: `npm test` 80/80 · `npm run smoke` 5/5 tamaños (sin errores de 
 - En la invitación aparecen dentro de "Mesa de regalos"; el QR se amplía al tocarlo (visor propio, sin mezclarse con el álbum).
 - Demo con 2 QR de ejemplo generados con `qrcode.react` (`baby-shower/media/qr-*.webp`).
 - Al cambiar el schema hay que reiniciar el backend (`touch qralbumback/app.js`).
+
+## Baby shower dragón: movimiento, adornos y aura
+
+- El dragón sube y baja con un poco de zoom (9 s, suave) una vez que aparece; sigue apareciendo con desvanecido a los ~2 s de invocar.
+- Adornos que flotan: nubes voladoras (Nimbus), scouters y 7 esferas (`Dragon.jsx`, todo SVG propio), en lugar de biberón/osito.
+- Aura de Super Saiyayin (`Aura`) detrás de la foto de la portada y de la de "Gracias": llamas doradas que parpadean y resplandor que late. Sólo transform/opacity; quieta con `data-calm` o movimiento reducido.
