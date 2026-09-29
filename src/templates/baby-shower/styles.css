@@ -961,3 +961,76 @@
     animation: none;
   }
 }
+
+
+/* Métodos de pago (Yape, Plin…) con su QR */
+.bsh-pay {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  justify-items: center;
+}
+
+.bsh-pay__intro {
+  margin: 0;
+  font-weight: 700;
+  text-align: center;
+}
+
+.bsh-pay__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bsh-pay__item {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 8px;
+  padding: 12px 8px;
+  border-radius: 18px;
+  background: var(--bsh-tint);
+  text-align: center;
+}
+
+.bsh-pay__item strong {
+  font-family: var(--bsh-serif);
+  font-size: 1.05rem;
+  color: var(--bsh-accent);
+}
+
+.bsh-pay__item span {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--bsh-ink-soft);
+  overflow-wrap: anywhere;
+}
+
+.bsh-pay__qr {
+  display: block;
+  width: min(100%, 132px);
+  padding: 6px;
+  border: 0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 6px 16px var(--bsh-shadow);
+  cursor: zoom-in;
+  touch-action: manipulation;
+}
+
+.bsh-pay__qr .xk-photo {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.bsh-pay__hint {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--bsh-ink-soft);
+}

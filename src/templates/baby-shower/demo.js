@@ -1,9 +1,12 @@
 import { demoMedia } from "../_demo-media/index.js";
-import { demoBaby } from "./media/index.js";
+import { demoBaby, demoQr } from "./media/index.js";
 
 const { media: photoMedia, refs: photos, song } = demoMedia(["blossoms", "bouquet", "greenery", "gift"]);
 // Portada del demo: la ilustración de la bebé en rosado (el demo es "girl").
 const { media: babyMedia, ref: cover } = demoBaby("baby-girl");
+
+const { media: yapeMedia, ref: yapeQr } = demoQr("qr-yape");
+const { media: plinMedia, ref: plinQr } = demoQr("qr-plin");
 
 // El baby shower es en 18 días para que el demo muestre la cuenta regresiva.
 const shower = new Date(Date.now() + 18 * 86400000);
@@ -28,6 +31,10 @@ export default {
       mapsUrl: "",
       dressCode: "Ven de rosa pastel",
       giftIdeas: ["Pañales talla 1", "Biberones", "Mantitas de algodón", "Body 0-3 meses", "Toallitas húmedas"],
+      payMethods: [
+        { title: "Yape", qr: yapeQr, detail: "987 654 321 · Ana Pérez" },
+        { title: "Plin", qr: plinQr, detail: "987 654 321 · Ana Pérez" },
+      ],
       registryUrl: "",
       registryNote: "Tu presencia es el mejor regalo, pero si quieres consentir a Emilia…",
       rsvpEnabled: true,
@@ -38,5 +45,5 @@ export default {
       finalMessage: "Gracias por acompañarnos en la espera más linda de nuestra vida.",
     },
   },
-  media: { ...babyMedia, ...photoMedia },
+  media: { ...babyMedia, ...yapeMedia, ...plinMedia, ...photoMedia },
 };

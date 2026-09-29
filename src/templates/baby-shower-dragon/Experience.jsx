@@ -239,7 +239,7 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
   const {
     recipientName, senderName, gender = "girl", dueDate, coverPhoto, greeting, announceMessage, inviteMessage,
     eventDate, eventTime, venueName, address, reference, mapsUrl, dressCode,
-    giftIdeas = [], registryUrl, registryNote, rsvpEnabled, rsvpDeadline, hostPhone,
+    giftIdeas = [], payMethods = [], registryUrl, registryNote, rsvpEnabled, rsvpDeadline, hostPhone,
     photos = [], finalMessage,
   } = content;
   const copy = COPY[gender] || COPY.girl;
@@ -259,6 +259,9 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
   const wazeLink = `https://waze.com/ul?q=${encodeURIComponent(address || venueName || "")}&navigate=yes`;
   const storageKey = useMemo(() => `bsd-rsvp:${recipientName}:${eventDate}`, [recipientName, eventDate]);
   const ideas = (giftIdeas || []).filter((idea) => String(idea || "").trim());
+  const pays = (payMethods || []).filter((p) => p && (String(p.title || "").trim() || p.qr?.src));
+  const qrPhotos = pays.filter((p) => p.qr?.src).map((p) => p.qr);
+  const [qrViewer, setQrViewer] = useState(null);
   const finalRef = useRef(null);
   const finalVisible = useInView(finalRef, { threshold: 0.5 });
 
@@ -433,7 +436,7 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
           )}
 
           {/* 6. Regalos */}
-          {(ideas.length > 0 || registryUrl) && (
+          {(ideas.length > 0 || registryUrl || pays.length > 0) && (
             <section className="bsd-panel bsd-gifts" aria-label="Mesa de regalos">
               <Reveal as="h2" variant="scale" className="bsd-heading">
                 {copy.gifts}
@@ -449,6 +452,28 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
                       </li>
                     ))}
                   </ul>
+                )}
+                {pays.length > 0 && (
+                  <div className="bsd-pay">
+                    <p className="bsd-pay__intro">Si prefieres apoyar con un aporte:</p>
+                    <ul className="bsd-pay__list">
+                      {pays.map((pay, i) => {
+                        const qrIndex = pay.qr?.src ? qrPhotos.indexOf(pay.qr) : -1;
+                        return (
+                          <li key={`${pay.title}-${i}`} className="bsd-pay__item">
+                            <strong>{pay.title}</strong>
+                            {pay.qr?.src && (
+                              <button type="button" className="bsd-pay__qr" onClick={() => setQrViewer(qrIndex)} aria-label={`Ampliar el QR de ${pay.title}`}>
+                                <Photo image={pay.qr} sizes="140px" fit="contain" />
+                              </button>
+                            )}
+                            {pay.detail && <span>{pay.detail}</span>}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                    {qrPhotos.length > 0 && <p className="bsd-pay__hint">Toca el QR para ampliarlo</p>}
+                  </div>
                 )}
                 {registryUrl && (
                   <a className="bsd-btn bsd-btn--primary" href={registryUrl} target="_blank" rel="noreferrer">
@@ -520,6 +545,7 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
       )}
 
       <ConfettiBurst trigger={burst} colors={CONFETTI[gender] || CONFETTI.girl} />
+      <PhotoViewer photos={qrPhotos} index={qrViewer} onIndexChange={setQrViewer} onClose={() => setQrViewer(null)} />
       <PhotoViewer photos={photos} index={viewer} onIndexChange={setViewer} onClose={() => setViewer(null)} />
     </div>
   );

@@ -272,3 +272,10 @@ Verificación: `npm test` 80/80 · `npm run smoke` 5/5 tamaños (sin errores de 
 - Esferas dibujadas en SVG propio (`Dragon.jsx`); el dragón son dos imágenes que aportó el usuario: `media/dragon.webp` (vertical, móvil) y `media/dragon-wide.webp` (horizontal, escritorio y móvil horizontal), con `<picture>`. Entra sola a la colección `baby-shower`.
 - La portada sin foto usa las ilustraciones de bebé de `baby-shower/media` (dependencia entre plantillas).
 - Verificación: `npm test` 151/151, `npm run smoke` 5 tamaños OK, miniatura generada.
+
+## Baby shower (los dos modelos): métodos de pago con QR
+
+- Campo nuevo `payMethods` (hasta 3) en `baby-shower` y `baby-shower-dragon`, paso "Regalos": nombre (Yape, Plin…), imagen del QR y detalle (número/titular). Opcional; el cliente lo llena desde el portal.
+- En la invitación aparecen dentro de "Mesa de regalos"; el QR se amplía al tocarlo (visor propio, sin mezclarse con el álbum).
+- Demo con 2 QR de ejemplo generados con `qrcode.react` (`baby-shower/media/qr-*.webp`).
+- Al cambiar el schema hay que reiniciar el backend (`touch qralbumback/app.js`).

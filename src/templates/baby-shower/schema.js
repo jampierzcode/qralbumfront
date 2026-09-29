@@ -130,6 +130,21 @@ export default defineSchema({
       max: 90,
       editorStep: "gifts",
     }),
+    payMethods: f.list({
+      label: "Métodos de pago",
+      itemLabel: "Método",
+      portalLabel: "Yape, Plin u otros (opcional)",
+      description: "Opcional. Hasta 3 opciones para quien quiera apoyar con un aporte: nombre (Yape, Plin…), su QR y un detalle (número o titular).",
+      max: 3,
+      editorStep: "gifts",
+      item: f.group({
+        fields: {
+          title: f.text({ label: "Nombre", placeholder: "Yape", required: true, max: 24 }),
+          qr: f.image({ label: "QR", description: "Sube la captura del QR de esa app." }),
+          detail: f.text({ label: "Detalle", placeholder: "987 654 321 · Ana Pérez", max: 60 }),
+        },
+      }),
+    }),
     rsvpEnabled: f.toggle({
       label: "Recibir confirmaciones de asistencia",
       default: true,

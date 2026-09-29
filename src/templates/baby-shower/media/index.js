@@ -8,6 +8,17 @@ const urls = {
   "baby-girl": new URL("./baby-girl.webp", import.meta.url).href,
 };
 
+const qrUrls = {
+  "qr-yape": new URL("./qr-yape.webp", import.meta.url).href,
+  "qr-plin": new URL("./qr-plin.webp", import.meta.url).href,
+};
+
+/** { media, ref } de un QR de ejemplo (imagen cuadrada de 480 px), para el demo de los métodos de pago. */
+export function demoQr(name) {
+  const id = `demo-${name}`;
+  return { media: { [id]: { kind: "image", url: qrUrls[name], width: 480, height: 480 } }, ref: { assetId: id } };
+}
+
 export const BABY_BY_GENDER = { boy: "baby-boy", girl: "baby-girl", surprise: "baby-girl" };
 
 /** Imagen ya preparada ({ src, width, height, placeholder }) para usar sin pasar por el motor. */
