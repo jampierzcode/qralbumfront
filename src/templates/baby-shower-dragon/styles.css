@@ -968,10 +968,6 @@
 }
 
 /* Portada: escenario con las 7 esferas girando alrededor del aro */
-.bsd-cover {
-  overflow: clip;
-}
-
 .bsd-stage {
   position: relative;
   display: grid;
@@ -1025,6 +1021,7 @@
   height: auto;
   opacity: 0;
   transform: translateY(14%) scale(0.9);
+  display: block;
   transform-origin: 70% 100%;
   pointer-events: none;
   /* Se ve nítido arriba y se difumina hacia abajo hasta desaparecer */
@@ -1107,4 +1104,23 @@
 
 .bsd[data-open] .bsd-cover__text::before {
   opacity: 1;
+}
+
+.bsd-cover__dragon img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Escritorio y horizontal: el dragón largo recorre la parte baja, con la cabeza a la derecha */
+@media (min-width: 1024px), (orientation: landscape) and (max-height: 520px) {
+  .bsd-cover__dragon {
+    /* el panel está centrado y angosto: el dragón se alinea con el borde de la pantalla */
+    grid-column: 1 / -1 !important;
+    inset: auto calc(50% - 50vw - 2vw) 0 auto;
+    width: min(96vw, 1500px);
+    transform-origin: 80% 100%;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 34%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 34%);
+  }
 }

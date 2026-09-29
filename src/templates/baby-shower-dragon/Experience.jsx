@@ -12,6 +12,7 @@ import { DragonBall } from "./Dragon.jsx";
 import Icon from "./Icons.jsx";
 import { babyIllustration } from "../baby-shower/media/index.js";
 import dragonSrc from "./media/dragon.webp";
+import dragonWideSrc from "./media/dragon-wide.webp";
 import Scenery from "./Scenery.jsx";
 import "./styles.css";
 
@@ -293,7 +294,11 @@ export default function BabyShowerDragonExperience({ content, mode, onEvent, res
 
       {/* 1. Portada: las 7 esferas se encienden una a una y el dragón sube detrás del aro */}
       <section className="bsd-panel bsd-cover" aria-label="Portada">
-        <img className="bsd-cover__dragon" src={dragonSrc} width="720" height="1279" alt="" aria-hidden="true" decoding="async" />
+        <picture className="bsd-cover__dragon" aria-hidden="true">
+          {/* Escritorio y horizontal: el dragón largo; móvil vertical: el enroscado */}
+          <source media="(min-width: 1024px), (orientation: landscape) and (max-height: 520px)" srcSet={dragonWideSrc} width="1400" height="787" />
+          <img src={dragonSrc} width="720" height="1279" alt="" decoding="async" />
+        </picture>
         <div className="bsd-stage">
           <div className="bsd-orbit" aria-hidden="true">
             {ORBIT.map((n, i) => (
